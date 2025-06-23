@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "온글잎 박다현체";
+  src: url("/온글잎 박다현체.ttf");
+}
+
+body * {
+  font-family: "온글잎 박다현체";
+}
+
+html,
+body {
+  margin: 0px;
+  width: 100%;
+  background: linear-gradient(to right, #51c4d0, #a18cd1);
+}
