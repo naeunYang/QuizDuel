@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.tsx";
 import Battle from "./pages/Battle.tsx";
 import Admin from "./pages/Admin.tsx";
-import Notfound from "./pages/Notfount.tsx";
+import Notfound from "./pages/Notfound.tsx";
 
 function App() {
   return (
