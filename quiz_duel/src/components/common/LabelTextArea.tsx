@@ -1,5 +1,5 @@
-import "./LabelInput.css";
-import { Input } from "../shadcn/input";
+import "./LabelTextArea.css";
+import { Textarea } from "../shadcn/textarea";
 
 interface Props {
   label: string;
@@ -7,20 +7,21 @@ interface Props {
   placeholder?: string;
   content?: string;
   width?: number;
+  height?: number;
 }
 
-const LabelInput = (props: Props) => {
+const LabelTextArea = (props: Props) => {
   return (
-    <div className={`LabelInput ${props.direction}`}>
+    <div className={`LabelTextArea ${props.direction}`}>
       <label className="label_section">{props.label}</label>
-      <Input
+      <Textarea
         className="!text-[18px] placeholder:text-[#AAAAAA] min-w-30 max-w-full focus:border-none "
         placeholder={props.placeholder}
-        style={{ width: props.width }}
         value={props.content}
+        style={{ width: props.width, height: props.height, resize: "none" }}
       />
     </div>
   );
 };
 
-export default LabelInput;
+export default LabelTextArea;

@@ -10,9 +10,10 @@ import {
 } from "../shadcn/select";
 
 interface Props {
-  text: string;
+  label: string;
   direction: "vertical" | "horizontal";
   placeholder?: string;
+  content?: string;
   width?: number;
   defaultValue?: string;
   selectLabel?: string;
@@ -25,10 +26,10 @@ interface Props {
 const LabelSelect = ({ placeholder = "", ...props }: Props) => {
   return (
     <div className={`LabelSelect ${props.direction}`}>
-      <label className="label_section">{props.text}</label>
-      <Select defaultValue={props.defaultValue}>
+      <label className="label_section">{props.label}</label>
+      <Select defaultValue={props.defaultValue} value={props.content}>
         <SelectTrigger
-          className="min-w-30 justify-center"
+          className="min-w-30 justify-center !text-[16px]"
           style={{ width: props.width }}
         >
           <SelectValue placeholder={placeholder} />
@@ -37,7 +38,11 @@ const LabelSelect = ({ placeholder = "", ...props }: Props) => {
           <SelectGroup>
             <SelectLabel>{props.selectLabel}</SelectLabel>
             {props.itemList.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
+              <SelectItem
+                key={item.value}
+                value={item.value}
+                className="!text-[16px]"
+              >
                 {item.name}
               </SelectItem>
             ))}
