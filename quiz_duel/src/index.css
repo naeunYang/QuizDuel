@@ -4,12 +4,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @font-face {
-  font-family: "온글잎 박다현체";
-  src: url("/온글잎 박다현체.ttf");
+  font-family: "omyu pretty";
+  src: url("/omyu pretty.ttf");
 }
 
 body * {
-  font-family: "온글잎 박다현체";
+  font-family: "omyu pretty";
 }
 
 html,

@@ -35,7 +35,7 @@ const LabelSelect = ({ placeholder = "", ...props }: Props) => {
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
-          <SelectGroup>
+          <SelectGroup className="max-h-50">
             <SelectLabel>{props.selectLabel}</SelectLabel>
             {props.itemList.map((item) => (
               <SelectItem

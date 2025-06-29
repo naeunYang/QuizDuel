@@ -2,7 +2,7 @@ import { Button as ShadcnButton } from "../shadcn/button";
 
 interface Props {
   text: string;
-  type: "PARTICIPATE" | "POSITIVE" | "NEGATIVE" | "DEFAULT";
+  type: "CREATEROOM" | "PARTICIPATE" | "POSITIVE" | "NEGATIVE" | "DEFAULT";
   onButtonClick: () => void;
 }
 
@@ -10,6 +10,10 @@ const Button = (props: Props) => {
   let buttonClass = "";
 
   switch (props.type) {
+    case "CREATEROOM":
+      buttonClass =
+        "bg-[#E74C3C] hover:bg-[#C0392B] active:bg-[#A93226] w-80 p-5.5 text-[20px] font-[100] cursor-pointer";
+      break;
     case "PARTICIPATE":
       buttonClass =
         "bg-[#F39C12] hover:bg-[#d78b10] active:bg-[#bf7a0e] min-w-20 p-5 text-[17px] font-[100] cursor-pointer";

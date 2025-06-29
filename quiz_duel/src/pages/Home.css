@@ -1,0 +1,11 @@
+.Home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 700px;
+  margin: 0 auto;
+  min-height: 100vh;
+  height: 100%;
+  padding: 20px;
+  padding-bottom: 200px;
+}

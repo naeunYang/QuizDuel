@@ -1,0 +1,11 @@
+.CreateRoomContent .select_section {
+  display: flex;
+}
+
+.CreateRoomContent .select_section .badge_section {
+  display: flex;
+  gap: 0;
+  margin: 0 10px;
+  justify-content: space-between;
+  max-width: 100%;
+}

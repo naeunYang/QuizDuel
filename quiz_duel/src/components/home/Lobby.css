@@ -1,0 +1,32 @@
+.Lobby {
+  display: flex;
+  justify-content: center;
+}
+
+.Lobby .title {
+  font-size: 25px;
+  font-weight: bold;
+  padding-bottom: 30px;
+}
+
+.Lobby .divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 35px 0;
+}
+
+.Lobby .divider::before,
+.Lobby .divider::after {
+  content: "";
+  flex: 1;
+  height: 0.5px;
+  background-color: #cdcdcd;
+}
+
+.Lobby .divider-text {
+  margin: 0 10px;
+  color: #cdcdcd;
+  font-size: 18px;
+  white-space: nowrap;
+}
