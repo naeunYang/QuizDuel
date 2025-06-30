@@ -16,6 +16,7 @@ interface Props {
   content: React.ReactNode;
   closeButtonLabel: string;
   activeButton: React.ReactNode;
+  width?: number;
   height?: number;
 }
 
@@ -25,7 +26,7 @@ const BaseModal = ({ height = 450, ...props }: Props) => {
       <Dialog open={props.open} onOpenChange={props.onOpenChange}>
         <DialogContent
           className="w-90 flex flex-col justify-between gap-0 [&>button]:hidden"
-          style={{ height: height }}
+          style={{ width: props.width, height: height }}
         >
           <DialogHeader>
             <DialogTitle className="text-center text-xl">

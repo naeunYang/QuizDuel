@@ -14,6 +14,7 @@ const Lobby = () => {
   const [modalStep, setModalStep] = useState<"CREATE" | "WAITING" | "SUCCESS">(
     "SUCCESS"
   );
+  const [isReady, setIsReady] = useState(false);
 
   const onCreateBtnClick = () => {
     setModalStep("WAITING");
@@ -23,7 +24,9 @@ const Lobby = () => {
     setOpenMoal(false);
   };
 
-  const onExitBtnClick = () => {};
+  const onReadyBtnClick = () => {
+    setIsReady(!isReady);
+  };
 
   const getModalContent = () => {
     switch (modalStep) {
@@ -58,13 +61,20 @@ const Lobby = () => {
           title: "🕹️ 대기중",
           content: <WaitForReady />,
           closeButtonLabel: "나가기",
-          activeButton: (
+          activeButton: isReady ? (
+            <Button
+              text="준비취소"
+              type="NEGATIVE"
+              onButtonClick={onReadyBtnClick}
+            />
+          ) : (
             <Button
               text="준비하기"
               type="POSITIVE"
-              onButtonClick={onExitBtnClick}
+              onButtonClick={onReadyBtnClick}
             />
           ),
+          width: 430,
         };
     }
   };
@@ -109,6 +119,7 @@ const Lobby = () => {
           closeButtonLabel={modalProps.closeButtonLabel}
           activeButton={modalProps.activeButton}
           height={modalProps.height}
+          width={modalProps.width}
         />
       )}
     </div>

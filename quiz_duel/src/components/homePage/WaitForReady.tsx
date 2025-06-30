@@ -1,12 +1,22 @@
 import "./WaitForReady.css";
-import { Card, CardContent } from "../shadcn/card";
+import WaitForReadyProfile from "./WaitForReadyProfile";
 
 const WaitForReady = () => {
   return (
-    <div>
-      <Card className="rounded-md bg-[#F5F5F5] h-65 mt-7 mb-7">
-        <CardContent></CardContent>
-      </Card>
+    <div className="WaitForReady">
+      <WaitForReadyProfile
+        userProfile="player1.PNG"
+        backColor="#FFE7D2"
+        userName="Player1"
+        isReady={true}
+      />
+      <img className="versus" src="/versus.png" />
+      <WaitForReadyProfile
+        userProfile="player2.PNG"
+        backColor="#DBF5D7"
+        userName="Player2"
+        isReady={false}
+      />
     </div>
   );
 };
