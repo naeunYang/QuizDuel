@@ -1,6 +1,6 @@
 import "./Home.css";
-import Title from "@/components/home/Title";
-import Lobby from "@/components/home/Lobby";
+import Title from "@/components/homePage/Title";
+import Lobby from "@/components/homePage/Lobby";
 
 const Home = () => {
   return (

@@ -4,12 +4,7 @@ import LabelSelect from "@/components/common/LabelSelect";
 import LabelTextArea from "@/components/common/LabelTextArea";
 import LoadingModal from "@/components/common/LoadingModal";
 import ConfirmModal from "@/components/common/ConfirmModal";
-import BaseModal from "@/components/common/BaseModal";
 import { useState } from "react";
-import Badge from "@/components/common/Badge";
-import { Spinner } from "@/components/common/LoadingSpinner";
-import { Card, CardContent } from "@/components/shadcn/card";
-import { Share, Copy } from "lucide-react";
 
 interface SelectItem {
   name: string;
@@ -39,12 +34,8 @@ const mockData: SelectItem[] = [
   },
 ];
 
-const badgeData: [string, string?, string?] = ["상식", "만화", "밈"];
-
 const Admin = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isBaseOpen, setIsBaseOpen] = useState(false);
-  const [isBase2Open, setIsBase2Open] = useState(false);
   const onButtonClick = () => {
     console.log("클릭됐다!");
   };
@@ -87,44 +78,6 @@ const Admin = () => {
               onButtonClick={() => setIsOpen(false)}
             />
           }
-        />
-        <Button
-          text={"상대 기다리는중"}
-          type={"PARTICIPATE"}
-          onButtonClick={() => setIsBase2Open(true)}
-        />
-        <BaseModal
-          open={isBase2Open}
-          onOpenChange={setIsBase2Open}
-          content={
-            <div className="flex flex-col justify-center items-center">
-              <Spinner className="text-yellow-400 w-20 h-20" />
-              <span className="w-full text-center mt-5 mb-8 text-[18px]">
-                🖐️ 상대를 기다리는 중...
-              </span>
-              <Card className="rounded-md bg-[#F5F5F5] w-70 h-25 pt-4">
-                <CardContent>
-                  <p className="flex flex-row justify-center items-center text-[#787878] cursor-pointer mb-3">
-                    초대 링크 공유하기&nbsp;
-                    <Share className="w-4 h-4" />
-                  </p>
-                  <p className="flex flex-row justify-center items-center text-[#1ABC9C] text-[21px] cursor-pointer">
-                    ABC123&nbsp;
-                    <Copy className="w-5 h-5" />
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          }
-          closeButtonLabel={""}
-          activeButton={
-            <Button
-              text="대기 취소"
-              type="NEGATIVE"
-              onButtonClick={() => setIsBase2Open(false)}
-            />
-          }
-          height={390}
         />
         <br />
         <br />

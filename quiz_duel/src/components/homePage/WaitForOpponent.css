@@ -1,0 +1,31 @@
+.WaitForOpponent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.WaitForOpponent .title_section {
+  width: 100%;
+  text-align: center;
+  margin: 20px 0px 32px 0px;
+  font-size: 18px;
+}
+
+.WaitForOpponent .cardcontent_section {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.WaitForOpponent .share {
+  color: #787878;
+  margin-bottom: 0.75rem;
+}
+
+.WaitForOpponent .copy {
+  color: #1abc9c;
+  font-size: 21px;
+}

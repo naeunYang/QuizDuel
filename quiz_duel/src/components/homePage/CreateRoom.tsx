@@ -1,4 +1,4 @@
-import "./CreateRoomContent.css";
+import "./CreateRoom.css";
 import LabelInput from "../common/LabelInput";
 import LabelSelect from "../common/LabelSelect";
 import Badge from "../common/Badge";
@@ -111,9 +111,9 @@ const mockDataTime: SelectItem[] = [
 
 const badgeData: [string, string?, string?] = ["상식", "만화", "밈"];
 
-const CreateRoomContent = () => {
+const CreateRoom = () => {
   return (
-    <div className="CreateRoomContent">
+    <div className="CreateRoom">
       <LabelInput
         direction="vertical"
         label="방 제목"
@@ -167,4 +167,4 @@ const CreateRoomContent = () => {
   );
 };
 
-export default CreateRoomContent;
+export default CreateRoom;
