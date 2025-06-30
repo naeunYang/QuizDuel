@@ -5,13 +5,14 @@ import { Input } from "../shadcn/input";
 import BaseModal from "../common/BaseModal";
 import CreateRoom from "./CreateRoom";
 import WaitForOpponent from "./WaitForOpponent";
+import WaitForReady from "./WaitForReady";
 
 import { useState } from "react";
 
 const Lobby = () => {
   const [isOpenModal, setOpenMoal] = useState(false);
   const [modalStep, setModalStep] = useState<"CREATE" | "WAITING" | "SUCCESS">(
-    "CREATE"
+    "SUCCESS"
   );
 
   const onCreateBtnClick = () => {
@@ -21,6 +22,8 @@ const Lobby = () => {
   const onWaitCancelBtnClick = () => {
     setOpenMoal(false);
   };
+
+  const onExitBtnClick = () => {};
 
   const getModalContent = () => {
     switch (modalStep) {
@@ -52,13 +55,14 @@ const Lobby = () => {
         };
       case "SUCCESS":
         return {
-          content: <WaitForOpponent />,
-          closeButtonLabel: "",
+          title: "🕹️ 대기중",
+          content: <WaitForReady />,
+          closeButtonLabel: "나가기",
           activeButton: (
             <Button
-              text="대기 취소"
-              type="NEGATIVE"
-              onButtonClick={onWaitCancelBtnClick}
+              text="준비하기"
+              type="POSITIVE"
+              onButtonClick={onExitBtnClick}
             />
           ),
         };
