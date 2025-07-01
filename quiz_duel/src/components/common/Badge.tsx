@@ -1,4 +1,5 @@
 import { Badge as ShadcnBadge } from "../shadcn/badge";
+import { X } from "lucide-react";
 
 interface Props {
   content: string | undefined;

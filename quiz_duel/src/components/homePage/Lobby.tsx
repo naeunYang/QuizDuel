@@ -9,12 +9,134 @@ import WaitForReady from "./WaitForReady";
 
 import { useState } from "react";
 
+interface Room {
+  title: string;
+  quizCount: string;
+  level: string;
+  category: string;
+  timeLimit: string;
+}
+
+interface SelectItem {
+  name: string;
+  value: string;
+}
+
+const mockDataCount: SelectItem[] = [
+  {
+    name: "5개",
+    value: "5",
+  },
+  {
+    name: "10개",
+    value: "10",
+  },
+  {
+    name: "15개",
+    value: "15",
+  },
+  {
+    name: "20개",
+    value: "20",
+  },
+  {
+    name: "30개",
+    value: "30",
+  },
+];
+
+const mockDataLevel: SelectItem[] = [
+  {
+    name: "상",
+    value: "high",
+  },
+  {
+    name: "중",
+    value: "medium",
+  },
+
+  {
+    name: "하",
+    value: "low",
+  },
+];
+
+const mockDataCategory: SelectItem[] = [
+  {
+    name: "랜덤",
+    value: "random",
+  },
+  {
+    name: "요즘 밈",
+    value: "meme",
+  },
+  {
+    name: "드라마",
+    value: "drama",
+  },
+  {
+    name: "영화",
+    value: "movie",
+  },
+  {
+    name: "만화",
+    value: "comic",
+  },
+  {
+    name: "넌센스",
+    value: "nonsense",
+  },
+  {
+    name: "신조어",
+    value: "slang",
+  },
+  {
+    name: "이모지",
+    value: "emoji",
+  },
+  {
+    name: "추억",
+    value: "memory",
+  },
+];
+
+const mockDataTime: SelectItem[] = [
+  {
+    name: "5초",
+    value: "5",
+  },
+  {
+    name: "10초",
+    value: "10",
+  },
+  {
+    name: "15초",
+    value: "15",
+  },
+  {
+    name: "20초",
+    value: "20",
+  },
+  {
+    name: "30초",
+    value: "30",
+  },
+];
+
 const Lobby = () => {
   const [isOpenModal, setOpenModal] = useState(false);
   const [modalStep, setModalStep] = useState<"CREATE" | "WAITING" | "SUCCESS">(
     "CREATE"
   );
   const [isReady, setIsReady] = useState(false);
+  const [roomData, setRoom] = useState<Room>({
+    title: "",
+    quizCount: "5",
+    level: "high",
+    category: "",
+    timeLimit: "15",
+  });
+  const [badgeData, setBadgeData] = useState<string[]>([]);
 
   const onCreateBtnClick = () => {
     setModalStep("WAITING");

@@ -35,7 +35,7 @@ const LabelSelect = (props: Props) => {
           className="min-w-30 justify-center !text-[16px]"
           style={{ width: props.width }}
         >
-          <SelectValue />
+          <SelectValue placeholder="선택" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup className="max-h-50">

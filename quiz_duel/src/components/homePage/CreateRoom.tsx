@@ -120,10 +120,10 @@ const mockDataTime: SelectItem[] = [
 
 const CreateRoom = () => {
   const [room, setRoom] = useState<Room>({
-    title: "즐겜 합시다~",
+    title: "",
     quizCount: "5",
     level: "high",
-    category: "meme",
+    category: "",
     timeLimit: "15",
   });
 
@@ -137,9 +137,19 @@ const CreateRoom = () => {
 
     if (name === "category") {
       setBadgeData((prev) => {
-        const newArr = [...prev, value];
+        const newItem = mockDataCategory.find(
+          (item) => item.value == value
+        )!.name;
 
-        if (newArr.length > 3) newArr.shift();
+        if (prev.includes(newItem)) {
+          return prev;
+        }
+
+        const newArr = [...prev, newItem];
+
+        if (newArr.length > 3) {
+          newArr.shift();
+        }
         return newArr;
       });
     }
@@ -152,6 +162,7 @@ const CreateRoom = () => {
         label="방 제목"
         name="title"
         content={room.title}
+        placeholder="방 제목을 입력하세요."
         onInputValueChange={onChangeInput}
       />
       <div className="select_section">
@@ -181,7 +192,7 @@ const CreateRoom = () => {
           <LabelSelect
             label="카테고리"
             direction="vertical"
-            selectLabel="제한 시간(초)"
+            selectLabel="카테고리"
             itemList={mockDataCategory}
             width={135}
             name="category"

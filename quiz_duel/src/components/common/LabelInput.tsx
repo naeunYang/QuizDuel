@@ -7,6 +7,7 @@ interface Props {
   name?: string;
   content?: string;
   width?: number;
+  placeholder?: string;
   onInputValueChange: (name: string, value: string) => void;
 }
 
@@ -21,6 +22,7 @@ const LabelInput = (props: Props) => {
         onChange={(e) =>
           props.onInputValueChange(e.target.name, e.target.value)
         }
+        placeholder={props.placeholder}
         style={{ width: props.width }}
       />
     </div>
