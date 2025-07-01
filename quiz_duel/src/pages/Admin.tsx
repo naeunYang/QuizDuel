@@ -1,38 +1,8 @@
 import Button from "@/components/common/Button";
-import LabelInput from "@/components/common/LabelInput";
-import LabelSelect from "@/components/common/LabelSelect";
 import LabelTextArea from "@/components/common/LabelTextArea";
 import LoadingModal from "@/components/common/LoadingModal";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import { useState } from "react";
-
-interface SelectItem {
-  name: string;
-  value: string;
-}
-
-const mockData: SelectItem[] = [
-  {
-    name: "5초",
-    value: "5sec",
-  },
-  {
-    name: "10초",
-    value: "10sec",
-  },
-  {
-    name: "15초",
-    value: "15sec",
-  },
-  {
-    name: "20초",
-    value: "20sec",
-  },
-  {
-    name: "30초",
-    value: "30sec",
-  },
-];
 
 const Admin = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -82,53 +52,6 @@ const Admin = () => {
         <br />
         <br />
         <br />
-        <div className="flex gap-2">
-          <LabelInput
-            label={"방 제목"}
-            direction="vertical"
-            placeholder="방 제목을 입력하세요"
-            content="123"
-          />
-          <LabelInput
-            label={"방 제목"}
-            direction="vertical"
-            placeholder="방 제목을 입력하세요"
-            width={300}
-          />
-        </div>
-        <LabelInput
-          label={"방 제목"}
-          direction="horizontal"
-          placeholder="방 제목을 입력하세요"
-          width={435}
-        />
-        <br />
-        <br />
-        <div className="flex gap-2">
-          <LabelSelect
-            label={"제한시간(초)"}
-            direction="vertical"
-            placeholder="시간 선택"
-            content="5sec"
-            selectLabel="제한시간(초)"
-            itemList={mockData}
-          />
-          <LabelSelect
-            label={"제한시간(초)"}
-            direction="vertical"
-            placeholder="시간 선택"
-            selectLabel="제한시간(초)"
-            itemList={mockData}
-          />
-        </div>
-        <LabelSelect
-          label={"제한시간(초)"}
-          direction="horizontal"
-          placeholder="시간 선택"
-          width={185}
-          selectLabel="제한시간(초)"
-          itemList={mockData}
-        />
       </div>
       <br />
       <br />

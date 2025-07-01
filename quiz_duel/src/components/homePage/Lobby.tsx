@@ -10,18 +10,21 @@ import WaitForReady from "./WaitForReady";
 import { useState } from "react";
 
 const Lobby = () => {
-  const [isOpenModal, setOpenMoal] = useState(false);
+  const [isOpenModal, setOpenModal] = useState(false);
   const [modalStep, setModalStep] = useState<"CREATE" | "WAITING" | "SUCCESS">(
-    "SUCCESS"
+    "CREATE"
   );
   const [isReady, setIsReady] = useState(false);
 
   const onCreateBtnClick = () => {
     setModalStep("WAITING");
+    setTimeout(() => {
+      setModalStep("SUCCESS");
+    }, 3000);
   };
 
   const onWaitCancelBtnClick = () => {
-    setOpenMoal(false);
+    setOpenModal(false);
   };
 
   const onReadyBtnClick = () => {
@@ -74,7 +77,8 @@ const Lobby = () => {
               onButtonClick={onReadyBtnClick}
             />
           ),
-          width: 430,
+          width: 400,
+          height: 410,
         };
     }
   };
@@ -90,7 +94,8 @@ const Lobby = () => {
             type="CREATEROOM"
             text="🕹️ 새 방 만들기"
             onButtonClick={() => {
-              setOpenMoal(true);
+              setOpenModal(true);
+              setModalStep("CREATE");
             }}
           />
           <div className="divider">
@@ -113,7 +118,7 @@ const Lobby = () => {
       {isOpenModal && (
         <BaseModal
           open={isOpenModal}
-          onOpenChange={setOpenMoal}
+          onOpenChange={setOpenModal}
           title={modalProps.title}
           content={modalProps.content}
           closeButtonLabel={modalProps.closeButtonLabel}

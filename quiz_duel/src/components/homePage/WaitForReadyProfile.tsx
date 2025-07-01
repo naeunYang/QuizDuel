@@ -12,11 +12,11 @@ const WaitForReadyProfile = (props: Props) => {
   return (
     <div className="WaitForReadyProfile">
       <Card
-        className="rounded-md h-55 p-0 shadow-sm"
+        className="rounded-md h-50 p-0 shadow-sm"
         style={{ background: props.backColor }}
       >
         <CardContent className="p-0">
-          <img src={props.userProfile} />
+          <img src={`../src/assets/${props.userProfile}`} />
           <div className="user_name">{props.userName}</div>
         </CardContent>
         <div className="ready_status">

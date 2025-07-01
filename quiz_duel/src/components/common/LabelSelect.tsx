@@ -12,27 +12,30 @@ import {
 interface Props {
   label: string;
   direction: "vertical" | "horizontal";
-  placeholder?: string;
+  name: string;
   content?: string;
   width?: number;
-  defaultValue?: string;
   selectLabel?: string;
   itemList: {
     name: string;
     value: string;
   }[];
+  onSelectValueChange: (name: string, value: string) => void;
 }
 
-const LabelSelect = ({ placeholder = "", ...props }: Props) => {
+const LabelSelect = (props: Props) => {
   return (
     <div className={`LabelSelect ${props.direction}`}>
       <label className="label_section">{props.label}</label>
-      <Select defaultValue={props.defaultValue} value={props.content}>
+      <Select
+        value={props.content}
+        onValueChange={(value) => props.onSelectValueChange(props.name, value)}
+      >
         <SelectTrigger
           className="min-w-30 justify-center !text-[16px]"
           style={{ width: props.width }}
         >
-          <SelectValue placeholder={placeholder} />
+          <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup className="max-h-50">

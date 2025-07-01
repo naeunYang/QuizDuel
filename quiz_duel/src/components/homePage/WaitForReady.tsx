@@ -10,7 +10,7 @@ const WaitForReady = () => {
         userName="Player1"
         isReady={true}
       />
-      <img className="versus" src="/versus.png" />
+      <img className="versus" src="../src/assets/versus.png" />
       <WaitForReadyProfile
         userProfile="player2.PNG"
         backColor="#DBF5D7"

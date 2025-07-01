@@ -2,6 +2,15 @@ import "./CreateRoom.css";
 import LabelInput from "../common/LabelInput";
 import LabelSelect from "../common/LabelSelect";
 import Badge from "../common/Badge";
+import { useState } from "react";
+
+interface Room {
+  title: string;
+  quizCount: string;
+  level: string;
+  category: string;
+  timeLimit: string;
+}
 
 interface SelectItem {
   name: string;
@@ -109,32 +118,62 @@ const mockDataTime: SelectItem[] = [
   },
 ];
 
-const badgeData: [string, string?, string?] = ["상식", "만화", "밈"];
-
 const CreateRoom = () => {
+  const [room, setRoom] = useState<Room>({
+    title: "즐겜 합시다~",
+    quizCount: "5",
+    level: "high",
+    category: "meme",
+    timeLimit: "15",
+  });
+
+  const [badgeData, setBadgeData] = useState<string[]>([]);
+
+  const onChangeInput = (name: string, value: string) => {
+    setRoom((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    if (name === "category") {
+      setBadgeData((prev) => {
+        const newArr = [...prev, value];
+
+        if (newArr.length > 3) newArr.shift();
+        return newArr;
+      });
+    }
+  };
+
   return (
     <div className="CreateRoom">
       <LabelInput
         direction="vertical"
         label="방 제목"
-        placeholder="방 제목을 입력하세요."
+        name="title"
+        content={room.title}
+        onInputValueChange={onChangeInput}
       />
       <div className="select_section">
         <LabelSelect
           label="문제 개수"
           direction="vertical"
-          defaultValue={mockDataCount[1]["value"]}
           selectLabel="문제 개수"
           itemList={mockDataCount}
           width={135}
+          name="quizCount"
+          content={room.quizCount}
+          onSelectValueChange={onChangeInput}
         />
         <LabelSelect
           label="난이도"
           direction="vertical"
-          defaultValue={mockDataLevel[1]["value"]}
           selectLabel="난이도"
           itemList={mockDataLevel}
           width={135}
+          name="level"
+          content={room.level}
+          onSelectValueChange={onChangeInput}
         />
       </div>
       <div className="select_section">
@@ -142,10 +181,12 @@ const CreateRoom = () => {
           <LabelSelect
             label="카테고리"
             direction="vertical"
-            defaultValue={mockDataCategory[1]["value"]}
             selectLabel="제한 시간(초)"
             itemList={mockDataCategory}
             width={135}
+            name="category"
+            content={room.category}
+            onSelectValueChange={onChangeInput}
           />
           <div className="badge_section">
             {badgeData.map((item, idx) => (
@@ -157,10 +198,12 @@ const CreateRoom = () => {
         <LabelSelect
           label="제한시간(초)"
           direction="vertical"
-          defaultValue={mockDataTime[1]["value"]}
           selectLabel="제한 시간(초)"
           itemList={mockDataTime}
           width={135}
+          name="timeLimit"
+          content={room.timeLimit}
+          onSelectValueChange={onChangeInput}
         />
       </div>
     </div>
