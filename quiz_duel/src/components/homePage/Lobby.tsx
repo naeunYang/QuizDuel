@@ -8,27 +8,56 @@ import WaitForOpponent from "./WaitForOpponent";
 import WaitForReady from "./WaitForReady";
 import type { RoomInfo } from "@/types/room-info";
 
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
+
+const defaultData: RoomInfo = {
+  title: "즐거운 퀴즈 대전",
+  quizCount: "5",
+  level: "high",
+  category: [],
+  timeLimit: "15",
+};
 
 const Lobby = () => {
   const [isOpenModal, setOpenModal] = useState(false);
   const [modalStep, setModalStep] = useState<"CREATE" | "WAITING" | "SUCCESS">(
     "CREATE"
   );
-  const [room, setRoom] = useState<RoomInfo>({
-    title: "",
-    quizCount: "5",
-    level: "high",
-    category: [],
-    timeLimit: "15",
-  });
+  const [room, setRoom] = useState<RoomInfo>(defaultData);
 
   const [isReady, setIsReady] = useState(false);
 
+  const timer = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (!isOpenModal) {
+      setRoom(defaultData);
+      setModalStep("CREATE");
+      if (timer.current) clearTimeout(timer.current);
+    }
+  }, [isOpenModal]);
+
   // 생성 버튼 클릭
   const onCreateBtnClick = () => {
+    if (room.category.length === 0) {
+      setRoom((prev) => {
+        return {
+          ...prev,
+          ["category"]: ["random"],
+        };
+      });
+    }
+    if (room.title === "") {
+      setRoom((prev) => {
+        return {
+          ...prev,
+          ["title"]: "즐거운 퀴즈 대전",
+        };
+      });
+    }
+
     setModalStep("WAITING");
-    setTimeout(() => {
+    timer.current = setTimeout(() => {
       setModalStep("SUCCESS");
     }, 3000);
 
@@ -59,6 +88,7 @@ const Lobby = () => {
               onButtonClick={onCreateBtnClick}
             />
           ),
+          height: 430,
         };
       case "WAITING":
         return {
@@ -107,10 +137,7 @@ const Lobby = () => {
           <Button
             type="CREATEROOM"
             text="🕹️ 새 방 만들기"
-            onButtonClick={() => {
-              setOpenModal(true);
-              setModalStep("CREATE");
-            }}
+            onButtonClick={() => setOpenModal(true)}
           />
           <div className="divider">
             <span className="divider-text">또는</span>

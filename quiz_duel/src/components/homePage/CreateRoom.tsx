@@ -84,7 +84,7 @@ const CreateRoom = ({ room, setRoom }: Props) => {
             itemList={mockDataCategory}
             width={135}
             name="category"
-            content={room.category[2]}
+            content={room.category[room.category.length - 1]}
             onSelectValueChange={onChangeInput}
           />
           <div className="badge_section">
