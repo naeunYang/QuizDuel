@@ -6,149 +6,41 @@ import BaseModal from "../common/BaseModal";
 import CreateRoom from "./CreateRoom";
 import WaitForOpponent from "./WaitForOpponent";
 import WaitForReady from "./WaitForReady";
+import type { RoomInfo } from "@/types/room-info";
 
 import { useState } from "react";
-
-interface Room {
-  title: string;
-  quizCount: string;
-  level: string;
-  category: string;
-  timeLimit: string;
-}
-
-interface SelectItem {
-  name: string;
-  value: string;
-}
-
-const mockDataCount: SelectItem[] = [
-  {
-    name: "5개",
-    value: "5",
-  },
-  {
-    name: "10개",
-    value: "10",
-  },
-  {
-    name: "15개",
-    value: "15",
-  },
-  {
-    name: "20개",
-    value: "20",
-  },
-  {
-    name: "30개",
-    value: "30",
-  },
-];
-
-const mockDataLevel: SelectItem[] = [
-  {
-    name: "상",
-    value: "high",
-  },
-  {
-    name: "중",
-    value: "medium",
-  },
-
-  {
-    name: "하",
-    value: "low",
-  },
-];
-
-const mockDataCategory: SelectItem[] = [
-  {
-    name: "랜덤",
-    value: "random",
-  },
-  {
-    name: "요즘 밈",
-    value: "meme",
-  },
-  {
-    name: "드라마",
-    value: "drama",
-  },
-  {
-    name: "영화",
-    value: "movie",
-  },
-  {
-    name: "만화",
-    value: "comic",
-  },
-  {
-    name: "넌센스",
-    value: "nonsense",
-  },
-  {
-    name: "신조어",
-    value: "slang",
-  },
-  {
-    name: "이모지",
-    value: "emoji",
-  },
-  {
-    name: "추억",
-    value: "memory",
-  },
-];
-
-const mockDataTime: SelectItem[] = [
-  {
-    name: "5초",
-    value: "5",
-  },
-  {
-    name: "10초",
-    value: "10",
-  },
-  {
-    name: "15초",
-    value: "15",
-  },
-  {
-    name: "20초",
-    value: "20",
-  },
-  {
-    name: "30초",
-    value: "30",
-  },
-];
 
 const Lobby = () => {
   const [isOpenModal, setOpenModal] = useState(false);
   const [modalStep, setModalStep] = useState<"CREATE" | "WAITING" | "SUCCESS">(
     "CREATE"
   );
-  const [isReady, setIsReady] = useState(false);
-  const [roomData, setRoom] = useState<Room>({
+  const [room, setRoom] = useState<RoomInfo>({
     title: "",
     quizCount: "5",
     level: "high",
-    category: "",
+    category: [],
     timeLimit: "15",
   });
-  const [badgeData, setBadgeData] = useState<string[]>([]);
 
+  const [isReady, setIsReady] = useState(false);
+
+  // 생성 버튼 클릭
   const onCreateBtnClick = () => {
     setModalStep("WAITING");
     setTimeout(() => {
       setModalStep("SUCCESS");
     }, 3000);
+
+    console.log(room);
   };
 
+  // 대기 취소 버튼 클릭
   const onWaitCancelBtnClick = () => {
     setOpenModal(false);
   };
 
+  // 준비 버튼 클릭
   const onReadyBtnClick = () => {
     setIsReady(!isReady);
   };
@@ -158,7 +50,7 @@ const Lobby = () => {
       case "CREATE":
         return {
           title: "🕹️ 새 방 만들기",
-          content: <CreateRoom />,
+          content: <CreateRoom room={room} setRoom={setRoom} />,
           closeButtonLabel: "취소",
           activeButton: (
             <Button

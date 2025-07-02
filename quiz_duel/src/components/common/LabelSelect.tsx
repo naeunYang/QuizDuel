@@ -9,26 +9,25 @@ import {
   SelectValue,
 } from "../shadcn/select";
 
-interface Props {
+interface Props<T extends { name: string; value: string }> {
   label: string;
   direction: "vertical" | "horizontal";
   name: string;
   content?: string;
   width?: number;
   selectLabel?: string;
-  itemList: {
-    name: string;
-    value: string;
-  }[];
+  itemList: readonly T[];
   onSelectValueChange: (name: string, value: string) => void;
 }
 
-const LabelSelect = (props: Props) => {
+const LabelSelect = <T extends { name: string; value: string }>(
+  props: Props<T>
+) => {
   return (
     <div className={`LabelSelect ${props.direction}`}>
       <label className="label_section">{props.label}</label>
       <Select
-        value={props.content}
+        value={props.content ?? ""}
         onValueChange={(value) => props.onSelectValueChange(props.name, value)}
       >
         <SelectTrigger

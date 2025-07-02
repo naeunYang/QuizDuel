@@ -2,156 +2,44 @@ import "./CreateRoom.css";
 import LabelInput from "../common/LabelInput";
 import LabelSelect from "../common/LabelSelect";
 import Badge from "../common/Badge";
-import { useState } from "react";
 
-interface Room {
-  title: string;
-  quizCount: string;
-  level: string;
-  category: string;
-  timeLimit: string;
+import type { RoomInfo } from "@/types/room-info";
+import {
+  mockDataCount,
+  mockDataLevel,
+  mockDataCategory,
+  mockDataTime,
+} from "@/data/mockData";
+
+interface Props {
+  room: RoomInfo;
+  setRoom: React.Dispatch<React.SetStateAction<RoomInfo>>;
 }
 
-interface SelectItem {
-  name: string;
-  value: string;
-}
-
-const mockDataCount: SelectItem[] = [
-  {
-    name: "5개",
-    value: "5",
-  },
-  {
-    name: "10개",
-    value: "10",
-  },
-  {
-    name: "15개",
-    value: "15",
-  },
-  {
-    name: "20개",
-    value: "20",
-  },
-  {
-    name: "30개",
-    value: "30",
-  },
-];
-
-const mockDataLevel: SelectItem[] = [
-  {
-    name: "상",
-    value: "high",
-  },
-  {
-    name: "중",
-    value: "medium",
-  },
-
-  {
-    name: "하",
-    value: "low",
-  },
-];
-
-const mockDataCategory: SelectItem[] = [
-  {
-    name: "랜덤",
-    value: "random",
-  },
-  {
-    name: "요즘 밈",
-    value: "meme",
-  },
-  {
-    name: "드라마",
-    value: "drama",
-  },
-  {
-    name: "영화",
-    value: "movie",
-  },
-  {
-    name: "만화",
-    value: "comic",
-  },
-  {
-    name: "넌센스",
-    value: "nonsense",
-  },
-  {
-    name: "신조어",
-    value: "slang",
-  },
-  {
-    name: "이모지",
-    value: "emoji",
-  },
-  {
-    name: "추억",
-    value: "memory",
-  },
-];
-
-const mockDataTime: SelectItem[] = [
-  {
-    name: "5초",
-    value: "5",
-  },
-  {
-    name: "10초",
-    value: "10",
-  },
-  {
-    name: "15초",
-    value: "15",
-  },
-  {
-    name: "20초",
-    value: "20",
-  },
-  {
-    name: "30초",
-    value: "30",
-  },
-];
-
-const CreateRoom = () => {
-  const [room, setRoom] = useState<Room>({
-    title: "",
-    quizCount: "5",
-    level: "high",
-    category: "",
-    timeLimit: "15",
-  });
-
-  const [badgeData, setBadgeData] = useState<string[]>([]);
-
+const CreateRoom = ({ room, setRoom }: Props) => {
   const onChangeInput = (name: string, value: string) => {
-    setRoom((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
     if (name === "category") {
-      setBadgeData((prev) => {
-        const newItem = mockDataCategory.find(
-          (item) => item.value == value
-        )!.name;
-
-        if (prev.includes(newItem)) {
+      setRoom((prev) => {
+        if (prev.category.includes(value as RoomInfo["category"][number])) {
           return prev;
         }
 
-        const newArr = [...prev, newItem];
+        const newCategory = [
+          ...prev.category,
+          value as RoomInfo["category"][number],
+        ];
 
-        if (newArr.length > 3) {
-          newArr.shift();
+        if (newCategory.length > 3) {
+          newCategory.shift();
         }
-        return newArr;
+
+        return { ...prev, category: newCategory };
       });
+    } else {
+      setRoom((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
   };
 
@@ -196,12 +84,17 @@ const CreateRoom = () => {
             itemList={mockDataCategory}
             width={135}
             name="category"
-            content={room.category}
+            content={room.category[2]}
             onSelectValueChange={onChangeInput}
           />
           <div className="badge_section">
-            {badgeData.map((item, idx) => (
-              <Badge key={idx} content={item} />
+            {room.category.map((item, idx) => (
+              <Badge
+                key={idx}
+                content={
+                  mockDataCategory.find((data) => data.value == item)!.name
+                }
+              />
             ))}
           </div>
         </div>
