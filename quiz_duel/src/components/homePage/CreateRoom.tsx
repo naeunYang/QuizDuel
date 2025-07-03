@@ -17,6 +17,7 @@ interface Props {
 }
 
 const CreateRoom = ({ room, setRoom }: Props) => {
+  // 입력값 변경
   const onChangeInput = (name: string, value: string) => {
     if (name === "category") {
       setRoom((prev) => {

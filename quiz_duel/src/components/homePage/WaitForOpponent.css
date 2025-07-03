@@ -17,15 +17,15 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
 }
 
 .WaitForOpponent .share {
   color: #787878;
-  margin-bottom: 0.75rem;
+  cursor: pointer;
 }
 
 .WaitForOpponent .copy {
   color: #1abc9c;
   font-size: 21px;
+  margin-bottom: 0.75rem;
 }

@@ -33,9 +33,11 @@ const BaseModal = ({ height = 450, ...props }: Props) => {
           style={{ width: props.width, height: height }}
         >
           <DialogHeader>
-            <DialogTitle className="text-center text-xl">
-              {props.title}
-            </DialogTitle>
+            {props.title && (
+              <DialogTitle className="text-center text-xl">
+                {props.title}
+              </DialogTitle>
+            )}
             <DialogDescription></DialogDescription>
           </DialogHeader>
           <div className="h-full mt-1">{props.content}</div>

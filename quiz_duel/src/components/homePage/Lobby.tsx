@@ -10,7 +10,9 @@ import type { RoomInfo } from "@/types/room-info";
 
 import { useEffect, useState, useRef } from "react";
 
-const defaultData: RoomInfo = {
+// 방 초기값
+const defaultRoomData: RoomInfo = {
+  code: "",
   title: "즐거운 퀴즈 대전",
   quizCount: "5",
   level: "high",
@@ -18,27 +20,30 @@ const defaultData: RoomInfo = {
   timeLimit: "15",
 };
 
+// 초기 팝업창
+const defaultPopup: "CREATE" | "WAIT_OPPONENT" | "WAIT_READY" = "CREATE";
+
 const Lobby = () => {
   const [isOpenModal, setOpenModal] = useState(false);
-  const [modalStep, setModalStep] = useState<"CREATE" | "WAITING" | "SUCCESS">(
-    "CREATE"
-  );
-  const [room, setRoom] = useState<RoomInfo>(defaultData);
-
+  const [modalStep, setModalStep] = useState<
+    "CREATE" | "WAIT_OPPONENT" | "WAIT_READY"
+  >(defaultPopup);
+  const [room, setRoom] = useState<RoomInfo>(defaultRoomData);
   const [isReady, setIsReady] = useState(false);
-
   const timer = useRef<NodeJS.Timeout | null>(null);
 
+  // 팝업창 닫히면 값 초기화
   useEffect(() => {
     if (!isOpenModal) {
-      setRoom(defaultData);
-      setModalStep("CREATE");
+      setRoom(defaultRoomData);
+      setModalStep(defaultPopup);
       if (timer.current) clearTimeout(timer.current);
     }
   }, [isOpenModal]);
 
   // 생성 버튼 클릭
   const onCreateBtnClick = () => {
+    // 카테고리 선택 X 시 random값으로 설정
     if (room.category.length === 0) {
       setRoom((prev) => {
         return {
@@ -47,6 +52,8 @@ const Lobby = () => {
         };
       });
     }
+
+    // 방 제목 비었을 경우 기본값으로 설정
     if (room.title === "") {
       setRoom((prev) => {
         return {
@@ -56,10 +63,19 @@ const Lobby = () => {
       });
     }
 
-    setModalStep("WAITING");
-    timer.current = setTimeout(() => {
-      setModalStep("SUCCESS");
-    }, 3000);
+    // 방 생성 후 코드 생성
+    setRoom((prev) => {
+      return {
+        ...prev,
+        ["code"]: "EFG123",
+      };
+    });
+
+    // 임시) 대기 화면 이동 후, 3초 후
+    setModalStep("WAIT_OPPONENT");
+    // timer.current = setTimeout(() => {
+    //   setModalStep("WAIT_READY");
+    // }, 3000);
 
     console.log(room);
   };
@@ -71,9 +87,10 @@ const Lobby = () => {
 
   // 준비 버튼 클릭
   const onReadyBtnClick = () => {
-    setIsReady(!isReady);
+    setIsReady(!isReady); // 준비 상태 토글
   };
 
+  // 팝업창 content
   const getModalContent = () => {
     switch (modalStep) {
       case "CREATE":
@@ -90,9 +107,9 @@ const Lobby = () => {
           ),
           height: 430,
         };
-      case "WAITING":
+      case "WAIT_OPPONENT":
         return {
-          content: <WaitForOpponent />,
+          content: <WaitForOpponent roomCode={room.code} />,
           closeButtonLabel: "",
           activeButton: (
             <Button
@@ -103,7 +120,7 @@ const Lobby = () => {
           ),
           height: 390,
         };
-      case "SUCCESS":
+      case "WAIT_READY":
         return {
           title: "🕹️ 대기중",
           content: <WaitForReady />,

@@ -1,0 +1,15 @@
+.SharePlatform {
+  width: 22%;
+  cursor: pointer;
+}
+
+.SharePlatform .logo_section {
+  width: 90%;
+  height: auto;
+  margin-bottom: 3px;
+}
+
+.SharePlatform .name_section {
+  font-size: 13px;
+  color: gray;
+}
