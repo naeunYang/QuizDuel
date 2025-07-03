@@ -23,3 +23,5 @@ omyu pretty.ttf
 *.njsproj
 *.sln
 *.sw?
+
+.env

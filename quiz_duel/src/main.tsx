@@ -3,6 +3,11 @@ import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 
+// 카카오톡 공유하기 설정
+const JAVASCRIPT_KEY = import.meta.env.VITE_APP_JAVASCRIPT_KEY;
+window.Kakao.init(JAVASCRIPT_KEY);
+window.Kakao.isInitialized();
+
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <App />
