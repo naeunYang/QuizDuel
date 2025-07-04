@@ -13,7 +13,7 @@ import { useEffect, useState, useRef } from "react";
 // 방 초기값
 const defaultRoomData: RoomInfo = {
   code: "",
-  title: "즐거운 퀴즈 대전",
+  title: "진 사람 떡볶이 쏘기😎",
   quizCount: "5",
   level: "high",
   category: [],
@@ -67,15 +67,15 @@ const Lobby = () => {
     setRoom((prev) => {
       return {
         ...prev,
-        ["code"]: "EFG123",
+        ["code"]: "YNE123",
       };
     });
 
     // 임시) 대기 화면 이동 후, 3초 후
     setModalStep("WAIT_OPPONENT");
-    // timer.current = setTimeout(() => {
-    //   setModalStep("WAIT_READY");
-    // }, 3000);
+    timer.current = setTimeout(() => {
+      setModalStep("WAIT_READY");
+    }, 3000);
 
     console.log(room);
   };
@@ -109,7 +109,9 @@ const Lobby = () => {
         };
       case "WAIT_OPPONENT":
         return {
-          content: <WaitForOpponent roomCode={room.code} />,
+          content: (
+            <WaitForOpponent roomTitle={room.title} roomCode={room.code} />
+          ),
           closeButtonLabel: "",
           activeButton: (
             <Button
