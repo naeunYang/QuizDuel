@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model category {
+  categoryID   String @id @db.VarChar(50)
+  categoryName String @db.VarChar(50)
+}
+
+model count {
+  countID   String @id @db.VarChar(50)
+  countName String @db.VarChar(50)
+}
+
+model level {
+  levelID   String @id @db.VarChar(50)
+  levelName String @db.VarChar(50)
+}
+
+model time {
+  timeID   String @id @db.VarChar(50)
+  timeName String @db.VarChar(50)
+}

@@ -3,15 +3,21 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx app.ts",
+    "dev": "nodemon --watch \"*.ts\" --exec \"ts-node\" app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^6.11.1",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.3",
     "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "prisma": "^6.11.1",
+    "ts-node": "^10.9.2"
   }
 }

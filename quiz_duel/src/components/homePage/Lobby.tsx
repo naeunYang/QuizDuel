@@ -125,7 +125,7 @@ const Lobby = () => {
       case "WAIT_READY":
         return {
           title: "🕹️ 대기중",
-          content: <WaitForReady />,
+          content: <WaitForReady isReady={isReady} />,
           closeButtonLabel: "나가기",
           activeButton: isReady ? (
             <Button

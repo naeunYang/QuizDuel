@@ -70,7 +70,7 @@ const WaitForOpponent = ({
                 <Share className="w-4 h-4" />
               </p>
             </PopoverTrigger>
-            <PopoverContent className="w-63 h-41 flex flex-wrap gap-2 justify-start items-start overflow-hidden">
+            <PopoverContent className="w-63 h-24 flex flex-wrap gap-2 justify-start items-start overflow-hidden">
               <SharePlatform
                 fileName="kakaoTalk.png"
                 platformName="카카오톡"
