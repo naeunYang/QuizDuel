@@ -6,7 +6,7 @@ import BaseModal from "../common/BaseModal";
 import CreateRoom from "./CreateRoom";
 import WaitForOpponent from "./WaitForOpponent";
 import WaitForReady from "./WaitForReady";
-import type { RoomInfo } from "@/types/room-info";
+import type { RoomInfo } from "@/types/roomInfo.types";
 
 import { useEffect, useState, useRef } from "react";
 

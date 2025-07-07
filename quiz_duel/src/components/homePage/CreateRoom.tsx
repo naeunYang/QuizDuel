@@ -3,7 +3,7 @@ import LabelInput from "../common/LabelInput";
 import LabelSelect from "../common/LabelSelect";
 import Badge from "../common/Badge";
 
-import type { RoomInfo } from "@/types/room-info";
+import type { RoomInfo } from "@/types/roomInfo.types";
 import {
   mockDataCount,
   mockDataLevel,
