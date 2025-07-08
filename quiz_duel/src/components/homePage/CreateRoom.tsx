@@ -2,14 +2,11 @@ import "./CreateRoom.css";
 import LabelInput from "../common/LabelInput";
 import LabelSelect from "../common/LabelSelect";
 import Badge from "../common/Badge";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 import type { RoomInfo } from "@/types/roomInfo.types";
-import {
-  mockDataCount,
-  mockDataLevel,
-  mockDataCategory,
-  mockDataTime,
-} from "@/data/mockData";
+import type { RoomOption } from "@/types/room-options.types";
 
 interface Props {
   room: RoomInfo;
@@ -17,6 +14,19 @@ interface Props {
 }
 
 const CreateRoom = ({ room, setRoom }: Props) => {
+  const [roomOptions, setRoomOptions] = useState<RoomOption | null>();
+
+  useEffect(() => {
+    axios
+      .get("/home/room-options")
+      .then((response) => {
+        setRoomOptions(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   // 입력값 변경
   const onChangeInput = (name: string, value: string) => {
     if (name === "category") {
@@ -59,7 +69,9 @@ const CreateRoom = ({ room, setRoom }: Props) => {
           label="문제 개수"
           direction="vertical"
           selectLabel="문제 개수"
-          itemList={mockDataCount}
+          itemList={roomOptions?.counts}
+          getValue={(item) => item.countID}
+          getName={(item) => item.countName}
           width={135}
           name="quizCount"
           content={room.quizCount}
@@ -69,7 +81,9 @@ const CreateRoom = ({ room, setRoom }: Props) => {
           label="난이도"
           direction="vertical"
           selectLabel="난이도"
-          itemList={mockDataLevel}
+          itemList={roomOptions?.levels}
+          getValue={(item) => item.levelID}
+          getName={(item) => item.levelName}
           width={135}
           name="level"
           content={room.level}
@@ -82,7 +96,9 @@ const CreateRoom = ({ room, setRoom }: Props) => {
             label="카테고리"
             direction="vertical"
             selectLabel="카테고리"
-            itemList={mockDataCategory}
+            itemList={roomOptions?.categories}
+            getValue={(item) => item.categoryID}
+            getName={(item) => item.categoryName}
             width={135}
             name="category"
             content={room.category[room.category.length - 1]}
@@ -93,7 +109,9 @@ const CreateRoom = ({ room, setRoom }: Props) => {
               <Badge
                 key={idx}
                 content={
-                  mockDataCategory.find((data) => data.value == item)!.name
+                  roomOptions?.categories.find(
+                    (data) => data.categoryID == item
+                  )!.categoryName
                 }
               />
             ))}
@@ -104,7 +122,9 @@ const CreateRoom = ({ room, setRoom }: Props) => {
           label="제한시간(초)"
           direction="vertical"
           selectLabel="제한 시간(초)"
-          itemList={mockDataTime}
+          itemList={roomOptions?.times}
+          getValue={(item) => item.timeID}
+          getName={(item) => item.timeName}
           width={135}
           name="timeLimit"
           content={room.timeLimit}

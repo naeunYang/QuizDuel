@@ -13,7 +13,7 @@ model category {
 }
 
 model count {
-  countID   String @id @db.VarChar(50)
+  countID   Int    @id
   countName String @db.VarChar(50)
 }
 
@@ -23,6 +23,6 @@ model level {
 }
 
 model time {
-  timeID   String @id @db.VarChar(50)
+  timeID   Int    @id
   timeName String @db.VarChar(50)
 }

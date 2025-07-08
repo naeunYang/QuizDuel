@@ -27,17 +27,23 @@
 // });
 
 import express from "express";
+import cors from "cors";
 import homeRouter from "./routes/home";
 
 const app = express();
-const PORT = 3001;
 
 app.use(express.json()); // JSON 문자열로 들어오면 JSON 객체로 변환하여 req.body에 담아줌
+
+app.use(
+  cors({
+    origin: process.env.CLIENT_ORIGIN, // http://localhost:5173 출처(origin)의 요청만 허용
+  })
+);
 
 app.use("/home", homeRouter); // /home으로 진입하는 모든 요청을 homeRouter에 맡김
 
 // 서버 실행, 포트 열기
-app.listen(PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log("**----------------------------------**");
   console.log("====      Server is On...!!!      ====");
   console.log("**----------------------------------**");

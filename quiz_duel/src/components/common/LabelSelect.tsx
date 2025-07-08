@@ -9,20 +9,20 @@ import {
   SelectValue,
 } from "../shadcn/select";
 
-interface Props<T extends { name: string; value: string }> {
+interface Props<T> {
   label: string;
   direction: "vertical" | "horizontal";
   name: string;
   content?: string;
   width?: number;
   selectLabel?: string;
-  itemList: readonly T[];
+  itemList?: readonly T[];
+  getValue: (item: T) => string | number;
+  getName: (item: T) => string;
   onSelectValueChange: (name: string, value: string) => void;
 }
 
-const LabelSelect = <T extends { name: string; value: string }>(
-  props: Props<T>
-) => {
+const LabelSelect = <T,>(props: Props<T>) => {
   return (
     <div className={`LabelSelect ${props.direction}`}>
       <label className="label_section">{props.label}</label>
@@ -39,13 +39,13 @@ const LabelSelect = <T extends { name: string; value: string }>(
         <SelectContent>
           <SelectGroup className="max-h-50">
             <SelectLabel>{props.selectLabel}</SelectLabel>
-            {props.itemList.map((item) => (
+            {props.itemList?.map((item, idx) => (
               <SelectItem
-                key={item.value}
-                value={item.value}
+                key={idx}
+                value={String(props.getValue(item))}
                 className="!text-[16px]"
               >
-                {item.name}
+                {props.getName(item)}
               </SelectItem>
             ))}
           </SelectGroup>
