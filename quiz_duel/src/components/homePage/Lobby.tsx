@@ -73,9 +73,9 @@ const Lobby = () => {
 
     // 임시) 대기 화면 이동 후, 3초 후
     setModalStep("WAIT_OPPONENT");
-    timer.current = setTimeout(() => {
-      setModalStep("WAIT_READY");
-    }, 3000);
+    // timer.current = setTimeout(() => {
+    //   setModalStep("WAIT_READY");
+    // }, 3000);
 
     console.log(room);
   };
