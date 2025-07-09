@@ -29,6 +29,8 @@
 import express from "express";
 import cors from "cors";
 import homeRouter from "./routes/home";
+import http from "http";
+import WebSocket from "ws";
 
 const app = express();
 
@@ -42,8 +44,29 @@ app.use(
 
 app.use("/home", homeRouter); // /home으로 진입하는 모든 요청을 homeRouter에 맡김
 
-// 서버 실행, 포트 열기
-app.listen(process.env.PORT, () => {
+// http 서버
+const server = http.createServer(app);
+
+// WebSocket 서버, 기존 HTTP 서버에 WebSocket 서버 기능을 붙임
+// -> 일반적인 요청은 Express가 처리, WebSocket 요청은 wss가 가로채서 처리
+const wss = new WebSocket.Server({ server }); // 이 WebSocket 서버는 server 서버에 붙일게
+// => 이 두 개의 서버가 같은 포트에서 동시에 작동 가능
+
+// .on : 이벤트 핸들러를 등록하는 메서드
+wss.on("connection", (ws) => {
+  // connection : 클라이언트가 접속 성공했을 때 발생
+  // ws : 방금 연결된 그 한 클라이언트와 통신할 수 있는 WebSocket 연결 객체
+  console.log("웹소켓 연결됨!");
+
+  // message : 클라이언트가 서버에게 메시지를 보냈을 때 실행되는 이벤트
+  ws.on("message", (msg) => {
+    console.log("받은 메시지:", msg.toString());
+    ws.send("서버가 응답했어요!"); // 서버가 클라이언트에게 메시지를 보냄
+  });
+});
+
+// http + websocket 서버 실행, 포트 열기
+server.listen(process.env.PORT, () => {
   console.log("**----------------------------------**");
   console.log("====      Server is On...!!!      ====");
   console.log("**----------------------------------**");

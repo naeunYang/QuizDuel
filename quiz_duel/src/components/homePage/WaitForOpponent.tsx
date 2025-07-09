@@ -19,6 +19,13 @@ const WaitForOpponent = ({
   const [, copy] = useCopyToClipboard();
   const [isCopied, setIsCopied] = useState(false);
 
+  const socket = new WebSocket("ws://localhost:3001");
+
+  socket.onopen = () => {
+    console.log("웹소켓 연결 완료!");
+    socket.send("안녕!");
+  };
+
   const onCopyBtnClick = () => {
     copy(roomCode);
     setIsCopied(true);
