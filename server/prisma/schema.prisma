@@ -18,8 +18,9 @@ model count {
 }
 
 model level {
-  levelID   String @id @db.VarChar(50)
   levelName String @db.VarChar(50)
+  seq       Int    @id
+  levelID   String @db.VarChar(50)
 }
 
 model time {

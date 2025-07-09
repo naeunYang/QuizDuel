@@ -74,7 +74,7 @@ const CreateRoom = ({ room, setRoom }: Props) => {
           getName={(item) => item.countName}
           width={135}
           name="quizCount"
-          content={room.quizCount}
+          content={String(room.quizCount)}
           onSelectValueChange={onChangeInput}
         />
         <LabelSelect
@@ -127,7 +127,7 @@ const CreateRoom = ({ room, setRoom }: Props) => {
           getName={(item) => item.timeName}
           width={135}
           name="timeLimit"
-          content={room.timeLimit}
+          content={String(room.timeLimit)}
           onSelectValueChange={onChangeInput}
         />
       </div>

@@ -9,6 +9,7 @@ export interface Count {
 }
 
 export interface Level {
+  seq: number;
   levelID: string;
   levelName: string;
 }

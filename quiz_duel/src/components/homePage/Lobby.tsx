@@ -14,10 +14,10 @@ import { useEffect, useState, useRef } from "react";
 const defaultRoomData: RoomInfo = {
   code: "",
   title: "진 사람 떡볶이 쏘기😎",
-  quizCount: "5",
+  quizCount: 5,
   level: "high",
   category: [],
-  timeLimit: "15",
+  timeLimit: 15,
 };
 
 // 초기 팝업창
@@ -58,7 +58,7 @@ const Lobby = () => {
       setRoom((prev) => {
         return {
           ...prev,
-          ["title"]: "즐거운 퀴즈 대전",
+          ["title"]: defaultRoomData.title,
         };
       });
     }
@@ -73,11 +73,9 @@ const Lobby = () => {
 
     // 임시) 대기 화면 이동 후, 3초 후
     setModalStep("WAIT_OPPONENT");
-    // timer.current = setTimeout(() => {
-    //   setModalStep("WAIT_READY");
-    // }, 3000);
-
-    console.log(room);
+    timer.current = setTimeout(() => {
+      setModalStep("WAIT_READY");
+    }, 3000);
   };
 
   // 대기 취소 버튼 클릭
