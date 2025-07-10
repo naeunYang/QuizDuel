@@ -7,7 +7,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "../shadcn/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "../shadcn/popover";
 import SharePlatform from "./SharePlatform";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const WaitForOpponent = ({
   roomTitle,
@@ -19,12 +19,19 @@ const WaitForOpponent = ({
   const [, copy] = useCopyToClipboard();
   const [isCopied, setIsCopied] = useState(false);
 
-  const socket = new WebSocket("ws://localhost:3001");
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:3001");
 
-  socket.onopen = () => {
-    console.log("웹소켓 연결 완료!");
-    socket.send("안녕!");
-  };
+    ws.onopen = () => {
+      ws.send(
+        JSON.stringify({
+          // JSON.stringify : 객체 -> String으로 변환, 메시지는 문자열만 보낼 수 있기 때문
+          type: "join",
+          userId: crypto.randomUUID(),
+        })
+      );
+    };
+  }, []);
 
   const onCopyBtnClick = () => {
     copy(roomCode);

@@ -56,12 +56,23 @@ const wss = new WebSocket.Server({ server }); // 이 WebSocket 서버는 server 
 wss.on("connection", (ws) => {
   // connection : 클라이언트가 접속 성공했을 때 발생
   // ws : 방금 연결된 그 한 클라이언트와 통신할 수 있는 WebSocket 연결 객체
-  console.log("웹소켓 연결됨!");
+  console.log("====   WebSocket is Connected...!!!   ====");
 
+  const users = [];
   // message : 클라이언트가 서버에게 메시지를 보냈을 때 실행되는 이벤트
   ws.on("message", (msg) => {
-    console.log("받은 메시지:", msg.toString());
-    ws.send("서버가 응답했어요!"); // 서버가 클라이언트에게 메시지를 보냄
+    const data = JSON.parse(msg.toString()); // JSON.parse : String -> 객체, ws 서버는 기본적으로 모든 수신 메시지를 Buffer로 처리하 때문에 toString()으로 문자열 변환 처리를 해줘야 함
+
+    if (data.type === "join") {
+      const { userId } = data;
+
+      users.push(userId);
+      console.log(users.length);
+    }
+  });
+
+  ws.on("close", () => {
+    console.log("====   WebSocket is Disconnected...!!!   ====");
   });
 });
 
