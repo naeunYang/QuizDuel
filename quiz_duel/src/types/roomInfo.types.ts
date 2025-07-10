@@ -5,4 +5,5 @@ export interface RoomInfo {
   level: string;
   category: string[];
   timeLimit: number;
+  users: string[];
 }

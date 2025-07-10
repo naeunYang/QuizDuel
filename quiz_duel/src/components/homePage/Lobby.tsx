@@ -18,6 +18,7 @@ const defaultRoomData: RoomInfo = {
   level: "high",
   category: [],
   timeLimit: 15,
+  users: [],
 };
 
 // 초기 팝업창
@@ -107,9 +108,7 @@ const Lobby = () => {
         };
       case "WAIT_OPPONENT":
         return {
-          content: (
-            <WaitForOpponent roomTitle={room.title} roomCode={room.code} />
-          ),
+          content: <WaitForOpponent room={room} />,
           closeButtonLabel: "",
           activeButton: (
             <Button

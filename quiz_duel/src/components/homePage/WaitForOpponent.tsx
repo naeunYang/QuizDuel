@@ -6,21 +6,16 @@ import { useCopyToClipboard } from "@uidotdev/usehooks";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../shadcn/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "../shadcn/popover";
 import SharePlatform from "./SharePlatform";
+import type { RoomInfo } from "@/types/roomInfo.types";
 
 import { useState, useEffect } from "react";
 
-const WaitForOpponent = ({
-  roomTitle,
-  roomCode,
-}: {
-  roomTitle: string;
-  roomCode: string;
-}) => {
+const WaitForOpponent = ({ room }: { room: RoomInfo }) => {
   const [, copy] = useCopyToClipboard();
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3001");
+    const ws = new WebSocket("ws://localhost:3001"); // 소켓 연결 요청
 
     ws.onopen = () => {
       ws.send(
@@ -28,13 +23,23 @@ const WaitForOpponent = ({
           // JSON.stringify : 객체 -> String으로 변환, 메시지는 문자열만 보낼 수 있기 때문
           type: "join",
           userId: crypto.randomUUID(),
+          roomCode: room.code,
         })
       );
+    };
+
+    ws.onmessage = (msg) => {
+      const data = JSON.parse(msg.data);
+      if (data.type === "ready") {
+        if (data.ready) {
+          console.log("모두 접속 완료");
+        }
+      }
     };
   }, []);
 
   const onCopyBtnClick = () => {
-    copy(roomCode);
+    copy(room.code);
     setIsCopied(true);
 
     setTimeout(() => {
@@ -46,8 +51,8 @@ const WaitForOpponent = ({
     window.Kakao.Share.sendCustom({
       templateId: Number(import.meta.env.VITE_KAKAO_SHARE_TEMPLETE_KEY),
       templateArgs: {
-        TITLE: String(roomTitle),
-        CODE: String(roomCode),
+        TITLE: String(room.title),
+        CODE: String(room.code),
       },
     });
   };
@@ -59,7 +64,7 @@ const WaitForOpponent = ({
       <Card className="rounded-md bg-[#F5F5F5] w-70 h-25 pt-4">
         <CardContent>
           <p className="cardcontent_section copy">
-            {roomCode}&nbsp;
+            {room.code}&nbsp;
             <Tooltip>
               <TooltipTrigger>
                 {isCopied ? (
