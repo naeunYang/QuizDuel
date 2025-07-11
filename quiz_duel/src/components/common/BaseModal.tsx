@@ -21,13 +21,9 @@ interface Props {
 }
 
 const BaseModal = ({ height = 450, ...props }: Props) => {
-  const onOpenChange = () => {
-    props.onOpenChange((isOpen) => !isOpen);
-  };
-
   return (
     <div>
-      <Dialog open={props.open} onOpenChange={onOpenChange}>
+      <Dialog open={props.open}>
         <DialogContent
           className="w-90 flex flex-col justify-between gap-0 [&>button]:hidden"
           style={{ width: props.width, height: height }}

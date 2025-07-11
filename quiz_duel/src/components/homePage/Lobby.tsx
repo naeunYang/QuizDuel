@@ -7,8 +7,9 @@ import CreateRoom from "./CreateRoom";
 import WaitForOpponent from "./WaitForOpponent";
 import WaitForReady from "./WaitForReady";
 import type { RoomInfo } from "@/types/roomInfo.types";
+import webSocketConn from "@/lib/webSocketConn";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 // 방 초기값
 const defaultRoomData: RoomInfo = {
@@ -18,10 +19,9 @@ const defaultRoomData: RoomInfo = {
   level: "high",
   category: [],
   timeLimit: 15,
-  users: [],
 };
 
-// 초기 팝업창
+// 팝업창 초기값
 const defaultPopup: "CREATE" | "WAIT_OPPONENT" | "WAIT_READY" = "CREATE";
 
 const Lobby = () => {
@@ -30,19 +30,29 @@ const Lobby = () => {
     "CREATE" | "WAIT_OPPONENT" | "WAIT_READY"
   >(defaultPopup);
   const [room, setRoom] = useState<RoomInfo>(defaultRoomData);
-  const [isReady, setIsReady] = useState(false);
-  const timer = useRef<NodeJS.Timeout | null>(null);
+  const [isReady, setIsReady] = useState(false); // 준비 상태
+  const [isConnComplete, setIsConnComplete] = useState(false); // 소켓 연결 상태
+  const [codeInput, setCodeInput] = useState(""); // 코드 입력 value 상태
 
   // 팝업창 닫히면 값 초기화
   useEffect(() => {
     if (!isOpenModal) {
       setRoom(defaultRoomData);
       setModalStep(defaultPopup);
-      if (timer.current) clearTimeout(timer.current);
     }
   }, [isOpenModal]);
 
-  // 생성 버튼 클릭
+  useEffect(() => {
+    // 커넥션 완료되면 WAIT_READY창으로 이동
+    if (isConnComplete) {
+      setModalStep("WAIT_READY");
+      setOpenModal(true);
+    }
+  }, [isConnComplete]);
+
+  // #region 이벤트 핸들러
+
+  // CREATE - 생성 버튼 클릭
   const onCreateBtnClick = () => {
     // 카테고리 선택 X 시 random값으로 설정
     if (room.category.length === 0) {
@@ -72,24 +82,39 @@ const Lobby = () => {
       };
     });
 
-    // 임시) 대기 화면 이동 후, 3초 후
     setModalStep("WAIT_OPPONENT");
-    // timer.current = setTimeout(() => {
-    //   setModalStep("WAIT_READY");
-    // }, 3000);
   };
 
-  // 대기 취소 버튼 클릭
+  // WAIT_OPPONENT - 대기 취소 버튼 클릭
   const onWaitCancelBtnClick = () => {
     setOpenModal(false);
   };
 
-  // 준비 버튼 클릭
+  // WAIT_READY - 준비 버튼 클릭
   const onReadyBtnClick = () => {
     setIsReady(!isReady); // 준비 상태 토글
   };
 
-  // 팝업창 content
+  // 코드 입력 input
+  const onCodeInputValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCodeInput(e.target.value);
+  };
+
+  // 코드 입력 input
+  const onCodeInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      onPartiBtnClick();
+    }
+  };
+
+  // 참가하기 버튼 클릭
+  const onPartiBtnClick = () => {
+    webSocketConn(codeInput, setIsConnComplete);
+  };
+
+  //#endregion
+
+  // 팝업창 content 설정
   const getModalContent = () => {
     switch (modalStep) {
       case "CREATE":
@@ -108,7 +133,12 @@ const Lobby = () => {
         };
       case "WAIT_OPPONENT":
         return {
-          content: <WaitForOpponent room={room} />,
+          content: (
+            <WaitForOpponent
+              room={room}
+              setIsConnComplete={setIsConnComplete}
+            />
+          ),
           closeButtonLabel: "",
           activeButton: (
             <Button
@@ -159,6 +189,9 @@ const Lobby = () => {
             <span className="divider-text">또는</span>
           </div>
           <Input
+            value={codeInput}
+            onChange={onCodeInputValueChange}
+            onKeyDown={onCodeInputKeyDown}
             className="!text-[18px] placeholder:text-[#AAAAAA] placeholder:text-center focus:border-none p-5.5 "
             placeholder={"코드 입력 (예: ABC123)"}
           />
@@ -167,7 +200,7 @@ const Lobby = () => {
           <Button
             type="PARTICIPATE"
             text="🎉참가하기"
-            onButtonClick={() => {}}
+            onButtonClick={onPartiBtnClick}
           />
         </CardFooter>
       </Card>

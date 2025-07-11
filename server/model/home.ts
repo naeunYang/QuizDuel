@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import type { RoomOption } from "./room-options.types";
+import type { RoomOption } from "../types/room-options.types";
 
 const prisma = new PrismaClient();
 

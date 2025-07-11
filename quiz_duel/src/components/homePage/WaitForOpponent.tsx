@@ -7,39 +7,26 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "../shadcn/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "../shadcn/popover";
 import SharePlatform from "./SharePlatform";
 import type { RoomInfo } from "@/types/roomInfo.types";
+import webSocketConn from "@/lib/webSocketConn";
 
 import { useState, useEffect } from "react";
 
-const WaitForOpponent = ({ room }: { room: RoomInfo }) => {
+interface Props {
+  room: RoomInfo;
+  setIsConnComplete: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const WaitForOpponent = (props: Props) => {
   const [, copy] = useCopyToClipboard();
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3001"); // 소켓 연결 요청
-
-    ws.onopen = () => {
-      ws.send(
-        JSON.stringify({
-          // JSON.stringify : 객체 -> String으로 변환, 메시지는 문자열만 보낼 수 있기 때문
-          type: "join",
-          userId: crypto.randomUUID(),
-          roomCode: room.code,
-        })
-      );
-    };
-
-    ws.onmessage = (msg) => {
-      const data = JSON.parse(msg.data);
-      if (data.type === "ready") {
-        if (data.ready) {
-          console.log("모두 접속 완료");
-        }
-      }
-    };
+    // 웹 소켓 연결
+    webSocketConn(props.room.code, props.setIsConnComplete);
   }, []);
 
   const onCopyBtnClick = () => {
-    copy(room.code);
+    copy(props.room.code);
     setIsCopied(true);
 
     setTimeout(() => {
@@ -51,8 +38,8 @@ const WaitForOpponent = ({ room }: { room: RoomInfo }) => {
     window.Kakao.Share.sendCustom({
       templateId: Number(import.meta.env.VITE_KAKAO_SHARE_TEMPLETE_KEY),
       templateArgs: {
-        TITLE: String(room.title),
-        CODE: String(room.code),
+        TITLE: String(props.room.title),
+        CODE: String(props.room.code),
       },
     });
   };
@@ -64,7 +51,7 @@ const WaitForOpponent = ({ room }: { room: RoomInfo }) => {
       <Card className="rounded-md bg-[#F5F5F5] w-70 h-25 pt-4">
         <CardContent>
           <p className="cardcontent_section copy">
-            {room.code}&nbsp;
+            {props.room.code}&nbsp;
             <Tooltip>
               <TooltipTrigger>
                 {isCopied ? (
