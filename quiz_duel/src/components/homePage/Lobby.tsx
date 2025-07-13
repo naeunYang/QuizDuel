@@ -7,9 +7,10 @@ import CreateRoom from "./CreateRoom";
 import WaitForOpponent from "./WaitForOpponent";
 import WaitForReady from "./WaitForReady";
 import type { RoomInfo } from "@/types/roomInfo.types";
-import webSocketConn from "@/lib/webSocketConn";
+import { createRoom, joinRoom } from "@/lib/webSocketConn";
+import LoadingModal from "../common/LoadingModal";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 // 방 초기값
 const defaultRoomData: RoomInfo = {
@@ -24,6 +25,31 @@ const defaultRoomData: RoomInfo = {
 // 팝업창 초기값
 const defaultPopup: "CREATE" | "WAIT_OPPONENT" | "WAIT_READY" = "CREATE";
 
+// 소켓 연결(방 생성 시, 참가 시)
+const socketUrl = "ws://localhost:3001";
+function connectWebSocket(
+  wsRef: React.RefObject<WebSocket | null>,
+  onConnected: () => void
+) {
+  // wsRef.current = new WebSocket("ws://localhost:3001"); 으로 연결을 시도하는 순간 onopen이벤트가 동작함
+  // 따라서 WebSocket 생성 직후 즉시 등록해야 한다.
+
+  if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
+    wsRef.current = new WebSocket(socketUrl); // 소켓 연결 요청
+
+    wsRef.current.onopen = () => {
+      onConnected();
+    };
+  } else if (wsRef.current.readyState === WebSocket.CONNECTING) {
+    // 연결 중일때는 onopen 이벤트를 기다림
+    wsRef.current.onopen = () => {
+      onConnected();
+    };
+  } else if (wsRef.current.readyState === WebSocket.OPEN) {
+    onConnected();
+  }
+}
+
 const Lobby = () => {
   const [isOpenModal, setOpenModal] = useState(false);
   const [modalStep, setModalStep] = useState<
@@ -33,6 +59,14 @@ const Lobby = () => {
   const [isReady, setIsReady] = useState(false); // 준비 상태
   const [isConnComplete, setIsConnComplete] = useState(false); // 소켓 연결 상태
   const [codeInput, setCodeInput] = useState(""); // 코드 입력 value 상태
+  const wsRef = useRef<WebSocket | null>(null); // 소켓 객체
+  const [socketErrorMsg, setSocketErrorMsg] = useState("");
+
+  useEffect(() => {
+    return () => {
+      wsRef.current?.close();
+    };
+  }, []);
 
   // 팝업창 닫히면 값 초기화
   useEffect(() => {
@@ -74,12 +108,9 @@ const Lobby = () => {
       });
     }
 
-    // 방 생성 후 코드 생성
-    setRoom((prev) => {
-      return {
-        ...prev,
-        ["code"]: "YNE123",
-      };
+    // 방 생성 및 입장
+    connectWebSocket(wsRef, () => {
+      createRoom(wsRef.current!, setRoom, setIsConnComplete);
     });
 
     setModalStep("WAIT_OPPONENT");
@@ -109,7 +140,9 @@ const Lobby = () => {
 
   // 참가하기 버튼 클릭
   const onPartiBtnClick = () => {
-    webSocketConn(codeInput, setIsConnComplete);
+    connectWebSocket(wsRef, () => {
+      joinRoom(wsRef.current!, codeInput, setIsConnComplete, setSocketErrorMsg);
+    });
   };
 
   //#endregion
@@ -216,6 +249,10 @@ const Lobby = () => {
           height={modalProps.height}
           width={modalProps.width}
         />
+      )}
+
+      {socketErrorMsg && (
+        <LoadingModal open={true} content={socketErrorMsg} type={"ERROR"} />
       )}
     </div>
   );

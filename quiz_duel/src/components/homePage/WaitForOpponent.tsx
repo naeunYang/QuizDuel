@@ -7,9 +7,8 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "../shadcn/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "../shadcn/popover";
 import SharePlatform from "./SharePlatform";
 import type { RoomInfo } from "@/types/roomInfo.types";
-import webSocketConn from "@/lib/webSocketConn";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface Props {
   room: RoomInfo;
@@ -19,11 +18,6 @@ interface Props {
 const WaitForOpponent = (props: Props) => {
   const [, copy] = useCopyToClipboard();
   const [isCopied, setIsCopied] = useState(false);
-
-  useEffect(() => {
-    // 웹 소켓 연결
-    webSocketConn(props.room.code, props.setIsConnComplete);
-  }, []);
 
   const onCopyBtnClick = () => {
     copy(props.room.code);

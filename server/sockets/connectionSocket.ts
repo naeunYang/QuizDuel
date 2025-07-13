@@ -22,30 +22,59 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
     ws.on("message", (msg) => {
       const data = JSON.parse(msg.toString()); // JSON.parse : String -> 객체, ws 서버는 기본적으로 모든 수신 메시지를 Buffer로 처리하기 때문에 toString()으로 문자열 변환 처리를 해줘야 함
 
-      if (data.type === "join") {
+      if (data.type == "create") {
+        const roomCode = "YNE123"; // 랜덤 생성, 디비 중복 확인 해야함
+        rooms.set(roomCode, { users: [] });
+
+        ws.send(
+          JSON.stringify({
+            type: "success",
+            message: "방을 성공적으로 생성했습니다.",
+            roomCode: roomCode,
+          })
+        );
+      } else if (data.type === "join") {
         const { userId, roomCode } = data;
 
+        // 해당하는 방이 없을 경우
         if (!rooms.has(roomCode)) {
-          rooms.set(roomCode, { users: [] });
-        }
+          ws.send(
+            JSON.stringify({
+              type: "room_not_found",
+              message: "방을 찾을 수 없습니다.",
+            })
+          );
+          ws.close();
+          return;
+        } else {
+          const room = rooms.get(roomCode); // 해당 room 객체 전체를 가져옴
 
-        const room = rooms.get(roomCode); // 해당 room 객체 전체를 가져옴
-        room!.users.push({ userId, socket: ws });
-
-        console.log(`[${roomCode}] 현재 접속 유저:`, room);
-
-        if (room!.users.length == 2) {
-          console.log(`[${roomCode}] 모두 접속 완료`);
-
-          room!.users.forEach(({ socket }: { socket: WebSocket }) => {
-            socket.send(
+          if (room!.users.length >= 2) {
+            ws.send(
               JSON.stringify({
-                type: "ready",
-                connCompleted: true,
+                type: "room_full",
+                message: "방이 가득 찼습니다.",
               })
             );
-          });
+            ws.close();
+            return;
+          } else {
+            room!.users.push({ userId, socket: ws });
+            console.log(room!.users);
+
+            if (room!.users.length == 2) {
+              room!.users.forEach(({ socket }: { socket: WebSocket }) => {
+                socket.send(
+                  JSON.stringify({
+                    type: "ready",
+                    connCompleted: true,
+                  })
+                );
+              });
+            }
+          }
         }
+      } else if (data.type === "delete") {
       }
     });
 
