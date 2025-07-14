@@ -53,11 +53,15 @@ export function joinRoom(
         }
         return;
       case "room_not_found":
-        setSocketErrorMsg && setSocketErrorMsg(data.message);
+        if (setSocketErrorMsg) {
+          setSocketErrorMsg(data.message);
+        }
         console.log(data.message);
         return;
       case "room_full":
-        setSocketErrorMsg && setSocketErrorMsg(data.message);
+        if (setSocketErrorMsg) {
+          setSocketErrorMsg(data.message);
+        }
         console.log(data.message);
         return;
       default:

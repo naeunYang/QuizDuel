@@ -12,12 +12,13 @@ interface Props {
   open: boolean;
   content: string;
   type: "LOADING" | "ERROR";
+  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const LoadingModal = (props: Props) => {
   return (
     <div>
-      <Dialog open={props.open}>
+      <Dialog open={props.open} onOpenChange={props.onOpenChange}>
         <DialogContent className="bg-[#E8E8E8] w-80 h-35">
           <DialogTitle className="LoadingModal">
             {props.type === "LOADING" && (

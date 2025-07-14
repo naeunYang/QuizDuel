@@ -11,6 +11,7 @@ import { createRoom, joinRoom } from "@/lib/webSocketConn";
 import LoadingModal from "../common/LoadingModal";
 
 import { useEffect, useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
 
 // 방 초기값
 const defaultRoomData: RoomInfo = {
@@ -29,7 +30,8 @@ const defaultPopup: "CREATE" | "WAIT_OPPONENT" | "WAIT_READY" = "CREATE";
 const socketUrl = "ws://localhost:3001";
 function connectWebSocket(
   wsRef: React.RefObject<WebSocket | null>,
-  onConnected: () => void
+  onConnected: () => void,
+  setSocketErrorMsg?: React.Dispatch<React.SetStateAction<string>>
 ) {
   // wsRef.current = new WebSocket("ws://localhost:3001"); 으로 연결을 시도하는 순간 onopen이벤트가 동작함
   // 따라서 WebSocket 생성 직후 즉시 등록해야 한다.
@@ -39,6 +41,13 @@ function connectWebSocket(
 
     wsRef.current.onopen = () => {
       onConnected();
+    };
+
+    wsRef.current.onerror = (e) => {
+      console.error("WebSocket error:", e);
+      if (setSocketErrorMsg) {
+        setSocketErrorMsg("서버 연결 중 오류가 발생했습니다.");
+      }
     };
   } else if (wsRef.current.readyState === WebSocket.CONNECTING) {
     // 연결 중일때는 onopen 이벤트를 기다림
@@ -61,12 +70,45 @@ const Lobby = () => {
   const [codeInput, setCodeInput] = useState(""); // 코드 입력 value 상태
   const wsRef = useRef<WebSocket | null>(null); // 소켓 객체
   const [socketErrorMsg, setSocketErrorMsg] = useState("");
+  const [isOpenErrMsg, setIsOpenErrMsg] = useState(false);
 
   useEffect(() => {
+    // window.location.search : 현재 url의 쿼리 스트링 부분 가져오기
+    // new URLSearchParams() : key=value 구조로 파싱
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("code")) {
+      const roomCode = params.get("code");
+
+      connectWebSocket(
+        wsRef,
+        () => {
+          joinRoom(
+            wsRef.current!,
+            roomCode!,
+            setIsConnComplete,
+            setSocketErrorMsg
+          );
+        },
+        setSocketErrorMsg
+      );
+    }
+
     return () => {
       wsRef.current?.close();
     };
   }, []);
+
+  useEffect(() => {
+    if (socketErrorMsg) {
+      setIsOpenErrMsg(true);
+    }
+  }, [socketErrorMsg]);
+
+  useEffect(() => {
+    if (!isOpenErrMsg) {
+      setSocketErrorMsg("");
+    }
+  }, [isOpenErrMsg]);
 
   // 팝업창 닫히면 값 초기화
   useEffect(() => {
@@ -109,9 +151,13 @@ const Lobby = () => {
     }
 
     // 방 생성 및 입장
-    connectWebSocket(wsRef, () => {
-      createRoom(wsRef.current!, setRoom, setIsConnComplete);
-    });
+    connectWebSocket(
+      wsRef,
+      () => {
+        createRoom(wsRef.current!, setRoom, setIsConnComplete);
+      },
+      setSocketErrorMsg
+    );
 
     setModalStep("WAIT_OPPONENT");
   };
@@ -140,9 +186,23 @@ const Lobby = () => {
 
   // 참가하기 버튼 클릭
   const onPartiBtnClick = () => {
-    connectWebSocket(wsRef, () => {
-      joinRoom(wsRef.current!, codeInput, setIsConnComplete, setSocketErrorMsg);
-    });
+    if (!codeInput) {
+      setSocketErrorMsg("코드를 입력하세요!");
+      return;
+    }
+
+    connectWebSocket(
+      wsRef,
+      () => {
+        joinRoom(
+          wsRef.current!,
+          codeInput,
+          setIsConnComplete,
+          setSocketErrorMsg
+        );
+      },
+      setSocketErrorMsg
+    );
   };
 
   //#endregion
@@ -252,7 +312,12 @@ const Lobby = () => {
       )}
 
       {socketErrorMsg && (
-        <LoadingModal open={true} content={socketErrorMsg} type={"ERROR"} />
+        <LoadingModal
+          open={isOpenErrMsg}
+          content={socketErrorMsg}
+          type={"ERROR"}
+          onOpenChange={setIsOpenErrMsg}
+        />
       )}
     </div>
   );
