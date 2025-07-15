@@ -15,12 +15,20 @@ interface Props {
   title?: string;
   content: React.ReactNode;
   closeButtonLabel: string;
+  onCloseButtonClick?: () => void;
   activeButton: React.ReactNode;
   width?: number;
   height?: number;
 }
 
 const BaseModal = ({ height = 450, ...props }: Props) => {
+  const onCloseButtonClick = () => {
+    props.onOpenChange(false);
+    if (props.onCloseButtonClick) {
+      props.onCloseButtonClick();
+    }
+  };
+
   return (
     <div>
       <Dialog open={props.open}>
@@ -43,9 +51,7 @@ const BaseModal = ({ height = 450, ...props }: Props) => {
               <Button
                 text={props.closeButtonLabel}
                 type="DEFAULT"
-                onButtonClick={() => {
-                  props.onOpenChange(false);
-                }}
+                onButtonClick={onCloseButtonClick}
               />
             ) : (
               <div></div>

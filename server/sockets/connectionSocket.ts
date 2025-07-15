@@ -1,4 +1,5 @@
 import WebSocket from "ws";
+import type { ExtendedWebSocket } from "../types/extended-websocket.type";
 
 type RoomInfo = {
   users: {
@@ -12,7 +13,7 @@ const rooms = new Map<string, RoomInfo>();
 
 export default function handleWebSocketConnection(wss: WebSocket.Server) {
   // .on : 이벤트 핸들러를 등록하는 메서드
-  wss.on("connection", (ws) => {
+  wss.on("connection", (ws: ExtendedWebSocket) => {
     // connection : 클라이언트가 접속 성공했을 때 발생
     // ws : 방금 연결된 그 한 클라이언트와 통신할 수 있는 WebSocket 연결 객체
 
@@ -35,6 +36,8 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
         );
       } else if (data.type === "join") {
         const { userId, roomCode } = data;
+        ws.userId = userId;
+        ws.roomCode = roomCode;
 
         // 해당하는 방이 없을 경우
         if (!rooms.has(roomCode)) {
@@ -47,7 +50,7 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
           ws.close();
           return;
         } else {
-          const room = rooms.get(roomCode); // 해당 room 객체 전체를 가져옴
+          const room = rooms.get(roomCode);
 
           if (room!.users.length >= 2) {
             ws.send(
@@ -60,7 +63,7 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
             return;
           } else {
             room!.users.push({ userId, socket: ws });
-            console.log(room!.users);
+            console.log(`[${roomCode}] 현재 접속 유저:`, room);
 
             if (room!.users.length == 2) {
               room!.users.forEach(({ socket }: { socket: WebSocket }) => {
@@ -74,12 +77,27 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
             }
           }
         }
-      } else if (data.type === "delete") {
       }
     });
 
     ws.on("close", () => {
       console.log("====   WebSocket is Disconnected...!!!   ====");
+
+      if (ws.roomCode) {
+        const room = rooms.get(ws.roomCode);
+
+        if (room) {
+          room.users = room.users.filter(
+            (user) => user["userId"] !== ws.userId
+          );
+
+          if (!room.users.length) {
+            console.log(`방이 비었습니다. [${ws.roomCode}] 방이 삭제됩니다.`);
+            rooms.delete(ws.roomCode);
+          }
+        }
+      }
+      console.log(rooms);
     });
   });
 }

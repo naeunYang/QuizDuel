@@ -38,7 +38,7 @@ export function joinRoom(
   ws.send(
     JSON.stringify({
       type: "join",
-      userId: crypto.randomUUID(), // user 식별자 생성 후 전달(userId)
+      userId: crypto.randomUUID(),
       roomCode: roodCode,
     })
   );

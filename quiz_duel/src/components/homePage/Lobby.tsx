@@ -11,7 +11,6 @@ import { createRoom, joinRoom } from "@/lib/webSocketConn";
 import LoadingModal from "../common/LoadingModal";
 
 import { useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
 
 // 방 초기값
 const defaultRoomData: RoomInfo = {
@@ -76,8 +75,8 @@ const Lobby = () => {
     // window.location.search : 현재 url의 쿼리 스트링 부분 가져오기
     // new URLSearchParams() : key=value 구조로 파싱
     const params = new URLSearchParams(window.location.search);
-    if (params.get("code")) {
-      const roomCode = params.get("code");
+    if (params.get("kakaoCode")) {
+      const roomCode = params.get("kakaoCode");
 
       connectWebSocket(
         wsRef,
@@ -165,6 +164,11 @@ const Lobby = () => {
   // WAIT_OPPONENT - 대기 취소 버튼 클릭
   const onWaitCancelBtnClick = () => {
     setOpenModal(false);
+
+    // 소켓 연결 해제
+    if (wsRef.current && wsRef.current.OPEN) {
+      wsRef.current.close();
+    }
   };
 
   // WAIT_READY - 준비 버튼 클릭
@@ -247,6 +251,11 @@ const Lobby = () => {
           title: "🕹️ 대기중",
           content: <WaitForReady isReady={isReady} />,
           closeButtonLabel: "나가기",
+          onCloseButtonClick: () => {
+            if (wsRef.current && wsRef.current.OPEN) {
+              wsRef.current.close();
+            }
+          },
           activeButton: isReady ? (
             <Button
               text="준비취소"
@@ -305,6 +314,7 @@ const Lobby = () => {
           title={modalProps.title}
           content={modalProps.content}
           closeButtonLabel={modalProps.closeButtonLabel}
+          onCloseButtonClick={modalProps.onCloseButtonClick}
           activeButton={modalProps.activeButton}
           height={modalProps.height}
           width={modalProps.width}
