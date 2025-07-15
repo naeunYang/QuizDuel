@@ -75,9 +75,9 @@ const Lobby = () => {
     // window.location.search : 현재 url의 쿼리 스트링 부분 가져오기
     // new URLSearchParams() : key=value 구조로 파싱
     const params = new URLSearchParams(window.location.search);
-    if (params.get("kakaoCode")) {
-      const roomCode = params.get("kakaoCode");
+    const roomCode = params.get("kakaoCode");
 
+    if (roomCode) {
       connectWebSocket(
         wsRef,
         () => {
@@ -90,6 +90,10 @@ const Lobby = () => {
         },
         setSocketErrorMsg
       );
+
+      window.history.replaceState({}, "", window.location.origin);
+      // window.history : 사용자의 방문 기록에 접근하는 객체
+      // .replaceState() : history 스택의 마지막 항목(현재 방문 기록)을 새 정보로 교체, 페이지를 새로고침하지 않고 주소만 바꾼다.
     }
 
     return () => {

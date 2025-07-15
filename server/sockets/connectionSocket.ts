@@ -1,5 +1,7 @@
 import WebSocket from "ws";
 import type { ExtendedWebSocket } from "../types/extended-websocket.type";
+import { generateRoomCode } from "../util/generateRoomCode";
+import { getRedisClient } from "../util/redisClient";
 
 type RoomInfo = {
   users: {
@@ -7,6 +9,20 @@ type RoomInfo = {
     socket: WebSocket;
   }[];
 };
+
+async function saveRoom() {
+  const redis = await getRedisClient();
+
+  await redis.set("key1", "value1");
+}
+
+async function getRoom() {
+  const redis = await getRedisClient();
+
+  const result = await redis.get("key1");
+
+  return result;
+}
 
 // 현재 모든 방의 상태를 저장하는 공간 -> redis에 저장 예정
 const rooms = new Map<string, RoomInfo>();
@@ -24,7 +40,7 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
       const data = JSON.parse(msg.toString()); // JSON.parse : String -> 객체, ws 서버는 기본적으로 모든 수신 메시지를 Buffer로 처리하기 때문에 toString()으로 문자열 변환 처리를 해줘야 함
 
       if (data.type == "create") {
-        const roomCode = "YNE123"; // 랜덤 생성, 디비 중복 확인 해야함
+        const roomCode = generateRoomCode(); // 랜덤 생성, 디비 중복 확인 해야함
         rooms.set(roomCode, { users: [] });
 
         ws.send(
