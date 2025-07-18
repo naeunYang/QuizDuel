@@ -4,28 +4,65 @@ import { generateRoomCode } from "../util/generateRoomCode";
 import { getRedisClient } from "../util/redisClient";
 
 type RoomInfo = {
-  users: {
-    userId: string;
-    socket: WebSocket;
-  }[];
+  roomCode: string;
+  users: string[];
 };
 
-async function saveRoom() {
-  const redis = await getRedisClient();
-
-  await redis.set("key1", "value1");
+async function saveRoom(roomInfo: RoomInfo) {
+  try {
+    const redis = await getRedisClient();
+    await redis.hSet(roomInfo.roomCode, {
+      users: JSON.stringify(roomInfo.users),
+    });
+  } catch (err) {
+    console.log("saveRoom 실패: ", err);
+  }
 }
 
-async function getRoom() {
-  const redis = await getRedisClient();
+async function isRoomExists(roomCode: string) {
+  try {
+    const redis = await getRedisClient();
+    const isExists = await redis.exists(roomCode);
 
-  const result = await redis.get("key1");
+    if (isExists) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.log("isRoomExists 실패: ", err);
+  }
+}
 
-  return result;
+async function getRoom(roomCode: string) {
+  try {
+    const redis = await getRedisClient();
+    const result = await redis.hGet(roomCode, "users");
+
+    let users;
+
+    if (result) {
+      users = JSON.parse(result);
+    }
+
+    return users;
+  } catch (err) {
+    console.log("getRoom 실패: ", err);
+  }
+}
+
+async function deleteRoom(roomCode: string) {
+  try {
+    const redis = await getRedisClient();
+
+    await redis.del(roomCode);
+  } catch (err) {
+    console.log("deleteRoom 실패: ", err);
+  }
 }
 
 // 현재 모든 방의 상태를 저장하는 공간 -> redis에 저장 예정
-const rooms = new Map<string, RoomInfo>();
+const socketInfo = new Map<string, WebSocket>();
 
 export default function handleWebSocketConnection(wss: WebSocket.Server) {
   // .on : 이벤트 핸들러를 등록하는 메서드
@@ -36,12 +73,12 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
     console.log("====   WebSocket is Connected...!!!   ====");
 
     // message : 클라이언트가 서버에게 메시지를 보냈을 때 실행되는 이벤트
-    ws.on("message", (msg) => {
+    ws.on("message", async (msg) => {
       const data = JSON.parse(msg.toString()); // JSON.parse : String -> 객체, ws 서버는 기본적으로 모든 수신 메시지를 Buffer로 처리하기 때문에 toString()으로 문자열 변환 처리를 해줘야 함
 
       if (data.type == "create") {
-        const roomCode = generateRoomCode(); // 랜덤 생성, 디비 중복 확인 해야함
-        rooms.set(roomCode, { users: [] });
+        const roomCode = generateRoomCode();
+        await saveRoom({ roomCode: roomCode, users: [] });
 
         ws.send(
           JSON.stringify({
@@ -56,7 +93,7 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
         ws.roomCode = roomCode;
 
         // 해당하는 방이 없을 경우
-        if (!rooms.has(roomCode)) {
+        if (!(await isRoomExists(roomCode))) {
           ws.send(
             JSON.stringify({
               type: "room_not_found",
@@ -65,10 +102,12 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
           );
           ws.close();
           return;
-        } else {
-          const room = rooms.get(roomCode);
+        }
+        // 해당하는 방이 존재할 경우
+        else {
+          let users = await getRoom(roomCode);
 
-          if (room!.users.length >= 2) {
+          if (users.length >= 2) {
             ws.send(
               JSON.stringify({
                 type: "room_full",
@@ -78,12 +117,18 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
             ws.close();
             return;
           } else {
-            room!.users.push({ userId, socket: ws });
-            console.log(`[${roomCode}] 현재 접속 유저:`, room);
+            users.push(userId);
+            saveRoom({ roomCode: roomCode, users: users });
 
-            if (room!.users.length == 2) {
-              room!.users.forEach(({ socket }: { socket: WebSocket }) => {
-                socket.send(
+            socketInfo.set(userId, ws);
+            console.log("소켓 입력 확인(join): ", socketInfo.has(userId));
+            users = await getRoom(roomCode);
+            console.log(`[${roomCode}] 현재 접속 유저:`, users);
+
+            if (users.length == 2) {
+              users.forEach((user: string) => {
+                const socket = socketInfo.get(user);
+                socket?.send(
                   JSON.stringify({
                     type: "ready",
                     connCompleted: true,
@@ -96,24 +141,29 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
       }
     });
 
-    ws.on("close", () => {
+    ws.on("close", async () => {
       console.log("====   WebSocket is Disconnected...!!!   ====");
 
       if (ws.roomCode) {
-        const room = rooms.get(ws.roomCode);
+        let users = await getRoom(ws.roomCode);
 
-        if (room) {
-          room.users = room.users.filter(
-            (user) => user["userId"] !== ws.userId
-          );
+        if (users.length > 1) {
+          await saveRoom({
+            roomCode: ws.roomCode,
+            users: users.filter((user: string) => user !== ws.userId),
+          });
+        } else {
+          console.log(`방이 비었습니다. [${ws.roomCode}] 방이 삭제됩니다.`);
+          await deleteRoom(ws.roomCode);
+        }
+        users = await getRoom(ws.roomCode);
+        console.log(users);
 
-          if (!room.users.length) {
-            console.log(`방이 비었습니다. [${ws.roomCode}] 방이 삭제됩니다.`);
-            rooms.delete(ws.roomCode);
-          }
+        if (ws.userId) {
+          socketInfo.delete(ws.userId);
+          console.log("소켓 입력 확인(close): ", socketInfo.has(ws.userId));
         }
       }
-      console.log(rooms);
     });
   });
 }

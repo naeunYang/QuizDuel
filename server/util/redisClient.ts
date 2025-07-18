@@ -6,9 +6,18 @@ redisClient.on("error", (err: Error) => {
   console.error("Redis Client Error", err);
 });
 
+redisClient.on("connect", () => {
+  console.error("Redis Client Connected");
+});
+
 export async function getRedisClient() {
-  if (!redisClient.isOpen) {
-    await redisClient.connect(); // 연결
+  try {
+    if (!redisClient.isOpen) {
+      await redisClient.connect(); // 연결
+    }
+  } catch (err) {
+    console.log("Redis 연결 실패:", err);
+    throw err; // 더 이상 진행하지 말고, 에러를 밖으로 던져라.
   }
 
   return redisClient;
