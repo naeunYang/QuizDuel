@@ -32,6 +32,7 @@ import homeRouter from "./routes/home";
 import http from "http";
 import WebSocket from "ws";
 import connectionSocket from "./sockets/connectionSocket";
+import { getRedisClient } from "./util/redisClient";
 
 const app = express();
 
@@ -61,4 +62,17 @@ server.listen(process.env.PORT, () => {
   console.log("**----------------------------------**");
   console.log("====      Server is On...!!!      ====");
   console.log("**----------------------------------**");
+});
+
+// 서버 종료 시 Redis 연결 해제
+process.on("SIGINT", async () => {
+  const redis = await getRedisClient();
+
+  if (redis.isOpen) {
+    await redis.disconnect();
+    console.log("Redis Client Connection closed");
+  }
+
+  // 서버 종료
+  process.exit(0);
 });

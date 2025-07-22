@@ -172,12 +172,21 @@ const Lobby = () => {
     // 소켓 연결 해제
     if (wsRef.current && wsRef.current.OPEN) {
       wsRef.current.close();
+      setIsConnComplete(false);
     }
   };
 
   // WAIT_READY - 준비 버튼 클릭
   const onReadyBtnClick = () => {
     setIsReady(!isReady); // 준비 상태 토글
+  };
+
+  // WAIT_READY - 나가기 버튼 클릭
+  const onCloseButtonClick = () => {
+    if (wsRef.current && wsRef.current.OPEN) {
+      wsRef.current.close();
+      setIsConnComplete(false);
+    }
   };
 
   // 코드 입력 input
@@ -256,9 +265,7 @@ const Lobby = () => {
           content: <WaitForReady isReady={isReady} />,
           closeButtonLabel: "나가기",
           onCloseButtonClick: () => {
-            if (wsRef.current && wsRef.current.OPEN) {
-              wsRef.current.close();
-            }
+            onCloseButtonClick();
           },
           activeButton: isReady ? (
             <Button

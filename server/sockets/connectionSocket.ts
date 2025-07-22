@@ -8,6 +8,8 @@ type RoomInfo = {
   users: string[];
 };
 
+// #region 디비 작업 메서드
+
 async function saveRoom(roomInfo: RoomInfo) {
   try {
     const redis = await getRedisClient();
@@ -61,6 +63,8 @@ async function deleteRoom(roomCode: string) {
   }
 }
 
+// #endregion
+
 // 현재 모든 방의 상태를 저장하는 공간 -> redis에 저장 예정
 const socketInfo = new Map<string, WebSocket>();
 
@@ -89,8 +93,6 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
         );
       } else if (data.type === "join") {
         const { userId, roomCode } = data;
-        ws.userId = userId;
-        ws.roomCode = roomCode;
 
         // 해당하는 방이 없을 경우
         if (!(await isRoomExists(roomCode))) {
@@ -117,11 +119,14 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
             ws.close();
             return;
           } else {
+            // 소켓 객체 저장
+            ws.userId = userId;
+            ws.roomCode = roomCode;
+            socketInfo.set(userId, ws);
+
             users.push(userId);
             saveRoom({ roomCode: roomCode, users: users });
 
-            socketInfo.set(userId, ws);
-            console.log("소켓 입력 확인(join): ", socketInfo.has(userId));
             users = await getRoom(roomCode);
             console.log(`[${roomCode}] 현재 접속 유저:`, users);
 
@@ -161,7 +166,6 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
 
         if (ws.userId) {
           socketInfo.delete(ws.userId);
-          console.log("소켓 입력 확인(close): ", socketInfo.has(ws.userId));
         }
       }
     });
