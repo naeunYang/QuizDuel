@@ -1,9 +1,12 @@
+import type { RoomInfo } from "@/types/roomInfo.types";
+
 export default function joinRoom(
   ws: WebSocket,
   roodCode: string,
   userId: string,
   setIsConnComplete: React.Dispatch<React.SetStateAction<boolean>>,
-  setSocketErrorMsg?: React.Dispatch<React.SetStateAction<string>>
+  setSocketErrorMsg?: React.Dispatch<React.SetStateAction<string>>,
+  setRoom?: React.Dispatch<React.SetStateAction<RoomInfo>>
 ) {
   ws.send(
     JSON.stringify({
@@ -19,6 +22,16 @@ export default function joinRoom(
       case "ready":
         if (data.connCompleted) {
           console.log("모두 접속 완료");
+
+          if (setRoom) {
+            setRoom((prev) => {
+              return {
+                ...prev,
+                ["code"]: roodCode,
+              };
+            });
+          }
+
           setIsConnComplete(data.connCompleted);
         }
         return;

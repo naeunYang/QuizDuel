@@ -4,6 +4,7 @@ import isRoomExists from "../../lib/isRoomExists";
 import getRoom from "../../lib/getRoom";
 import saveRoom from "../../lib/saveRoom";
 import { SocketMessage } from "./../../types/socket-message.type";
+import { RoomInfo } from "../../types/room-info.type";
 
 export default async function handleJoin(
   ws: ExtendedWebSocket,
@@ -41,15 +42,15 @@ export default async function handleJoin(
       ws.roomCode = roomCode;
       socketInfo.set(userId, ws);
 
-      users.push(userId);
+      users.push({ userId: userId, isReady: false });
       saveRoom({ roomCode: roomCode, users: users });
 
       users = await getRoom(roomCode);
       console.log(`[${roomCode}] 현재 접속 유저:`, users);
 
       if (users.length == 2) {
-        users.forEach((user: string) => {
-          const socket = socketInfo.get(user);
+        users.forEach((user: RoomInfo["users"][0]) => {
+          const socket = socketInfo.get(user.userId);
           socket?.send(
             JSON.stringify({
               type: "ready",

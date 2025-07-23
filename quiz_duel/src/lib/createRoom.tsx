@@ -26,6 +26,7 @@ export default function createRoom(
           ["code"]: data.roomCode,
         };
       });
+
       joinRoom(ws, data.roomCode, userId, setIsConnComplete);
     }
   };

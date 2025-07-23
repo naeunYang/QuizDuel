@@ -3,6 +3,7 @@ import getRoom from "../../lib/getRoom";
 import saveRoom from "../../lib/saveRoom";
 import deleteRoom from "../../lib/deleteRoom";
 import { socketInfo } from "./../socketInfo";
+import { RoomInfo } from "../../types/room-info.type";
 
 export default async function handleClose(ws: ExtendedWebSocket) {
   if (ws.roomCode) {
@@ -11,7 +12,9 @@ export default async function handleClose(ws: ExtendedWebSocket) {
     if (users.length > 1) {
       await saveRoom({
         roomCode: ws.roomCode,
-        users: users.filter((user: string) => user !== ws.userId),
+        users: users.filter(
+          (user: RoomInfo["users"][0]) => user.userId !== ws.userId
+        ),
       });
     } else {
       console.log(`방이 비었습니다. [${ws.roomCode}] 방이 삭제됩니다.`);

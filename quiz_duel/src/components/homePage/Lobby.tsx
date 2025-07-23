@@ -89,7 +89,8 @@ const Lobby = () => {
             roomCode!,
             userIdRef.current,
             setIsConnComplete,
-            setSocketErrorMsg
+            setSocketErrorMsg,
+            setRoom
           );
         },
         setSocketErrorMsg
@@ -187,13 +188,16 @@ const Lobby = () => {
 
   // WAIT_READY - 준비 버튼 클릭
   const onReadyBtnClick = () => {
-    setIsReady(!isReady); // 준비 상태 토글
+    // setIsReady(!Ready) 시 상태 변화가 비동기적으로 일어나기 때문에 readyState에 올바른 값이 안감
+    // 따라서 아래와 같이 해결함
+    const currentReady = !isReady;
+    setIsReady(currentReady); // 준비 상태 토글
 
     // 준비 상태 서버에 전송
     connectWebSocket(
       wsRef,
       () => {
-        readyState(wsRef.current!, userIdRef.current, isReady);
+        readyState(wsRef.current!, room.code, userIdRef.current, currentReady);
       },
       setSocketErrorMsg
     );
@@ -234,7 +238,8 @@ const Lobby = () => {
           codeInput,
           userIdRef.current,
           setIsConnComplete,
-          setSocketErrorMsg
+          setSocketErrorMsg,
+          setRoom
         );
       },
       setSocketErrorMsg

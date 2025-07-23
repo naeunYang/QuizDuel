@@ -1,4 +1,7 @@
 export type RoomInfo = {
   roomCode: string;
-  users: string[];
+  users: {
+    userId: string;
+    isReady: boolean;
+  }[];
 };
