@@ -7,7 +7,9 @@ import CreateRoom from "./CreateRoom";
 import WaitForOpponent from "./WaitForOpponent";
 import WaitForReady from "./WaitForReady";
 import type { RoomInfo } from "@/types/roomInfo.types";
-import { createRoom, joinRoom } from "@/lib/webSocketConn";
+import createRoom from "@/lib/createRoom";
+import joinRoom from "@/lib/joinRoom";
+import readyState from "@/lib/readyState";
 import LoadingModal from "../common/LoadingModal";
 
 import { useEffect, useState, useRef } from "react";
@@ -68,6 +70,7 @@ const Lobby = () => {
   const [isConnComplete, setIsConnComplete] = useState(false); // 소켓 연결 상태
   const [codeInput, setCodeInput] = useState(""); // 코드 입력 value 상태
   const wsRef = useRef<WebSocket | null>(null); // 소켓 객체
+  const userIdRef = useRef<string>(crypto.randomUUID());
   const [socketErrorMsg, setSocketErrorMsg] = useState("");
   const [isOpenErrMsg, setIsOpenErrMsg] = useState(false);
 
@@ -84,6 +87,7 @@ const Lobby = () => {
           joinRoom(
             wsRef.current!,
             roomCode!,
+            userIdRef.current,
             setIsConnComplete,
             setSocketErrorMsg
           );
@@ -157,7 +161,12 @@ const Lobby = () => {
     connectWebSocket(
       wsRef,
       () => {
-        createRoom(wsRef.current!, setRoom, setIsConnComplete);
+        createRoom(
+          wsRef.current!,
+          setRoom,
+          userIdRef.current,
+          setIsConnComplete
+        );
       },
       setSocketErrorMsg
     );
@@ -179,6 +188,15 @@ const Lobby = () => {
   // WAIT_READY - 준비 버튼 클릭
   const onReadyBtnClick = () => {
     setIsReady(!isReady); // 준비 상태 토글
+
+    // 준비 상태 서버에 전송
+    connectWebSocket(
+      wsRef,
+      () => {
+        readyState(wsRef.current!, userIdRef.current, isReady);
+      },
+      setSocketErrorMsg
+    );
   };
 
   // WAIT_READY - 나가기 버튼 클릭
@@ -214,6 +232,7 @@ const Lobby = () => {
         joinRoom(
           wsRef.current!,
           codeInput,
+          userIdRef.current,
           setIsConnComplete,
           setSocketErrorMsg
         );

@@ -1,44 +1,14 @@
-import type { RoomInfo } from "@/types/roomInfo.types";
-
-export function createRoom(
-  ws: WebSocket,
-  setRoom: React.Dispatch<React.SetStateAction<RoomInfo>>,
-  setIsConnComplete: React.Dispatch<React.SetStateAction<boolean>>
-) {
-  ws.send(
-    JSON.stringify({
-      // JSON.stringify : 객체 -> String으로 변환, 메시지는 문자열만 보낼 수 있기 때문
-      type: "create",
-    })
-  );
-
-  ws.onmessage = (msg) => {
-    const data = JSON.parse(msg.data);
-
-    if (data.type === "success") {
-      console.log(data.message);
-
-      setRoom((prev) => {
-        return {
-          ...prev,
-          ["code"]: data.roomCode,
-        };
-      });
-      joinRoom(ws, data.roomCode, setIsConnComplete);
-    }
-  };
-}
-
-export function joinRoom(
+export default function joinRoom(
   ws: WebSocket,
   roodCode: string,
+  userId: string,
   setIsConnComplete: React.Dispatch<React.SetStateAction<boolean>>,
   setSocketErrorMsg?: React.Dispatch<React.SetStateAction<string>>
 ) {
   ws.send(
     JSON.stringify({
       type: "join",
-      userId: crypto.randomUUID(),
+      userId: userId,
       roomCode: roodCode,
     })
   );

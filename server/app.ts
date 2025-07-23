@@ -31,7 +31,7 @@ import cors from "cors";
 import homeRouter from "./routes/home";
 import http from "http";
 import WebSocket from "ws";
-import connectionSocket from "./sockets/connectionSocket";
+import connectionSocket from "./websocket/connection";
 import { getRedisClient } from "./util/redisClient";
 
 const app = express();
