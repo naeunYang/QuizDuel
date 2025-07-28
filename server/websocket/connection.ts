@@ -24,7 +24,7 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
       } else if (data.type === "join") {
         handleJoin(ws, data);
       } else if (data.type === "ready_status") {
-        handleReadyState(ws, data);
+        handleReadyState(data);
       }
     });
 

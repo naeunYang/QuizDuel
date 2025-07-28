@@ -43,7 +43,7 @@ export default async function handleJoin(
       socketInfo.set(userId, ws);
 
       users.push({ userId: userId, isReady: false });
-      saveRoom({ roomCode: roomCode, users: users });
+      await saveRoom({ roomCode: roomCode, users: users });
 
       users = await getRoom(roomCode);
       console.log(`[${roomCode}] 현재 접속 유저:`, users);

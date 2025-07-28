@@ -123,6 +123,7 @@ const Lobby = () => {
     if (!isOpenModal) {
       setRoom(defaultRoomData);
       setModalStep(defaultPopup);
+      setIsReady(false);
     }
   }, [isOpenModal]);
 

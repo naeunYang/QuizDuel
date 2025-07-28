@@ -46,7 +46,7 @@ const BaseModal = ({ height = 450, ...props }: Props) => {
           </DialogHeader>
           <div className="h-full mt-1">{props.content}</div>
 
-          <DialogFooter className="!justify-center gap-3">
+          <DialogFooter className="flex flex-row !justify-center gap-3">
             {props.closeButtonLabel ? (
               <Button
                 text={props.closeButtonLabel}
