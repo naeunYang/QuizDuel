@@ -8,7 +8,7 @@ export default async function handleCreate(ws: ExtendedWebSocket) {
 
   ws.send(
     JSON.stringify({
-      type: "success",
+      type: "room_create_success",
       message: "방을 성공적으로 생성했습니다.",
       roomCode: roomCode,
     })

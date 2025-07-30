@@ -9,6 +9,15 @@ export default async function handleClose(ws: ExtendedWebSocket) {
   if (ws.roomCode) {
     let users = await getRoom(ws.roomCode);
 
+    if (!users) {
+      // 소켓 삭제
+      if (ws.userId && socketInfo.has(ws.userId)) {
+        socketInfo.delete(ws.userId);
+      }
+
+      return;
+    }
+
     if (users.length > 1) {
       await saveRoom({
         roomCode: ws.roomCode,
@@ -20,10 +29,12 @@ export default async function handleClose(ws: ExtendedWebSocket) {
       console.log(`방이 비었습니다. [${ws.roomCode}] 방이 삭제됩니다.`);
       await deleteRoom(ws.roomCode);
     }
+
     users = await getRoom(ws.roomCode);
     console.log(users);
 
-    if (ws.userId) {
+    // 소켓 삭제
+    if (ws.userId && socketInfo.has(ws.userId)) {
       socketInfo.delete(ws.userId);
     }
   }

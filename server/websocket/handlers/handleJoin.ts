@@ -53,8 +53,9 @@ export default async function handleJoin(
           const socket = socketInfo.get(user.userId);
           socket?.send(
             JSON.stringify({
-              type: "ready",
+              type: "all_users_joined",
               connCompleted: true,
+              roomCode: roomCode,
             })
           );
         });

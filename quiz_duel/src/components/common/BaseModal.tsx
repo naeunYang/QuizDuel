@@ -14,7 +14,7 @@ interface Props {
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
   title?: string;
   content: React.ReactNode;
-  closeButtonLabel: string;
+  closeButtonLabel: string | undefined;
   onCloseButtonClick?: () => void;
   activeButton: React.ReactNode;
   width?: number;

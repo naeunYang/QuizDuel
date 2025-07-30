@@ -25,7 +25,8 @@ export default async function handleReadyState(
   // 모두 준비 상태일 경우 메세지 전송
   users = await getRoom(roomCode);
 
-  const isAllReady = users.every((user) => user.isReady === true);
+  const isAllReady = users.every((user) => user.isReady === true); // every : 모든 요소가 조건을 만족하는지 검사, 하나라도 false가 나오면 즉시 false 반환(<-> some)
+
   if (users.length >= 2) {
     if (isAllReady) {
       users.forEach((user) => {
@@ -41,8 +42,8 @@ export default async function handleReadyState(
       // 상대방에게 내 준비 상태 전송
       users.forEach((user) => {
         if (user.userId !== userId) {
-          console.log("전송!");
           const socket = socketInfo.get(user.userId);
+
           socket?.send(
             JSON.stringify({
               type: "opponent_ready_state",

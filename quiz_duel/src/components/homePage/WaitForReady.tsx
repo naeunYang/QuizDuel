@@ -1,7 +1,13 @@
 import "./WaitForReady.css";
 import WaitForReadyProfile from "./WaitForReadyProfile";
 
-const WaitForReady = ({ isReady }: { isReady: boolean }) => {
+const WaitForReady = ({
+  isReady,
+  opponentState,
+}: {
+  isReady: boolean;
+  opponentState: boolean;
+}) => {
   return (
     <div className="WaitForReady">
       <WaitForReadyProfile
@@ -15,7 +21,7 @@ const WaitForReady = ({ isReady }: { isReady: boolean }) => {
         userProfile="player2.PNG"
         backColor="#DBF5D7"
         userName="Player2"
-        isReady={false}
+        isReady={opponentState}
       />
     </div>
   );
