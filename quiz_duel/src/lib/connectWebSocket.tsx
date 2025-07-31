@@ -12,7 +12,9 @@ export default function connectWebSocket(
   setRoom: React.Dispatch<React.SetStateAction<RoomInfo>>,
   userId: string,
   setSocketErrorMsg: React.Dispatch<React.SetStateAction<string>>,
-  setOpponentState: React.Dispatch<React.SetStateAction<boolean>>
+  setOpponentState: React.Dispatch<React.SetStateAction<boolean>>,
+  setIsOpenErrMsg: React.Dispatch<React.SetStateAction<boolean>>,
+  setGoToBattleUrl: React.Dispatch<React.SetStateAction<string>>
 ) {
   // wsRef.current = new WebSocket("ws://localhost:3001"); 으로 연결을 시도하는 순간 onopen이벤트가 동작함
   // 따라서 WebSocket 생성 직후 즉시 등록해야 한다.
@@ -34,7 +36,9 @@ export default function connectWebSocket(
         setRoom,
         userId,
         setSocketErrorMsg,
-        setOpponentState
+        setOpponentState,
+        setIsOpenErrMsg,
+        setGoToBattleUrl
       );
     };
 

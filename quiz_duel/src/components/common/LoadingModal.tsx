@@ -19,7 +19,11 @@ const LoadingModal = (props: Props) => {
   return (
     <div>
       <Dialog open={props.open} onOpenChange={props.onOpenChange}>
-        <DialogContent className="bg-[#E8E8E8] w-80 h-35">
+        <DialogContent
+          className="bg-[#E8E8E8] w-80 h-35"
+          // onOpenAutoFocus={(e) => e.preventDefault()}
+          // // e.preventDefault() : Dialog가 열릴 때 자동으로 내부 포커스 주는 기본 동작 막음.
+        >
           <DialogTitle className="LoadingModal">
             {props.type === "LOADING" && (
               <Spinner className="text-yellow-400 w-13 h-13" show={true} />

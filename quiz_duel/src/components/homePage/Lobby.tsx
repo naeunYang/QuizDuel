@@ -11,6 +11,7 @@ import connectWebSocket from "@/lib/connectWebSocket";
 import LoadingModal from "../common/LoadingModal";
 
 import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 // 방 초기값
 const defaultRoomData: RoomInfo = {
@@ -31,11 +32,14 @@ const Lobby = () => {
   const [isReady, setIsReady] = useState(false); // 준비 상태
   const [isConnComplete, setIsConnComplete] = useState(false); // 소켓 연결 상태
   const [codeInput, setCodeInput] = useState(""); // 코드 입력 value 상태
+  const codeInputRef = useRef<HTMLInputElement>(null);
   const wsRef = useRef<WebSocket | null>(null); // 소켓 객체
   const userIdRef = useRef<string>(crypto.randomUUID());
   const [socketErrorMsg, setSocketErrorMsg] = useState("");
   const [isOpenErrMsg, setIsOpenErrMsg] = useState(false);
   const [opponentState, setOpponentState] = useState(false);
+  const [goToBattleUrl, setGoToBattleUrl] = useState("");
+  const nav = useNavigate();
 
   useEffect(() => {
     // window.location.search : 현재 url의 쿼리 스트링 부분 가져오기
@@ -55,7 +59,9 @@ const Lobby = () => {
         setRoom,
         userIdRef.current,
         setSocketErrorMsg,
-        setOpponentState
+        setOpponentState,
+        setIsOpenErrMsg,
+        setGoToBattleUrl
       );
 
       window.history.replaceState({}, "", window.location.origin);
@@ -77,6 +83,10 @@ const Lobby = () => {
   useEffect(() => {
     if (!isOpenErrMsg) {
       setSocketErrorMsg("");
+
+      setTimeout(() => {
+        codeInputRef.current?.focus();
+      }, 100);
     }
   }, [isOpenErrMsg]);
 
@@ -103,6 +113,12 @@ const Lobby = () => {
       setModalStep("WAIT_OPPONENT");
     }
   }, [modalStep, room.code]);
+
+  useEffect(() => {
+    if (goToBattleUrl) {
+      nav(goToBattleUrl);
+    }
+  }, [goToBattleUrl, nav]);
 
   // #region 이벤트 핸들러
 
@@ -144,7 +160,9 @@ const Lobby = () => {
       setRoom,
       userIdRef.current,
       setSocketErrorMsg,
-      setOpponentState
+      setOpponentState,
+      setIsOpenErrMsg,
+      setGoToBattleUrl
     );
   };
 
@@ -179,7 +197,9 @@ const Lobby = () => {
       setRoom,
       userIdRef.current,
       setSocketErrorMsg,
-      setOpponentState
+      setOpponentState,
+      setIsOpenErrMsg,
+      setGoToBattleUrl
     );
   };
 
@@ -198,7 +218,7 @@ const Lobby = () => {
 
   // 코드 입력 input
   const onCodeInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && codeInput) {
       onPartiBtnClick();
     }
   };
@@ -207,6 +227,10 @@ const Lobby = () => {
   const onPartiBtnClick = () => {
     if (!codeInput) {
       setSocketErrorMsg("코드를 입력하세요!");
+
+      return;
+    } else if (codeInput === import.meta.env.VITE_ADMIN_ENTRY_CODE) {
+      nav("/admin");
       return;
     }
 
@@ -221,7 +245,9 @@ const Lobby = () => {
       setRoom,
       userIdRef.current,
       setSocketErrorMsg,
-      setOpponentState
+      setOpponentState,
+      setIsOpenErrMsg,
+      setGoToBattleUrl
     );
   };
 
@@ -307,6 +333,7 @@ const Lobby = () => {
             <span className="divider-text">또는</span>
           </div>
           <Input
+            ref={codeInputRef}
             value={codeInput}
             onChange={onCodeInputValueChange}
             onKeyDown={onCodeInputKeyDown}

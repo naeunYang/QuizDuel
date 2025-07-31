@@ -3,5 +3,6 @@ export type ReceiveSocketMessage =
   | { type: "room_not_found"; message: string }
   | { type: "room_full"; message: string }
   | { type: "all_users_joined"; connCompleted: boolean; roomCode: string }
-  | { type: "all_ready"; isAllReady: boolean }
-  | { type: "opponent_ready_state"; isOpponentReady: boolean };
+  | { type: "all_ready"; isAllReady: boolean; roomCode: string }
+  | { type: "opponent_ready_state"; isOpponentReady: boolean }
+  | { type: "opponent_quit" };
