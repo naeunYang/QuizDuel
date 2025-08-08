@@ -1,20 +1,17 @@
-import "./CreateRoom.css";
-import LabelInput from "../common/LabelInput";
-import LabelSelect from "../common/LabelSelect";
-import Badge from "../common/Badge";
-import axios from "axios";
-import { useEffect, useState } from "react";
-
 import type { RoomInfo } from "@/components/homePage/types/roomInfo.types";
 import type { RoomOption } from "@/types/room-options.types";
 
-interface Props {
-  room: RoomInfo;
-  setRoom: React.Dispatch<React.SetStateAction<RoomInfo>>;
-}
+import "./CreateRoom2.css";
+import LabelInput from "../../common/LabelInput";
+import LabelSelect from "../../common/LabelSelect";
+import Badge from "../../common/Badge";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useRoomInfoContext } from "../Lobby";
 
-const CreateRoom = ({ room, setRoom }: Props) => {
+const CreateRoom2 = () => {
   const [roomOptions, setRoomOptions] = useState<RoomOption | null>();
+  const { room, setRoom } = useRoomInfoContext();
 
   useEffect(() => {
     axios
@@ -31,13 +28,13 @@ const CreateRoom = ({ room, setRoom }: Props) => {
   const onChangeInput = (name: string, value: string) => {
     if (name === "category") {
       setRoom((prev) => {
-        if (prev.category.includes(value as RoomInfo["category"][number])) {
+        if (prev.category.includes(value as RoomInfo["category"][0])) {
           return prev;
         }
 
         const newCategory = [
           ...prev.category,
-          value as RoomInfo["category"][number],
+          value as RoomInfo["category"][0],
         ];
 
         if (newCategory.length > 3) {
@@ -91,7 +88,7 @@ const CreateRoom = ({ room, setRoom }: Props) => {
         />
       </div>
       <div className="select_section">
-        <div>
+        <div className="category_select">
           <LabelSelect
             label="카테고리"
             direction="vertical"
@@ -135,4 +132,4 @@ const CreateRoom = ({ room, setRoom }: Props) => {
   );
 };
 
-export default CreateRoom;
+export default CreateRoom2;

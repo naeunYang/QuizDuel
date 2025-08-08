@@ -1,0 +1,15 @@
+.CreateRoom .select_section {
+  display: flex;
+}
+
+.CreateRoom .category_select {
+  height: 8rem;
+}
+
+.CreateRoom .select_section .badge_section {
+  display: flex;
+  gap: 4px;
+  margin: 0 10px;
+  justify-content: flex-start;
+  max-width: 100%;
+}

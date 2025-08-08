@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
+import { SocketProvider } from "./components/SocketProvider.tsx";
 
 // 카카오톡 공유하기 설정
 const JAVASCRIPT_KEY = import.meta.env.VITE_KAKAO_SHARE_JAVASCRIPT_KEY;
@@ -10,6 +11,8 @@ window.Kakao.isInitialized();
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
-    <App />
+    <SocketProvider>
+      <App />
+    </SocketProvider>
   </BrowserRouter>
 );

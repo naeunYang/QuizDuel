@@ -1,6 +1,6 @@
-import type { RoomInfo } from "@/types/roomInfo.types";
+import type { RoomInfo } from "@/components/homePage/types/roomInfo.types";
 import { handleSocketMessage } from "./handleSocketMessage";
-import type { SendSocketMessage } from "@/types/send-socket-message.typs";
+import type { SendSocketMessage } from "@/types/send-socket-message.types";
 
 const socketUrl = "ws://localhost:3001";
 

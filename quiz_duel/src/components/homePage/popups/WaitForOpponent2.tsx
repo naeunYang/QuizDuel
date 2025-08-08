@@ -1,26 +1,22 @@
-import "./WaitForOpponent.css";
-import { Spinner } from "../common/LoadingSpinner";
-import { Card, CardContent } from "../shadcn/card";
+import "../WaitForOpponent.css";
+import { Spinner } from "../../common/LoadingSpinner";
+import { Card, CardContent } from "../../shadcn/card";
 import { Share, Copy, Check } from "lucide-react";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
-import { Tooltip, TooltipTrigger, TooltipContent } from "../shadcn/tooltip";
-import { Popover, PopoverContent, PopoverTrigger } from "../shadcn/popover";
-import SharePlatform from "./SharePlatform";
-import type { RoomInfo } from "@/components/homePage/types/roomInfo.types";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../../shadcn/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "../../shadcn/popover";
+import SharePlatform from "../SharePlatform";
 
 import { useState } from "react";
+import { useRoomInfoContext } from "../Lobby";
 
-interface Props {
-  room: RoomInfo;
-  setIsConnComplete: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const WaitForOpponent = (props: Props) => {
+const WaitForOpponent2 = () => {
   const [, copy] = useCopyToClipboard();
+  const { room } = useRoomInfoContext();
   const [isCopied, setIsCopied] = useState(false);
 
   const onCopyBtnClick = () => {
-    copy(props.room.code);
+    copy(room.code);
     setIsCopied(true);
 
     setTimeout(() => {
@@ -32,8 +28,8 @@ const WaitForOpponent = (props: Props) => {
     window.Kakao.Share.sendCustom({
       templateId: Number(import.meta.env.VITE_KAKAO_SHARE_TEMPLETE_KEY),
       templateArgs: {
-        TITLE: String(props.room.title),
-        CODE: String(props.room.code),
+        TITLE: String(room.title),
+        CODE: String(room.code),
       },
     });
   };
@@ -45,7 +41,7 @@ const WaitForOpponent = (props: Props) => {
       <Card className="rounded-md bg-[#F5F5F5] w-70 h-25 pt-4">
         <CardContent>
           <p className="cardcontent_section copy">
-            {props.room.code}&nbsp;
+            {room.code}&nbsp;
             <Tooltip>
               <TooltipTrigger>
                 {isCopied ? (
@@ -84,4 +80,4 @@ const WaitForOpponent = (props: Props) => {
   );
 };
 
-export default WaitForOpponent;
+export default WaitForOpponent2;

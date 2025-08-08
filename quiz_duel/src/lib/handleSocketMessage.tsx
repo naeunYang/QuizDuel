@@ -1,4 +1,4 @@
-import type { RoomInfo } from "@/types/roomInfo.types";
+import type { RoomInfo } from "@/components/homePage/types/roomInfo.types";
 import type { ReceiveSocketMessage } from "@/types/receive-socket-message.types";
 
 export function handleSocketMessage(

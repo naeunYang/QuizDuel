@@ -6,14 +6,19 @@ import BaseModal from "../common/BaseModal";
 import CreateRoom from "./CreateRoom";
 import WaitForOpponent from "./WaitForOpponent";
 import WaitForReady from "./WaitForReady";
-import type { RoomInfo } from "@/types/roomInfo.types";
+import type { RoomInfo } from "@/components/homePage/types/roomInfo.types";
 import connectWebSocket from "@/lib/connectWebSocket";
 import LoadingModal from "../common/LoadingModal";
+import type { ModalStep } from "./types/modal-step.types";
+import type { RoonInfoContextType } from "./types/room-info-context.types";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import BaseModal2 from "../common/BaseModal2";
+import CreateRoomModal from "./popups/CreateRoomModal";
+import WaitForOpponentModal from "./popups/WaitForOpponentModal";
 
-// 방 초기값
+// roomInfo 초기값
 const defaultRoomData: RoomInfo = {
   code: "",
   title: "진 사람 떡볶이 쏘기😎",
@@ -23,11 +28,29 @@ const defaultRoomData: RoomInfo = {
   timeLimit: 15,
 };
 
+const RoomInfoContext = createContext<RoonInfoContextType | null>(null);
+
+export function useRoomInfoContext() {
+  const value = useContext(RoomInfoContext);
+  if (!value) throw new Error("RoomInfoContext에 문제가 있음");
+  return value;
+}
+
+const ModalStepContext = createContext<{
+  modalStep: ModalStep;
+  setModalStep: React.Dispatch<React.SetStateAction<ModalStep>>;
+} | null>(null);
+
+export function useModalStepContext() {
+  const value = useContext(ModalStepContext);
+  if (!value) throw new Error("ModalStepContext에 문제가 있음");
+  return value;
+}
+
 const Lobby = () => {
   const [isOpenModal, setOpenModal] = useState(false);
-  const [modalStep, setModalStep] = useState<
-    "CREATE" | "WAIT_OPPONENT" | "WAIT_READY" | null
-  >(null);
+  const [modalStep, setModalStep] = useState<ModalStep>(null);
+  const [modalStep1, setModalStep1] = useState<ModalStep>(null);
   const [room, setRoom] = useState<RoomInfo>(defaultRoomData);
   const [isReady, setIsReady] = useState(false); // 준비 상태
   const [isConnComplete, setIsConnComplete] = useState(false); // 소켓 연결 상태
@@ -124,7 +147,7 @@ const Lobby = () => {
 
   // CREATE - 새 방 만들기 버튼 클릭
   const onCreateRoomBtnClick = () => {
-    setModalStep("CREATE");
+    setModalStep1("CREATE");
     setOpenModal(true);
   };
 
@@ -216,7 +239,6 @@ const Lobby = () => {
     setCodeInput(e.target.value);
   };
 
-  // 코드 입력 input
   const onCodeInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && codeInput) {
       onPartiBtnClick();
@@ -229,7 +251,9 @@ const Lobby = () => {
       setSocketErrorMsg("코드를 입력하세요!");
 
       return;
-    } else if (codeInput === import.meta.env.VITE_ADMIN_ENTRY_CODE) {
+    } else if (
+      codeInput.toUpperCase() === import.meta.env.VITE_ADMIN_ENTRY_CODE
+    ) {
       nav("/admin");
       return;
     }
@@ -239,7 +263,7 @@ const Lobby = () => {
       {
         type: "join",
         userId: userIdRef.current,
-        roomCode: codeInput,
+        roomCode: codeInput.toUpperCase(),
       },
       setIsConnComplete,
       setRoom,
@@ -319,59 +343,92 @@ const Lobby = () => {
 
   const modalProps = getModalContent();
 
+  const renderStepModal = () => {
+    switch (modalStep1) {
+      case "CREATE":
+        return <CreateRoomModal />;
+      case "WAIT_OPPONENT":
+        return <WaitForOpponentModal />;
+      case "WAIT_READY":
+        return <></>;
+      default:
+        return <></>;
+    }
+  };
+
   return (
     <div className="Lobby">
-      <Card className="rounded-[8px] w-95 h-95 flex items-center justify-between">
-        <CardContent className="flex flex-col items-center">
-          <p className="title">게임 시작하기</p>
+      <RoomInfoContext.Provider value={{ room, setRoom }}>
+        <ModalStepContext.Provider
+          value={{ modalStep: modalStep1, setModalStep: setModalStep1 }}
+        >
+          <Card className="rounded-[0.5rem] w-95 h-95 flex items-center justify-between">
+            <CardContent className="flex flex-col items-center">
+              <p className="title">게임 시작하기</p>
+              <Button
+                type="CREATEROOM"
+                text="🕹️ 새 방 만들기"
+                onButtonClick={onCreateRoomBtnClick}
+              />
+              <div className="divider">
+                <span className="divider-text">또는</span>
+              </div>
+              <Input
+                ref={codeInputRef}
+                value={codeInput}
+                onChange={onCodeInputValueChange}
+                onKeyDown={onCodeInputKeyDown}
+                className="!text-[1.125rem] placeholder:text-[#AAAAAA] placeholder:text-center focus:border-none p-5.5 "
+                placeholder={"코드 입력 (예: ABC123)"}
+              />
+            </CardContent>
+            <CardFooter>
+              <Button
+                type="PARTICIPATE"
+                text="🎉참가하기"
+                onButtonClick={onPartiBtnClick}
+              />
+            </CardFooter>
+          </Card>
+
+          {/* {isOpenModal && (
+          <BaseModal
+            open={isOpenModal}
+            onOpenChange={setOpenModal}
+            title={modalProps?.title}
+            content={modalProps?.content}
+            closeButtonLabel={modalProps?.closeButtonLabel}
+            onCloseButtonClick={modalProps?.onCloseButtonClick}
+            activeButton={modalProps?.activeButton}
+            height={modalProps?.height}
+            width={modalProps?.width}
+          />
+        )} */}
+
+          {socketErrorMsg && (
+            <LoadingModal
+              open={isOpenErrMsg}
+              content={socketErrorMsg}
+              type={"ERROR"}
+              onOpenChange={setIsOpenErrMsg}
+            />
+          )}
           <Button
-            type="CREATEROOM"
-            text="🕹️ 새 방 만들기"
+            text="test"
             onButtonClick={onCreateRoomBtnClick}
+            type="DEFAULT"
           />
-          <div className="divider">
-            <span className="divider-text">또는</span>
-          </div>
-          <Input
-            ref={codeInputRef}
-            value={codeInput}
-            onChange={onCodeInputValueChange}
-            onKeyDown={onCodeInputKeyDown}
-            className="!text-[18px] placeholder:text-[#AAAAAA] placeholder:text-center focus:border-none p-5.5 "
-            placeholder={"코드 입력 (예: ABC123)"}
-          />
-        </CardContent>
-        <CardFooter>
-          <Button
-            type="PARTICIPATE"
-            text="🎉참가하기"
-            onButtonClick={onPartiBtnClick}
-          />
-        </CardFooter>
-      </Card>
-
-      {isOpenModal && (
-        <BaseModal
-          open={isOpenModal}
-          onOpenChange={setOpenModal}
-          title={modalProps?.title}
-          content={modalProps?.content}
-          closeButtonLabel={modalProps?.closeButtonLabel}
-          onCloseButtonClick={modalProps?.onCloseButtonClick}
-          activeButton={modalProps?.activeButton}
-          height={modalProps?.height}
-          width={modalProps?.width}
-        />
-      )}
-
-      {socketErrorMsg && (
-        <LoadingModal
-          open={isOpenErrMsg}
-          content={socketErrorMsg}
-          type={"ERROR"}
-          onOpenChange={setIsOpenErrMsg}
-        />
-      )}
+          {isOpenModal && (
+            <BaseModal2
+              open={isOpenModal}
+              setOpen={setOpenModal}
+              userId={userIdRef.current}
+            >
+              {renderStepModal()}
+            </BaseModal2>
+          )}
+        </ModalStepContext.Provider>
+      </RoomInfoContext.Provider>
     </div>
   );
 };
