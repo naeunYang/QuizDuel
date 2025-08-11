@@ -5,6 +5,8 @@ import handleJoin from "./handlers/handleJoin";
 import handleClose from "./handlers/handleClose";
 import handleReadyState from "./handlers/handleReadyState";
 import type { SocketMessage } from "../types/socket-message.type";
+import handleExit from "./handlers/handleExit";
+import { socketInfo } from "./socketInfo";
 
 export default function handleWebSocketConnection(wss: WebSocket.Server) {
   // .on : 이벤트 핸들러를 등록하는 메서드
@@ -25,12 +27,19 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
         handleJoin(ws, data);
       } else if (data.type === "ready_status") {
         handleReadyState(data);
+      } else if (data.type === "exit") {
+        handleExit(ws);
       }
     });
 
     ws.on("close", async () => {
       console.log("====   WebSocket is Disconnected...!!!   ====");
-      handleClose(ws);
+      // handleClose(ws);
+
+      // 소켓 삭제
+      if (ws.userId && socketInfo.has(ws.userId)) {
+        socketInfo.delete(ws.userId);
+      }
     });
   });
 }

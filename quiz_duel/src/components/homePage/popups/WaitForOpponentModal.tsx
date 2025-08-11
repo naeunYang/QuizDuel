@@ -10,7 +10,7 @@ interface Props {
 }
 
 const WaitForOpponentModal = ({ setOpen }: Props) => {
-  const { subscribe } = useSocket();
+  const { subscribe, send } = useSocket();
   const { setModalStep } = useSetModalStepContext();
   const { room, setRoom } = useRoomInfoContext();
 
@@ -38,6 +38,9 @@ const WaitForOpponentModal = ({ setOpen }: Props) => {
 
   const onWaitCancelBtnClick = () => {
     setOpen?.(false);
+    send({
+      type: "exit",
+    });
   };
 
   return (

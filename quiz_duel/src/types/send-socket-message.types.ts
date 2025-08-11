@@ -6,4 +6,5 @@ export type SendSocketMessage =
       roomCode: string;
       userId: string;
       isReady: boolean;
-    };
+    }
+  | { type: "exit" };
