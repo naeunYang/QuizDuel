@@ -1,12 +1,41 @@
+import { useSocket } from "@/components/SocketProvider";
 import { DialogFooter } from "../../shadcn/dialog";
 import WaitForOpponent2 from "./WaitForOpponent2";
 import Button from "@/components/common/Button";
+import { useEffect } from "react";
+import { useRoomInfoContext, useSetModalStepContext } from "../Lobby";
 
 interface Props {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const WaitForOpponentModal = ({ setOpen }: Props) => {
+  const { subscribe } = useSocket();
+  const { setModalStep } = useSetModalStepContext();
+  const { room, setRoom } = useRoomInfoContext();
+
+  useEffect(() => {
+    const unsubscribe = subscribe((msg) => {
+      if (msg.type === "all_users_joined") {
+        if (msg.connCompleted) {
+          console.log("모두 접속 완료");
+          setModalStep("WAIT_READY");
+
+          if (!room.code) {
+            setRoom((prev) => {
+              return {
+                ...prev,
+                ["code"]: msg.roomCode,
+              };
+            });
+          }
+        }
+      }
+    });
+
+    return unsubscribe;
+  }, [subscribe]);
+
   const onWaitCancelBtnClick = () => {
     setOpen?.(false);
   };

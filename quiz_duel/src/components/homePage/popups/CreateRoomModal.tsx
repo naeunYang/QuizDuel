@@ -6,7 +6,7 @@ import {
 } from "../../shadcn/dialog";
 import Button from "@/components/common/Button";
 import CreateRoom2 from "./CreateRoom2";
-import { useRoomInfoContext, useModalStepContext } from "../Lobby";
+import { useRoomInfoContext, useSetModalStepContext } from "../Lobby";
 import { useSocket } from "@/components/SocketProvider";
 import { useEffect } from "react";
 
@@ -17,7 +17,7 @@ interface Props {
 
 const CreateRoomModal = ({ setOpen, userId }: Props) => {
   const { room, setRoom } = useRoomInfoContext();
-  const { setModalStep } = useModalStepContext();
+  const { setModalStep } = useSetModalStepContext();
   const { subscribe, send } = useSocket();
 
   useEffect(() => {

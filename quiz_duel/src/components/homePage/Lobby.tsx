@@ -17,6 +17,8 @@ import { useNavigate } from "react-router-dom";
 import BaseModal2 from "../common/BaseModal2";
 import CreateRoomModal from "./popups/CreateRoomModal";
 import WaitForOpponentModal from "./popups/WaitForOpponentModal";
+import WaitForReadyModal from "./popups/WaitForReadyModal";
+import { useSocket } from "../SocketProvider";
 
 // roomInfo 초기값
 const defaultRoomData: RoomInfo = {
@@ -36,13 +38,12 @@ export function useRoomInfoContext() {
   return value;
 }
 
-const ModalStepContext = createContext<{
-  modalStep: ModalStep;
+const SetModalStepContext = createContext<{
   setModalStep: React.Dispatch<React.SetStateAction<ModalStep>>;
 } | null>(null);
 
-export function useModalStepContext() {
-  const value = useContext(ModalStepContext);
+export function useSetModalStepContext() {
+  const value = useContext(SetModalStepContext);
   if (!value) throw new Error("ModalStepContext에 문제가 있음");
   return value;
 }
@@ -63,6 +64,7 @@ const Lobby = () => {
   const [opponentState, setOpponentState] = useState(false);
   const [goToBattleUrl, setGoToBattleUrl] = useState("");
   const nav = useNavigate();
+  const { subscribe, send } = useSocket();
 
   useEffect(() => {
     // window.location.search : 현재 url의 쿼리 스트링 부분 가져오기
@@ -142,6 +144,32 @@ const Lobby = () => {
       nav(goToBattleUrl);
     }
   }, [goToBattleUrl, nav]);
+
+  useEffect(() => {
+    const unsubscribe = subscribe((msg) => {
+      if (msg.type === "room_not_found" || msg.type === "room_full") {
+        setSocketErrorMsg(msg.message);
+      } else if (msg.type === "all_users_joined") {
+        if (msg.connCompleted) {
+          console.log("모두 접속 완료");
+          setModalStep1("WAIT_READY");
+
+          if (!room.code) {
+            setRoom((prev) => {
+              return {
+                ...prev,
+                ["code"]: msg.roomCode,
+              };
+            });
+          }
+
+          setOpenModal(true);
+        }
+      }
+    });
+
+    return unsubscribe;
+  }, [subscribe]);
 
   // #region 이벤트 핸들러
 
@@ -258,21 +286,27 @@ const Lobby = () => {
       return;
     }
 
-    connectWebSocket(
-      wsRef,
-      {
-        type: "join",
-        userId: userIdRef.current,
-        roomCode: codeInput.toUpperCase(),
-      },
-      setIsConnComplete,
-      setRoom,
-      userIdRef.current,
-      setSocketErrorMsg,
-      setOpponentState,
-      setIsOpenErrMsg,
-      setGoToBattleUrl
-    );
+    // connectWebSocket(
+    //   wsRef,
+    //   {
+    //     type: "join",
+    //     userId: userIdRef.current,
+    //     roomCode: codeInput.toUpperCase(),
+    //   },
+    //   setIsConnComplete,
+    //   setRoom,
+    //   userIdRef.current,
+    //   setSocketErrorMsg,
+    //   setOpponentState,
+    //   setIsOpenErrMsg,
+    //   setGoToBattleUrl
+    // );
+
+    send({
+      type: "join",
+      userId: userIdRef.current,
+      roomCode: codeInput.toUpperCase(),
+    });
   };
 
   //#endregion
@@ -350,7 +384,7 @@ const Lobby = () => {
       case "WAIT_OPPONENT":
         return <WaitForOpponentModal />;
       case "WAIT_READY":
-        return <></>;
+        return <WaitForReadyModal />;
       default:
         return <></>;
     }
@@ -359,9 +393,7 @@ const Lobby = () => {
   return (
     <div className="Lobby">
       <RoomInfoContext.Provider value={{ room, setRoom }}>
-        <ModalStepContext.Provider
-          value={{ modalStep: modalStep1, setModalStep: setModalStep1 }}
-        >
+        <SetModalStepContext.Provider value={{ setModalStep: setModalStep1 }}>
           <Card className="rounded-[0.5rem] w-95 h-95 flex items-center justify-between">
             <CardContent className="flex flex-col items-center">
               <p className="title">게임 시작하기</p>
@@ -427,7 +459,7 @@ const Lobby = () => {
               {renderStepModal()}
             </BaseModal2>
           )}
-        </ModalStepContext.Provider>
+        </SetModalStepContext.Provider>
       </RoomInfoContext.Provider>
     </div>
   );
