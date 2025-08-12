@@ -34,7 +34,8 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
 
     ws.on("close", async () => {
       console.log("====   WebSocket is Disconnected...!!!   ====");
-      // handleClose(ws);
+
+      handleExit(ws);
 
       // 소켓 삭제
       if (ws.userId && socketInfo.has(ws.userId)) {

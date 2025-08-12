@@ -20,7 +20,7 @@ export default async function handleJoin(
         message: "방을 찾을 수 없습니다.",
       })
     );
-    ws.close();
+
     return;
   }
   // 해당하는 방이 존재할 경우
@@ -34,7 +34,7 @@ export default async function handleJoin(
           message: "방이 가득 찼습니다.",
         })
       );
-      ws.close();
+
       return;
     } else {
       // 소켓 객체 저장
