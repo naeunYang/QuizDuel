@@ -1,14 +1,17 @@
 import "./WaitForOpponent.css";
-import { Spinner } from "../../common/LoadingSpinner";
-import { Card, CardContent } from "../../shadcn/card";
-import { Share, Copy, Check } from "lucide-react";
-import { useCopyToClipboard } from "@uidotdev/usehooks";
-import { Tooltip, TooltipTrigger, TooltipContent } from "../../shadcn/tooltip";
-import { Popover, PopoverContent, PopoverTrigger } from "../../shadcn/popover";
-import SharePlatform from "./SharePlatform";
 
+// React Hooks
 import { useState } from "react";
 import { useRoomInfoContext } from "../Lobby";
+import { useCopyToClipboard } from "@uidotdev/usehooks";
+
+// 컴포넌트
+import { Tooltip, TooltipTrigger, TooltipContent } from "../../shadcn/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "../../shadcn/popover";
+import { Card, CardContent } from "../../shadcn/card";
+import { Spinner } from "../../common/LoadingSpinner";
+import { Share, Copy, Check } from "lucide-react";
+import SharePlatform from "./SharePlatform";
 
 const WaitForOpponent = () => {
   const [, copy] = useCopyToClipboard();

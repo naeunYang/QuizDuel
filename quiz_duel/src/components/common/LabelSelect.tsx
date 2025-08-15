@@ -31,7 +31,7 @@ const LabelSelect = <T,>(props: Props<T>) => {
         onValueChange={(value) => props.onSelectValueChange(props.name, value)}
       >
         <SelectTrigger
-          className="min-w-30 justify-center !text-[16px]"
+          className="min-w-30 justify-center !text-[1rem]"
           style={{ width: props.width }}
         >
           <SelectValue placeholder="선택" />
@@ -43,7 +43,7 @@ const LabelSelect = <T,>(props: Props<T>) => {
               <SelectItem
                 key={idx}
                 value={String(props.getValue(item))}
-                className="!text-[16px]"
+                className="!text-[1rem]"
               >
                 {props.getName(item)}
               </SelectItem>

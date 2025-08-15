@@ -1,5 +1,4 @@
 import { Badge as ShadcnBadge } from "../shadcn/badge";
-import { X } from "lucide-react";
 
 interface Props {
   content: string | undefined;
@@ -8,7 +7,7 @@ interface Props {
 const Badge = (props: Props) => {
   return (
     <ShadcnBadge
-      className="w-10.5 text-[13px] flex items-center gap-1"
+      className="w-10.5 text-[0.8rem] flex items-center gap-1"
       variant="secondary"
     >
       {props.content}

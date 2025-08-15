@@ -9,7 +9,7 @@
 .CreateRoom .select_section .badge_section {
   display: flex;
   gap: 4px;
-  margin: 0 10px;
+  margin: 0 0.6rem;
   justify-content: flex-start;
   max-width: 100%;
 }

@@ -1,3 +1,9 @@
+// React Hooks
+import { useEffect } from "react";
+import { useSocket } from "@/SocketProvider";
+import { useRoomInfoContext, useSetModalStepContext } from "../Lobby";
+
+// 컴포넌트
 import {
   DialogDescription,
   DialogFooter,
@@ -6,9 +12,6 @@ import {
 } from "../../shadcn/dialog";
 import Button from "@/components/common/Button";
 import CreateRoom from "./CreateRoom";
-import { useRoomInfoContext, useSetModalStepContext } from "../Lobby";
-import { useSocket } from "@/SocketProvider";
-import { useEffect } from "react";
 
 interface Props {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;

@@ -6,10 +6,10 @@
 .SharePlatform .logo_section {
   width: 90%;
   height: auto;
-  margin-bottom: 3px;
+  margin-bottom: 0.1rem;
 }
 
 .SharePlatform .name_section {
-  font-size: 13px;
+  font-size: 0.8rem;
   color: gray;
 }

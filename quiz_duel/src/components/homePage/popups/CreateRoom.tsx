@@ -1,13 +1,18 @@
-import type { RoomInfo } from "@/components/homePage/types/roomInfo.types";
-import type { RoomOption } from "@/types/room-options.types";
-
 import "./CreateRoom.css";
+
+// React Hooks, lib
+import { useEffect, useState } from "react";
+import { useRoomInfoContext } from "../Lobby";
+import axios from "axios";
+
+// 컴포넌트
 import LabelInput from "../../common/LabelInput";
 import LabelSelect from "../../common/LabelSelect";
 import Badge from "../../common/Badge";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useRoomInfoContext } from "../Lobby";
+
+// type
+import type { RoomInfo } from "@/components/homePage/types/roomInfo.types";
+import type { RoomOption } from "@/types/room-options.types";
 
 const CreateRoom = () => {
   const [roomOptions, setRoomOptions] = useState<RoomOption | null>();

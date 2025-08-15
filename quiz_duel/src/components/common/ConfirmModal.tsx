@@ -35,7 +35,7 @@ const ConfirmModal = ({
         <AlertDialogFooter className="!justify-center gap-3">
           <AlertDialogCancel
             onClick={() => props.onOpenChange(false)}
-            className="min-w-20 h-[40px] text-[#A4A4A4] bg-[#F4F4F4] hover:bg-[#E6E6E6] hover:text-[#A4A4A4] active:bg-[#DADADA] text-[17px] cursor-pointer"
+            className="min-w-20 h-[2.5rem] text-[#A4A4A4] bg-[#F4F4F4] hover:bg-[#E6E6E6] hover:text-[#A4A4A4] active:bg-[#DADADA] text-[1.1rem] cursor-pointer"
           >
             {closeButtonLabel}
           </AlertDialogCancel>

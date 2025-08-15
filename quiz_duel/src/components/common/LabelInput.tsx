@@ -17,7 +17,7 @@ const LabelInput = (props: Props) => {
       <label className="label_section">{props.label}</label>
       <Input
         autoFocus={true}
-        className="!text-[18px] placeholder:text-[#AAAAAA] min-w-30 max-w-full focus:border-none "
+        className="!text-[1.125rem] placeholder:text-[#AAAAAA] min-w-30 max-w-full focus:border-none "
         name={props.name}
         value={props.content}
         onChange={(e) =>

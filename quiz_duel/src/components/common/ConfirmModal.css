@@ -1,7 +1,7 @@
 .ConfirmModal label {
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
   font-weight: normal;
   white-space: pre-line;
-  font-size: 18px;
+  font-size: 1.125rem;
 }

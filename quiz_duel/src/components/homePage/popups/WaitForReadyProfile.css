@@ -8,13 +8,13 @@
 
 .WaitForReadyProfile .user_name {
   text-align: center;
-  font-size: 18px;
+  font-size: 1.15rem;
   font-weight: bold;
   font-family: "/NanumSquareB.otf";
 }
 
 .WaitForReadyProfile .ready_status {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: bold;
   text-align: center;
 }

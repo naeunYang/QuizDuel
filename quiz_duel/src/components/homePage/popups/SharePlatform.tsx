@@ -6,13 +6,13 @@ interface Props {
   onLogoClick: () => void;
 }
 
-const SharePlatform = (props: Props) => {
+const SharePlatform = ({ fileName, platformName, onLogoClick }: Props) => {
   return (
     <button className="SharePlatform">
-      <div className="logo_section" onClick={props.onLogoClick}>
-        <img src={`../src/assets/${props.fileName}`} />
+      <div className="logo_section" onClick={onLogoClick}>
+        <img src={`../src/assets/${fileName}`} />
       </div>
-      <div className="name_section">{props.platformName}</div>
+      <div className="name_section">{platformName}</div>
     </button>
   );
 };

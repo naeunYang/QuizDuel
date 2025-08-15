@@ -1,3 +1,10 @@
+// React Hooks
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSocket } from "@/SocketProvider";
+import { useRoomInfoContext } from "../Lobby";
+
+// 컴포넌트
 import {
   DialogDescription,
   DialogFooter,
@@ -6,10 +13,6 @@ import {
 } from "../../shadcn/dialog";
 import Button from "@/components/common/Button";
 import WaitForReady from "./WaitForReady";
-import { useRoomInfoContext } from "../Lobby";
-import { useSocket } from "@/SocketProvider";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;

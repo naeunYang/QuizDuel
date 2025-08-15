@@ -1,19 +1,24 @@
 import "./Lobby.css";
-import { Card, CardContent, CardFooter } from "../shadcn/card";
-import Button from "../common/Button";
-import { Input } from "../shadcn/input";
-import type { RoomInfo } from "@/components/homePage/types/roomInfo.types";
-import LoadingModal from "../common/LoadingModal";
-import type { ModalStep } from "./types/modal-step.types";
-import type { RoonInfoContextType } from "./types/room-info-context.types";
 
+// React Hooks
 import { useEffect, useState, useRef, createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSocket } from "../../SocketProvider";
+
+// 컴포넌트
+import { Card, CardContent, CardFooter } from "../shadcn/card";
+import { Input } from "../shadcn/input";
+import Button from "../common/Button";
+import LoadingModal from "../common/LoadingModal";
 import BaseModal from "../common/BaseModal";
 import CreateRoomModal from "./popups/CreateRoomModal";
 import WaitForOpponentModal from "./popups/WaitForOpponentModal";
 import WaitForReadyModal from "./popups/WaitForReadyModal";
-import { useSocket } from "../../SocketProvider";
+
+// type
+import type { RoomInfo } from "@/components/homePage/types/roomInfo.types";
+import type { ModalStep } from "./types/modal-step.types";
+import type { RoonInfoContextType } from "./types/room-info-context.types";
 
 // roomInfo 초기값
 const defaultRoomData: RoomInfo = {
@@ -25,6 +30,7 @@ const defaultRoomData: RoomInfo = {
   timeLimit: 15,
 };
 
+// Context
 const RoomInfoContext = createContext<RoonInfoContextType | null>(null);
 
 export function useRoomInfoContext() {
@@ -113,6 +119,13 @@ const Lobby = () => {
       }, 100);
     }
   }, [isOpenErrMsg]);
+
+  useEffect(() => {
+    // 팝업 닫히면 값 초기화
+    if (!isOpenModal) {
+      setRoom(defaultRoomData);
+    }
+  }, [isOpenModal]);
 
   // #region 이벤트 핸들러
 

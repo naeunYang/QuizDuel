@@ -2,11 +2,11 @@
   display: flex;
   justify-content: space-between;
   position: relative;
-  margin-top: 20px;
+  margin-top: 1.25rem;
 }
 
 .WaitForReady .versus {
-  width: 50px;
+  width: 3.2rem;
   height: auto;
   position: absolute;
   left: 50%;

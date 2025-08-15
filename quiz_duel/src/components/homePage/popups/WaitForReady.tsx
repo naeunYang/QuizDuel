@@ -1,5 +1,6 @@
 import "./WaitForReady.css";
 import WaitForReadyProfile from "./WaitForReadyProfile";
+import versus from "../../../assets/versus.png";
 
 interface Props {
   isReady: boolean;
@@ -15,7 +16,7 @@ const WaitForReady = ({ isReady, opponentState }: Props) => {
         userName="Player1"
         isReady={isReady}
       />
-      <img className="versus" src="../src/assets/versus.png" />
+      <img className="versus" src={versus} />
       <WaitForReadyProfile
         userProfile="player2.PNG"
         backColor="#DBF5D7"

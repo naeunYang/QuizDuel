@@ -1,20 +1,20 @@
 .LabelInput {
   display: flex;
-  margin: 10px;
+  margin: 0.6rem;
 }
 
 .LabelInput.horizontal {
   flex-direction: row;
-  gap: 10px;
+  gap: 0.6rem;
 }
 
 .LabelInput.vertical {
   flex-direction: column;
-  gap: 5px;
+  gap: 0.3rem;
 }
 
 .LabelInput .label_section {
-  font-size: 18px;
+  font-size: 1.125rem;
   align-content: center;
   white-space: nowrap;
 }

@@ -15,7 +15,7 @@ const LabelTextArea = (props: Props) => {
     <div className={`LabelTextArea ${props.direction}`}>
       <label className="label_section">{props.label}</label>
       <Textarea
-        className="!text-[18px] placeholder:text-[#AAAAAA] min-w-30 max-w-full focus:border-none "
+        className="!text-[1.125rem] placeholder:text-[#AAAAAA] min-w-30 max-w-full focus:border-none "
         placeholder={props.placeholder}
         value={props.content}
         style={{ width: props.width, height: props.height, resize: "none" }}

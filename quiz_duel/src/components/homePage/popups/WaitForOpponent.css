@@ -8,8 +8,8 @@
 .WaitForOpponent .title_section {
   width: 100%;
   text-align: center;
-  margin: 20px 0px 32px 0px;
-  font-size: 18px;
+  margin: 1.25rem 0rem 2rem 0rem;
+  font-size: 1.125rem;
 }
 
 .WaitForOpponent .cardcontent_section {
@@ -26,6 +26,6 @@
 
 .WaitForOpponent .copy {
   color: #1abc9c;
-  font-size: 21px;
+  font-size: 1.3rem;
   margin-bottom: 0.75rem;
 }

@@ -1,7 +1,8 @@
+// React Hooks
 import type { ReactElement } from "react";
 import { cloneElement } from "react";
 
-import "./BaseModal.css";
+// 컴포넌트
 import { Dialog, DialogContent } from "../shadcn/dialog";
 
 interface Props {

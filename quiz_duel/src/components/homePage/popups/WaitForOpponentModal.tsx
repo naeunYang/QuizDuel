@@ -1,9 +1,12 @@
-import { useSocket } from "@/SocketProvider";
-import { DialogFooter } from "../../shadcn/dialog";
-import WaitForOpponent from "./WaitForOpponent";
-import Button from "@/components/common/Button";
+// React Hooks
 import { useEffect } from "react";
 import { useRoomInfoContext, useSetModalStepContext } from "../Lobby";
+import { useSocket } from "@/SocketProvider";
+
+// 컴포넌트
+import { DialogFooter } from "../../shadcn/dialog";
+import Button from "@/components/common/Button";
+import WaitForOpponent from "./WaitForOpponent";
 
 interface Props {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;

@@ -1,20 +1,20 @@
 .LabelTextArea {
   display: flex;
-  margin: 10px;
+  margin: 0.6rem;
 }
 
 .LabelTextArea.horizontal {
   flex-direction: row;
-  gap: 10px;
+  gap: 0.6rem;
 }
 
 .LabelTextArea.vertical {
   flex-direction: column;
-  gap: 5px;
+  gap: 0.3rem;
 }
 
 .LabelTextArea .label_section {
-  font-size: 18px;
+  font-size: 1.125rem;
   align-content: center;
   white-space: nowrap;
 }
