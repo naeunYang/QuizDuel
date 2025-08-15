@@ -8,7 +8,7 @@ export default async function handleExit(ws: ExtendedWebSocket) {
   if (ws.roomCode) {
     let users = await getRoom(ws.roomCode);
 
-    if (users.length > 1) {
+    if (users?.length > 1) {
       // 상대방에게 quit 상태 전달
       users.forEach((user) => {
         if (user.userId !== ws.userId) {

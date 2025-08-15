@@ -5,9 +5,9 @@ import {
   DialogTitle,
 } from "../../shadcn/dialog";
 import Button from "@/components/common/Button";
-import WaitForReady2 from "./WaitForReady2";
+import WaitForReady from "./WaitForReady";
 import { useRoomInfoContext } from "../Lobby";
-import { useSocket } from "@/components/SocketProvider";
+import { useSocket } from "@/SocketProvider";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -67,7 +67,7 @@ const WaitForReadyModal = ({ setOpen, userId }: Props) => {
       </DialogHeader>
 
       <div className="h-full mt-3 mb-10">
-        <WaitForReady2 isReady={isReady} opponentState={opponentState} />
+        <WaitForReady isReady={isReady} opponentState={opponentState} />
       </div>
 
       <DialogFooter className="flex flex-row !justify-center gap-3">

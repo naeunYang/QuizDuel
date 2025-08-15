@@ -1,12 +1,12 @@
-import "./WaitForReady2.css";
-import WaitForReadyProfile from "../WaitForReadyProfile";
+import "./WaitForReady.css";
+import WaitForReadyProfile from "./WaitForReadyProfile";
 
 interface Props {
   isReady: boolean;
   opponentState: boolean;
 }
 
-const WaitForReady2 = ({ isReady, opponentState }: Props) => {
+const WaitForReady = ({ isReady, opponentState }: Props) => {
   return (
     <div className="WaitForReady">
       <WaitForReadyProfile
@@ -26,4 +26,4 @@ const WaitForReady2 = ({ isReady, opponentState }: Props) => {
   );
 };
 
-export default WaitForReady2;
+export default WaitForReady;

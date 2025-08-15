@@ -1,6 +1,6 @@
-import { useSocket } from "@/components/SocketProvider";
+import { useSocket } from "@/SocketProvider";
 import { DialogFooter } from "../../shadcn/dialog";
-import WaitForOpponent2 from "./WaitForOpponent2";
+import WaitForOpponent from "./WaitForOpponent";
 import Button from "@/components/common/Button";
 import { useEffect } from "react";
 import { useRoomInfoContext, useSetModalStepContext } from "../Lobby";
@@ -46,7 +46,7 @@ const WaitForOpponentModal = ({ setOpen }: Props) => {
   return (
     <div>
       <div className="h-full mt-3 mb-2">
-        <WaitForOpponent2 />
+        <WaitForOpponent />
       </div>
 
       <DialogFooter className="flex flex-row !justify-center gap-3 mt-8">

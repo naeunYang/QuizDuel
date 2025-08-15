@@ -5,9 +5,9 @@ import {
   DialogTitle,
 } from "../../shadcn/dialog";
 import Button from "@/components/common/Button";
-import CreateRoom2 from "./CreateRoom2";
+import CreateRoom from "./CreateRoom";
 import { useRoomInfoContext, useSetModalStepContext } from "../Lobby";
-import { useSocket } from "@/components/SocketProvider";
+import { useSocket } from "@/SocketProvider";
 import { useEffect } from "react";
 
 interface Props {
@@ -85,7 +85,7 @@ const CreateRoomModal = ({ setOpen, userId }: Props) => {
       </DialogHeader>
 
       <div className="h-full mt-3 mb-2">
-        <CreateRoom2 />
+        <CreateRoom />
       </div>
 
       <DialogFooter className="flex flex-row !justify-center gap-3">

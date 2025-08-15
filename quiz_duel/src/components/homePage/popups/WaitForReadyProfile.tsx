@@ -1,5 +1,5 @@
 import "./WaitForReadyProfile.css";
-import { Card, CardContent } from "../shadcn/card";
+import { Card, CardContent } from "../../shadcn/card";
 
 interface Props {
   userProfile: string;

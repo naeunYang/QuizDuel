@@ -1,17 +1,19 @@
 import type { ReceiveSocketMessage } from "@/types/receive-socket-message.types";
 import type { SendSocketMessage } from "@/types/send-socket-message.types";
-import { useEffect, useRef, createContext, useContext } from "react";
+import { useEffect, useRef, createContext, useContext, useState } from "react";
 
 const socketUrl = "ws://localhost:3001";
 
 type SocketContextType = {
   subscribe: (fn: (msg: ReceiveSocketMessage) => void) => () => void; // 함수를 받아서 또 다른 함수를 반환(구독 함수를 받아서 구독 해제 함수 반환)
   send: (msg: SendSocketMessage) => void;
+  isConnected: boolean;
 };
 
 const SocketContext = createContext<SocketContextType | null>(null);
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isConnected, setIsConnected] = useState(false);
   const socketRef = useRef<WebSocket | null>(null);
   const listenersRef = useRef(new Set<(msg: ReceiveSocketMessage) => void>());
 
@@ -21,6 +23,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     socket.onopen = () => {
       console.log("====   WebSocket is Connected...!!!   ====");
+      setIsConnected(true);
     };
 
     socket.onmessage = (e) => {
@@ -52,7 +55,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <SocketContext.Provider value={{ subscribe, send }}>
+    <SocketContext.Provider value={{ subscribe, send, isConnected }}>
       {children}
     </SocketContext.Provider>
   );
