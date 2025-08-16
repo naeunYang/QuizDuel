@@ -7,13 +7,13 @@ import { useSocket } from "../../SocketProvider";
 
 // 컴포넌트
 import { Card, CardContent, CardFooter } from "../shadcn/card";
-import { Input } from "../shadcn/input";
 import Button from "../common/Button";
 import LoadingModal from "../common/LoadingModal";
 import BaseModal from "../common/BaseModal";
 import CreateRoomModal from "./popups/CreateRoomModal";
 import WaitForOpponentModal from "./popups/WaitForOpponentModal";
 import WaitForReadyModal from "./popups/WaitForReadyModal";
+import CodeInput from "./CodeInput";
 
 // type
 import type { RoomInfo } from "@/components/homePage/types/roomInfo.types";
@@ -55,7 +55,6 @@ const Lobby = () => {
   const [socketErrorMsg, setSocketErrorMsg] = useState("");
   const [isOpenErrMsg, setIsOpenErrMsg] = useState(false);
   const [room, setRoom] = useState<RoomInfo>(defaultRoomData);
-  const [codeInput, setCodeInput] = useState(""); // 코드 입력 value 상태
   const codeInputRef = useRef<HTMLInputElement>(null);
   const userIdRef = useRef<string>(crypto.randomUUID());
   const nav = useNavigate();
@@ -114,9 +113,9 @@ const Lobby = () => {
 
   useEffect(() => {
     if (!isOpenErrMsg) {
-      setTimeout(() => {
-        codeInputRef.current?.focus();
-      }, 100);
+      codeInputRef.current?.focus(); // 에러 메세지 출력 후 코드 input에 포커스 주기
+      setSocketErrorMsg("");
+      setIsOpenErrMsg(false);
     }
   }, [isOpenErrMsg]);
 
@@ -135,26 +134,19 @@ const Lobby = () => {
     setOpenModal(true);
   };
 
-  // 코드 입력 input
-  const onCodeInputValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCodeInput(e.target.value);
-  };
-
-  const onCodeInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && codeInput) {
-      onPartiBtnClick();
+  // 참가하기 버튼 클릭
+  const onPartiBtnClick = () => {
+    if (codeInputRef.current) {
+      codeInputSubmit(codeInputRef.current.value);
     }
   };
 
-  // 참가하기 버튼 클릭
-  const onPartiBtnClick = () => {
-    if (!codeInput) {
+  const codeInputSubmit = (code: string) => {
+    if (!code) {
       setSocketErrorMsg("코드를 입력하세요!");
 
       return;
-    } else if (
-      codeInput.toUpperCase() === import.meta.env.VITE_ADMIN_ENTRY_CODE
-    ) {
+    } else if (code.toUpperCase() === import.meta.env.VITE_ADMIN_ENTRY_CODE) {
       nav("/admin");
       return;
     }
@@ -162,7 +154,7 @@ const Lobby = () => {
     send({
       type: "join",
       userId: userIdRef.current,
-      roomCode: codeInput.toUpperCase(),
+      roomCode: code.toUpperCase(),
     });
   };
 
@@ -196,14 +188,7 @@ const Lobby = () => {
               <div className="divider">
                 <span className="divider-text">또는</span>
               </div>
-              <Input
-                ref={codeInputRef}
-                value={codeInput}
-                onChange={onCodeInputValueChange}
-                onKeyDown={onCodeInputKeyDown}
-                className="!text-[1.125rem] placeholder:text-[#AAAAAA] placeholder:text-center focus:border-none p-5.5 "
-                placeholder={"코드 입력 (예: ABC123)"}
-              />
+              <CodeInput ref={codeInputRef} codeInputSubmit={codeInputSubmit} />
             </CardContent>
             <CardFooter>
               <Button
