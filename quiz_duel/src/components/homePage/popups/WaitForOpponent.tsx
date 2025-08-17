@@ -2,8 +2,8 @@ import "./WaitForOpponent.css";
 
 // React Hooks
 import { useState } from "react";
-import { useRoomInfoContext } from "../Lobby";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
+import { useRoomInfoValueContext } from "@/context/RoomInfoProvider";
 
 // 컴포넌트
 import { Tooltip, TooltipTrigger, TooltipContent } from "../../shadcn/tooltip";
@@ -15,8 +15,8 @@ import SharePlatform from "./SharePlatform";
 
 const WaitForOpponent = () => {
   const [, copy] = useCopyToClipboard();
-  const { room } = useRoomInfoContext();
   const [isCopied, setIsCopied] = useState(false);
+  const room = useRoomInfoValueContext();
 
   const onCopyBtnClick = () => {
     copy(room.code);

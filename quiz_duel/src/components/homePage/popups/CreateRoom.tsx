@@ -1,8 +1,7 @@
 import "./CreateRoom.css";
 
 // React Hooks, lib
-import { useEffect, useState } from "react";
-import { useRoomInfoContext } from "../Lobby";
+import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import axios from "axios";
 
 // 컴포넌트
@@ -14,9 +13,27 @@ import Badge from "../../common/Badge";
 import type { RoomInfo } from "@/components/homePage/types/roomInfo.types";
 import type { RoomOption } from "@/types/room-options.types";
 
-const CreateRoom = () => {
+// roomInfo 초기값
+const defaultRoomData: RoomInfo = {
+  code: "",
+  title: "진 사람 떡볶이 쏘기😎",
+  quizCount: 5,
+  level: "high",
+  category: [],
+  timeLimit: 15,
+};
+
+interface ChildHandle {
+  getValue: () => RoomInfo;
+}
+
+const CreateRoom = forwardRef<ChildHandle>((props, ref) => {
   const [roomOptions, setRoomOptions] = useState<RoomOption | null>();
-  const { room, setRoom } = useRoomInfoContext();
+  const [roomInput, setRoomInput] = useState<RoomInfo>(defaultRoomData);
+
+  useImperativeHandle(ref, () => ({
+    getValue: () => roomInput,
+  }));
 
   useEffect(() => {
     axios
@@ -32,16 +49,15 @@ const CreateRoom = () => {
   // 입력값 변경
   const onChangeInput = (name: string, value: string) => {
     if (name === "category") {
-      setRoom((prev) => {
-        if (prev.category.includes(value as RoomInfo["category"][0])) {
+      setRoomInput((prev) => {
+        // 이미 해당 카테고리 값이 설정되어 있으면 return
+        if (prev.category.includes(value)) {
           return prev;
         }
 
-        const newCategory = [
-          ...prev.category,
-          value as RoomInfo["category"][0],
-        ];
+        const newCategory = [...prev.category, value];
 
+        // 3개가 넘어가면 맨 앞에 있는 요소를 제거
         if (newCategory.length > 3) {
           newCategory.shift();
         }
@@ -49,7 +65,7 @@ const CreateRoom = () => {
         return { ...prev, category: newCategory };
       });
     } else {
-      setRoom((prev) => ({
+      setRoomInput((prev) => ({
         ...prev,
         [name]: value,
       }));
@@ -62,7 +78,7 @@ const CreateRoom = () => {
         direction="vertical"
         label="방 제목"
         name="title"
-        content={room.title}
+        content={roomInput.title}
         placeholder="방 제목을 입력하세요."
         onInputValueChange={onChangeInput}
       />
@@ -76,7 +92,7 @@ const CreateRoom = () => {
           getName={(item) => item.countName}
           width={135}
           name="quizCount"
-          content={String(room.quizCount)}
+          content={String(roomInput.quizCount)}
           onSelectValueChange={onChangeInput}
         />
         <LabelSelect
@@ -88,7 +104,7 @@ const CreateRoom = () => {
           getName={(item) => item.levelName}
           width={135}
           name="level"
-          content={room.level}
+          content={roomInput.level}
           onSelectValueChange={onChangeInput}
         />
       </div>
@@ -103,11 +119,11 @@ const CreateRoom = () => {
             getName={(item) => item.categoryName}
             width={135}
             name="category"
-            content={room.category[room.category.length - 1]}
+            content={roomInput.category[roomInput.category.length - 1]}
             onSelectValueChange={onChangeInput}
           />
           <div className="badge_section">
-            {room.category.map((item, idx) => (
+            {roomInput.category.map((item, idx) => (
               <Badge
                 key={idx}
                 content={
@@ -129,12 +145,12 @@ const CreateRoom = () => {
           getName={(item) => item.timeName}
           width={135}
           name="timeLimit"
-          content={String(room.timeLimit)}
+          content={String(roomInput.timeLimit)}
           onSelectValueChange={onChangeInput}
         />
       </div>
     </div>
   );
-};
+});
 
 export default CreateRoom;

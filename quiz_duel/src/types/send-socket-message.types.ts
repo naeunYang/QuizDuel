@@ -1,5 +1,12 @@
 export type SendSocketMessage =
-  | { type: "create" }
+  | {
+      type: "create";
+      title: string;
+      quizCount: number;
+      level: string;
+      category: string[];
+      timeLimit: number;
+    }
   | { type: "join"; userId: string; roomCode: string }
   | {
       type: "ready_status";

@@ -1,7 +1,8 @@
 // React Hooks
-import { useEffect } from "react";
-import { useSocket } from "@/SocketProvider";
-import { useRoomInfoContext, useSetModalStepContext } from "../Lobby";
+import { useEffect, useRef } from "react";
+import { useSocket } from "@/context/SocketProvider";
+import { useSetModalStepContext } from "../Lobby";
+import { useSetRoomInfoContext } from "@/context/RoomInfoProvider";
 
 // 컴포넌트
 import {
@@ -13,15 +14,23 @@ import {
 import Button from "@/components/common/Button";
 import CreateRoom from "./CreateRoom";
 
+// type
+import type { RoomInfo } from "../types/roomInfo.types";
+
 interface Props {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   userId?: string;
 }
 
+interface ChildHandle {
+  getValue: () => RoomInfo;
+}
+
 const CreateRoomModal = ({ setOpen, userId }: Props) => {
-  const { room, setRoom } = useRoomInfoContext();
   const { setModalStep } = useSetModalStepContext();
   const { subscribe, send } = useSocket();
+  const childRef = useRef<ChildHandle>(null);
+  const setRoom = useSetRoomInfoContext();
 
   useEffect(() => {
     const unsubscribe = subscribe((msg) => {
@@ -29,18 +38,18 @@ const CreateRoomModal = ({ setOpen, userId }: Props) => {
       if (msg.type === "room_create_success") {
         console.log(msg.message);
 
-        setRoom((prev) => {
-          return {
-            ...prev,
-            ["code"]: msg.roomCode,
-          };
-        });
-
         // join 요청
         send({
           type: "join",
           userId: userId!,
           roomCode: msg.roomCode,
+        });
+
+        setRoom((prev) => {
+          return {
+            ...prev,
+            code: msg.roomCode,
+          };
         });
 
         // 대기 창으로 전환
@@ -52,30 +61,32 @@ const CreateRoomModal = ({ setOpen, userId }: Props) => {
   }, [subscribe]);
 
   const onCreateBtnClick = () => {
-    // 카테고리 선택 X 시 random값으로 설정
-    if (room.category.length === 0) {
+    if (childRef.current) {
+      const childRoomInput = childRef.current.getValue();
+
+      // create 요청
+      send({
+        type: "create",
+        title:
+          childRoomInput.title === ""
+            ? "진 사람 떡볶이 쏘기😎"
+            : childRoomInput.title,
+        quizCount: childRoomInput.quizCount,
+        level: childRoomInput.level,
+        category:
+          childRoomInput.category.length === 0
+            ? ["random"]
+            : childRoomInput.category,
+        timeLimit: childRoomInput.timeLimit,
+      });
+
       setRoom((prev) => {
         return {
           ...prev,
-          ["category"]: ["random"],
+          title: childRoomInput.title,
         };
       });
     }
-
-    // 방 제목 비었을 경우 기본값으로 설정
-    if (room.title === "") {
-      setRoom((prev) => {
-        return {
-          ...prev,
-          ["title"]: "진 사람 떡볶이 쏘기😎",
-        };
-      });
-    }
-
-    // create 요청
-    send({
-      type: "create",
-    });
   };
 
   return (
@@ -88,7 +99,7 @@ const CreateRoomModal = ({ setOpen, userId }: Props) => {
       </DialogHeader>
 
       <div className="h-full mt-3 mb-2">
-        <CreateRoom />
+        <CreateRoom ref={childRef} />
       </div>
 
       <DialogFooter className="flex flex-row !justify-center gap-3">

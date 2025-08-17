@@ -1,8 +1,8 @@
 // React Hooks
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSocket } from "@/SocketProvider";
-import { useRoomInfoContext } from "../Lobby";
+import { useSocket } from "@/context/SocketProvider";
+import { useRoomInfoValueContext } from "@/context/RoomInfoProvider";
 
 // 컴포넌트
 import {
@@ -22,9 +22,9 @@ interface Props {
 const WaitForReadyModal = ({ setOpen, userId }: Props) => {
   const [isReady, setIsReady] = useState(false);
   const [opponentState, setOpponentState] = useState(false);
-  const { room } = useRoomInfoContext();
   const { subscribe, send } = useSocket();
   const nav = useNavigate();
+  const room = useRoomInfoValueContext();
 
   useEffect(() => {
     const unsubscribe = subscribe((msg) => {

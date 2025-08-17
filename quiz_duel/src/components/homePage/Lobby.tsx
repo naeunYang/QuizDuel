@@ -3,7 +3,8 @@ import "./Lobby.css";
 // React Hooks
 import { useEffect, useState, useRef, createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSocket } from "../../SocketProvider";
+import { useSocket } from "../../context/SocketProvider";
+import { useSetRoomInfoContext } from "@/context/RoomInfoProvider";
 
 // 컴포넌트
 import { Card, CardContent, CardFooter } from "../shadcn/card";
@@ -16,29 +17,9 @@ import WaitForReadyModal from "./popups/WaitForReadyModal";
 import CodeInput from "./CodeInput";
 
 // type
-import type { RoomInfo } from "@/components/homePage/types/roomInfo.types";
 import type { ModalStep } from "./types/modal-step.types";
-import type { RoonInfoContextType } from "./types/room-info-context.types";
-
-// roomInfo 초기값
-const defaultRoomData: RoomInfo = {
-  code: "",
-  title: "진 사람 떡볶이 쏘기😎",
-  quizCount: 5,
-  level: "high",
-  category: [],
-  timeLimit: 15,
-};
 
 // Context
-const RoomInfoContext = createContext<RoonInfoContextType | null>(null);
-
-export function useRoomInfoContext() {
-  const value = useContext(RoomInfoContext);
-  if (!value) throw new Error("RoomInfoContext에 문제가 있음");
-  return value;
-}
-
 const SetModalStepContext = createContext<{
   setModalStep: React.Dispatch<React.SetStateAction<ModalStep>>;
 } | null>(null);
@@ -54,11 +35,11 @@ const Lobby = () => {
   const [modalStep, setModalStep] = useState<ModalStep>(null);
   const [socketErrorMsg, setSocketErrorMsg] = useState("");
   const [isOpenErrMsg, setIsOpenErrMsg] = useState(false);
-  const [room, setRoom] = useState<RoomInfo>(defaultRoomData);
   const codeInputRef = useRef<HTMLInputElement>(null);
   const userIdRef = useRef<string>(crypto.randomUUID());
   const nav = useNavigate();
   const { subscribe, send, isConnected } = useSocket();
+  const setRoom = useSetRoomInfoContext();
 
   useEffect(() => {
     // window.location.search : 현재 url의 쿼리 스트링 부분 가져오기
@@ -71,6 +52,13 @@ const Lobby = () => {
         type: "join",
         userId: userIdRef.current,
         roomCode: roomCode,
+      });
+
+      setRoom((prev) => {
+        return {
+          ...prev,
+          code: roomCode,
+        };
       });
 
       window.history.replaceState({}, "", window.location.origin);
@@ -87,15 +75,6 @@ const Lobby = () => {
         if (msg.connCompleted) {
           console.log("모두 접속 완료");
           setModalStep("WAIT_READY");
-
-          if (!room.code) {
-            setRoom((prev) => {
-              return {
-                ...prev,
-                ["code"]: msg.roomCode,
-              };
-            });
-          }
 
           setOpenModal(true);
         }
@@ -118,13 +97,6 @@ const Lobby = () => {
       setIsOpenErrMsg(false);
     }
   }, [isOpenErrMsg]);
-
-  useEffect(() => {
-    // 팝업 닫히면 값 초기화
-    if (!isOpenModal) {
-      setRoom(defaultRoomData);
-    }
-  }, [isOpenModal]);
 
   // #region 이벤트 핸들러
 
@@ -156,6 +128,13 @@ const Lobby = () => {
       userId: userIdRef.current,
       roomCode: code.toUpperCase(),
     });
+
+    setRoom((prev) => {
+      return {
+        ...prev,
+        code: code.toUpperCase(),
+      };
+    });
   };
 
   //#endregion
@@ -175,50 +154,48 @@ const Lobby = () => {
 
   return (
     <div className="Lobby">
-      <RoomInfoContext.Provider value={{ room, setRoom }}>
-        <SetModalStepContext.Provider value={{ setModalStep: setModalStep }}>
-          <Card className="rounded-[0.5rem] w-95 h-95 flex items-center justify-between">
-            <CardContent className="flex flex-col items-center">
-              <p className="title">게임 시작하기</p>
-              <Button
-                type="CREATEROOM"
-                text="🕹️ 새 방 만들기"
-                onButtonClick={onCreateRoomBtnClick}
-              />
-              <div className="divider">
-                <span className="divider-text">또는</span>
-              </div>
-              <CodeInput ref={codeInputRef} codeInputSubmit={codeInputSubmit} />
-            </CardContent>
-            <CardFooter>
-              <Button
-                type="PARTICIPATE"
-                text="🎉참가하기"
-                onButtonClick={onPartiBtnClick}
-              />
-            </CardFooter>
-          </Card>
-
-          {isOpenModal && (
-            <BaseModal
-              open={isOpenModal}
-              setOpen={setOpenModal}
-              userId={userIdRef.current}
-            >
-              {renderStepModal()}
-            </BaseModal>
-          )}
-
-          {socketErrorMsg && (
-            <LoadingModal
-              open={isOpenErrMsg}
-              content={socketErrorMsg}
-              type={"ERROR"}
-              onOpenChange={setIsOpenErrMsg}
+      <SetModalStepContext.Provider value={{ setModalStep: setModalStep }}>
+        <Card className="rounded-[0.5rem] w-95 h-95 flex items-center justify-between">
+          <CardContent className="flex flex-col items-center">
+            <p className="title">게임 시작하기</p>
+            <Button
+              type="CREATEROOM"
+              text="🕹️ 새 방 만들기"
+              onButtonClick={onCreateRoomBtnClick}
             />
-          )}
-        </SetModalStepContext.Provider>
-      </RoomInfoContext.Provider>
+            <div className="divider">
+              <span className="divider-text">또는</span>
+            </div>
+            <CodeInput ref={codeInputRef} codeInputSubmit={codeInputSubmit} />
+          </CardContent>
+          <CardFooter>
+            <Button
+              type="PARTICIPATE"
+              text="🎉참가하기"
+              onButtonClick={onPartiBtnClick}
+            />
+          </CardFooter>
+        </Card>
+
+        {isOpenModal && (
+          <BaseModal
+            open={isOpenModal}
+            setOpen={setOpenModal}
+            userId={userIdRef.current}
+          >
+            {renderStepModal()}
+          </BaseModal>
+        )}
+
+        {socketErrorMsg && (
+          <LoadingModal
+            open={isOpenErrMsg}
+            content={socketErrorMsg}
+            type={"ERROR"}
+            onOpenChange={setIsOpenErrMsg}
+          />
+        )}
+      </SetModalStepContext.Provider>
     </div>
   );
 };

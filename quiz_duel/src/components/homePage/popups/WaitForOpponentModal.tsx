@@ -1,7 +1,7 @@
 // React Hooks
 import { useEffect } from "react";
-import { useRoomInfoContext, useSetModalStepContext } from "../Lobby";
-import { useSocket } from "@/SocketProvider";
+import { useSetModalStepContext } from "../Lobby";
+import { useSocket } from "@/context/SocketProvider";
 
 // 컴포넌트
 import { DialogFooter } from "../../shadcn/dialog";
@@ -15,7 +15,6 @@ interface Props {
 const WaitForOpponentModal = ({ setOpen }: Props) => {
   const { subscribe, send } = useSocket();
   const { setModalStep } = useSetModalStepContext();
-  const { room, setRoom } = useRoomInfoContext();
 
   useEffect(() => {
     const unsubscribe = subscribe((msg) => {
@@ -23,15 +22,6 @@ const WaitForOpponentModal = ({ setOpen }: Props) => {
         if (msg.connCompleted) {
           console.log("모두 접속 완료");
           setModalStep("WAIT_READY");
-
-          if (!room.code) {
-            setRoom((prev) => {
-              return {
-                ...prev,
-                ["code"]: msg.roomCode,
-              };
-            });
-          }
         }
       }
     });

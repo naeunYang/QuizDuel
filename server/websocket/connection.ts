@@ -22,7 +22,7 @@ export default function handleWebSocketConnection(wss: WebSocket.Server) {
       const data: SocketMessage = JSON.parse(msg.toString());
 
       if (data.type == "create") {
-        handleCreate(ws);
+        handleCreate(ws, data);
       } else if (data.type === "join") {
         handleJoin(ws, data);
       } else if (data.type === "ready_status") {
