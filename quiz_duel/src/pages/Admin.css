@@ -1,0 +1,27 @@
+.Admin {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 0 auto;
+  min-height: 100vh;
+  height: 100vh;
+  padding: 0 1vh 1vh 1vh;
+}
+
+.Admin .logo_section {
+  height: 9%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Admin .logo_section > img {
+  width: 12%;
+}
+
+.Admin .content_section {
+  height: 91%;
+  background-color: whitesmoke;
+  border-radius: 10px;
+  padding: 0.5vh 1.5vh 0 1.5vh;
+}

@@ -1,0 +1,29 @@
+.QuizSearch {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.QuizSearch .search_icon > div {
+  background-color: gray;
+  border-radius: 0.3rem;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+}
+
+.QuizSearch .search_icon :hover {
+  background-color: darkgray;
+}
+
+.QuizSearch .search_icon :active {
+  background-color: dimgray;
+}
+
+.QuizSearch .search_icon {
+  color: white;
+}

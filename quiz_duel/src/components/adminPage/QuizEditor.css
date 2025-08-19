@@ -1,0 +1,11 @@
+.QuizEditor {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.QuizEditor .settings_icon {
+  cursor: pointer;
+  color: gray;
+}
