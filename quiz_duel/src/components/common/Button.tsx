@@ -1,4 +1,5 @@
 import { Button as ShadcnButton } from "../shadcn/button";
+import { CoolMode } from "@/components/magicui/cool-mode";
 
 interface Props {
   text: string;
@@ -36,9 +37,19 @@ const Button = ({ text, type, onButtonClick }: Props) => {
   }
 
   return (
-    <ShadcnButton className={buttonClass} onClick={onButtonClick}>
-      {text}
-    </ShadcnButton>
+    <>
+      {type === "PARTICIPATE" ? (
+        <CoolMode>
+          <ShadcnButton className={buttonClass} onClick={onButtonClick}>
+            {text}
+          </ShadcnButton>
+        </CoolMode>
+      ) : (
+        <ShadcnButton className={buttonClass} onClick={onButtonClick}>
+          {text}
+        </ShadcnButton>
+      )}
+    </>
   );
 };
 

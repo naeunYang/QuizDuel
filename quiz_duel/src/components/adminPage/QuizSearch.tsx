@@ -24,6 +24,10 @@ const status = [
 const QuizSearch = () => {
   return (
     <div className="QuizSearch">
+      <div className="total">
+        Total
+        <p>500</p>
+      </div>
       <LabelInput
         label="ID"
         direction="horizontal"

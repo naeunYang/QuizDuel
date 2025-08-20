@@ -7,9 +7,9 @@
 }
 
 .QuizContent .toolbar_section {
-  height: 7%;
+  height: 10vh;
 }
 
 .QuizContent .table_section {
-  height: 93%;
+  height: 80vh;
 }

@@ -3,12 +3,6 @@
   justify-content: center;
 }
 
-.Lobby .title {
-  font-size: 1.563rem;
-  font-weight: bold;
-  padding-bottom: 1.875rem;
-}
-
 .Lobby .divider {
   display: flex;
   align-items: center;

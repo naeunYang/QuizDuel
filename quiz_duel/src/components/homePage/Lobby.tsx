@@ -15,6 +15,7 @@ import CreateRoomModal from "./popups/CreateRoomModal";
 import WaitForOpponentModal from "./popups/WaitForOpponentModal";
 import WaitForReadyModal from "./popups/WaitForReadyModal";
 import CodeInput from "./CodeInput";
+import { TypingAnimation } from "@/components/magicui/typing-animation";
 
 // type
 import type { ModalStep } from "./types/modal-step.types";
@@ -157,7 +158,13 @@ const Lobby = () => {
       <SetModalStepContext.Provider value={{ setModalStep: setModalStep }}>
         <Card className="rounded-[0.5rem] w-95 h-95 flex items-center justify-between">
           <CardContent className="flex flex-col items-center">
-            <p className="title">게임 시작하기</p>
+            <TypingAnimation
+              startOnView={true}
+              duration={150}
+              className="text-[1.563rem] font-bold pb-[1.875rem]"
+            >
+              게임 시작하기
+            </TypingAnimation>
             <Button
               type="CREATEROOM"
               text="🕹️ 새 방 만들기"
@@ -182,6 +189,7 @@ const Lobby = () => {
             open={isOpenModal}
             setOpen={setOpenModal}
             userId={userIdRef.current}
+            modalStep={modalStep}
           >
             {renderStepModal()}
           </BaseModal>

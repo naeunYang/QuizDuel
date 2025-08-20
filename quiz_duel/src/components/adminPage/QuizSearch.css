@@ -4,8 +4,22 @@
   align-items: center;
 }
 
+.QuizSearch .total {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #5a2e20;
+  font-size: 1rem;
+  font-weight: bold;
+  padding-right: 1rem;
+}
+
+.QuizSearch .total > p {
+  padding: 0.5rem;
+}
+
 .QuizSearch .search_icon > div {
-  background-color: gray;
+  background-color: #5a2e20;
   border-radius: 0.3rem;
   width: 2rem;
   height: 2rem;
@@ -17,11 +31,11 @@
 }
 
 .QuizSearch .search_icon :hover {
-  background-color: darkgray;
+  background-color: #7a4531;
 }
 
 .QuizSearch .search_icon :active {
-  background-color: dimgray;
+  background-color: #4a2316;
 }
 
 .QuizSearch .search_icon {

@@ -1,90 +1,280 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "../shadcn/table";
+import { Checkbox } from "../shadcn/checkbox";
 
-const invoices = [
+const quizList = [
   {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
+    isChecked: false,
+    id: "Solution1",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
   },
   {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
+    isChecked: true,
+    id: "Solution2",
+    type: "MULTIPLE",
+    category: "만화",
+    level: "하",
+    quiz: "짱구 엄마의 이름으로 알맞은 것은?",
+    status: "✅ NORMAL",
   },
   {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
+    isChecked: false,
+    id: "Solution3",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
   },
   {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
+    isChecked: true,
+    id: "Solution4",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
   },
   {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
+    isChecked: false,
+    id: "Solution5",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "🚨 REPORT",
   },
   {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
+    isChecked: false,
+    id: "Solution1",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
   },
   {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
+    isChecked: true,
+    id: "Solution2",
+    type: "MULTIPLE",
+    category: "만화",
+    level: "하",
+    quiz: "짱구 엄마의 이름으로 알맞은 것은?",
+    status: "✅ NORMAL",
+  },
+  {
+    isChecked: false,
+    id: "Solution3",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
+  },
+  {
+    isChecked: true,
+    id: "Solution4",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
+  },
+  {
+    isChecked: false,
+    id: "Solution5",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "🚨 REPORT",
+  },
+  {
+    isChecked: false,
+    id: "Solution1",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
+  },
+  {
+    isChecked: true,
+    id: "Solution2",
+    type: "MULTIPLE",
+    category: "만화",
+    level: "하",
+    quiz: "짱구 엄마의 이름으로 알맞은 것은?",
+    status: "✅ NORMAL",
+  },
+  {
+    isChecked: false,
+    id: "Solution3",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
+  },
+  {
+    isChecked: true,
+    id: "Solution4",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
+  },
+  {
+    isChecked: false,
+    id: "Solution5",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "🚨 REPORT",
+  },
+  {
+    isChecked: false,
+    id: "Solution1",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
+  },
+  {
+    isChecked: true,
+    id: "Solution2",
+    type: "MULTIPLE",
+    category: "만화",
+    level: "하",
+    quiz: "짱구 엄마의 이름으로 알맞은 것은?",
+    status: "✅ NORMAL",
+  },
+  {
+    isChecked: false,
+    id: "Solution3",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
+  },
+  {
+    isChecked: true,
+    id: "Solution4",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
+  },
+  {
+    isChecked: false,
+    id: "Solution5",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "🚨 REPORT",
+  },
+  {
+    isChecked: true,
+    id: "Solution4",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "✅ NORMAL",
+  },
+  {
+    isChecked: false,
+    id: "Solution5",
+    type: "OX",
+    category: "상식",
+    level: "하",
+    quiz: "지구는 태양 주위를 맴돈다.",
+    status: "🚨 REPORT",
   },
 ];
 
 const QuizListTable = () => {
   return (
-    <div>
-      <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
+    <div className="w-full max-h-full overflow-auto">
+      <Table className="table-fixed w-full text-base">
         <TableHeader>
-          <TableRow className="bg-[#E74C3C]">
-            <TableHead className="w-[100px]">Invoice</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Method</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
+          <TableRow className="bg-[#f4a896] hover:bg-[#f7b3a0]">
+            <TableHead className="w-[2rem] text-center">
+              <Checkbox
+                className="border-amber-800
+               data-[state=checked]:bg-[#5a2e20]"
+              />
+            </TableHead>
+            <TableHead className="w-[6rem] text-center text-amber-800">
+              ID
+            </TableHead>
+            <TableHead className="w-[6rem] text-center  text-amber-800">
+              문제 형식
+            </TableHead>
+            <TableHead className="w-[6rem] text-center  text-amber-800">
+              카테고리
+            </TableHead>
+            <TableHead className="w-[6rem] text-center  text-amber-800">
+              난이도
+            </TableHead>
+            <TableHead className="w-[40rem] text-center  text-amber-800">
+              문제
+            </TableHead>
+            <TableHead className="w-[6rem] text-center  text-amber-800">
+              상태
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{invoice.invoice}</TableCell>
-              <TableCell>{invoice.paymentStatus}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell className="text-right">
-                {invoice.totalAmount}
+          {quizList.map((quiz) => (
+            <TableRow
+              key={quiz.id}
+              className="hover:bg-[#f2f2f2] cursor-pointer"
+            >
+              <TableCell className="w-[3.1rem] text-center">
+                <Checkbox
+                  className="border-amber-800
+               data-[state=checked]:bg-[#5a2e20]"
+                  checked={quiz.isChecked}
+                />
+              </TableCell>
+              <TableCell className="w-[6rem] text-center text-[#5a2e20]">
+                {quiz.id}
+              </TableCell>
+              <TableCell className="w-[6rem] text-center text-[#5a2e20]">
+                {quiz.type}
+              </TableCell>
+              <TableCell className="w-[6rem] text-center text-[#5a2e20]">
+                {quiz.category}
+              </TableCell>
+              <TableCell className="w-[6rem] text-center text-[#5a2e20]">
+                {quiz.level}
+              </TableCell>
+              <TableCell className="text-center truncate text-[#5a2e20]">
+                {quiz.quiz}
+              </TableCell>
+              <TableCell className="w-[6rem] text-center text-[#5a2e20]">
+                {quiz.status}
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
-        </TableFooter>
       </Table>
     </div>
   );
