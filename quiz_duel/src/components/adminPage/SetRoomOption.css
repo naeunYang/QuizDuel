@@ -1,0 +1,19 @@
+.SetRoomOption .content-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.SetRoomOption .content-wrapper .key {
+  font-weight: bold;
+  width: 35%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.SetRoomOption .content-wrapper .value {
+  width: 35%;
+}

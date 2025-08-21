@@ -20,6 +20,26 @@ body {
   padding: 0px;
 }
 
+@layer untilities {
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .table_container {
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 0.5rem;
+  }
+
+  .table_container:not(:first-child) .sticky-header {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

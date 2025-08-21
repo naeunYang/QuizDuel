@@ -1,3 +1,5 @@
+import { useRef } from "react";
+
 import {
   Table,
   TableBody,
@@ -7,6 +9,8 @@ import {
   TableRow,
 } from "../shadcn/table";
 import { Checkbox } from "../shadcn/checkbox";
+import { Button } from "../shadcn/button";
+import RowPopover from "./RowPopover";
 
 const quizList = [
   {
@@ -54,166 +58,19 @@ const quizList = [
     quiz: "지구는 태양 주위를 맴돈다.",
     status: "🚨 REPORT",
   },
-  {
-    isChecked: false,
-    id: "Solution1",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: true,
-    id: "Solution2",
-    type: "MULTIPLE",
-    category: "만화",
-    level: "하",
-    quiz: "짱구 엄마의 이름으로 알맞은 것은?",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: false,
-    id: "Solution3",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: true,
-    id: "Solution4",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: false,
-    id: "Solution5",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "🚨 REPORT",
-  },
-  {
-    isChecked: false,
-    id: "Solution1",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: true,
-    id: "Solution2",
-    type: "MULTIPLE",
-    category: "만화",
-    level: "하",
-    quiz: "짱구 엄마의 이름으로 알맞은 것은?",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: false,
-    id: "Solution3",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: true,
-    id: "Solution4",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: false,
-    id: "Solution5",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "🚨 REPORT",
-  },
-  {
-    isChecked: false,
-    id: "Solution1",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: true,
-    id: "Solution2",
-    type: "MULTIPLE",
-    category: "만화",
-    level: "하",
-    quiz: "짱구 엄마의 이름으로 알맞은 것은?",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: false,
-    id: "Solution3",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: true,
-    id: "Solution4",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: false,
-    id: "Solution5",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "🚨 REPORT",
-  },
-  {
-    isChecked: true,
-    id: "Solution4",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "✅ NORMAL",
-  },
-  {
-    isChecked: false,
-    id: "Solution5",
-    type: "OX",
-    category: "상식",
-    level: "하",
-    quiz: "지구는 태양 주위를 맴돈다.",
-    status: "🚨 REPORT",
-  },
 ];
 
 const QuizListTable = () => {
+  const clickRow = useRef("");
+
+  const onRowClick = (id: string) => {
+    clickRow.current = id;
+  };
+
   return (
     <div className="w-full max-h-full overflow-auto">
       <Table className="table-fixed w-full text-base">
-        <TableHeader>
+        <TableHeader className="sticky-header">
           <TableRow className="bg-[#f4a896] hover:bg-[#f7b3a0]">
             <TableHead className="w-[2rem] text-center">
               <Checkbox
@@ -239,6 +96,7 @@ const QuizListTable = () => {
             <TableHead className="w-[6rem] text-center  text-amber-800">
               상태
             </TableHead>
+            <TableHead className="w-[3.5rem] text-center  text-amber-800"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -246,6 +104,7 @@ const QuizListTable = () => {
             <TableRow
               key={quiz.id}
               className="hover:bg-[#f2f2f2] cursor-pointer"
+              onClick={() => onRowClick(quiz.id)}
             >
               <TableCell className="w-[3.1rem] text-center">
                 <Checkbox
@@ -271,6 +130,15 @@ const QuizListTable = () => {
               </TableCell>
               <TableCell className="w-[6rem] text-center text-[#5a2e20]">
                 {quiz.status}
+              </TableCell>
+              <TableCell className="w-[1rem] text-center text-[#5a2e20]">
+                <RowPopover
+                  trigger={
+                    <Button className="bg-[#5a2e20] hover:bg-[#7a4531] active:bg-[#4a2316] text-white text-[1rem] font-[100] cursor-pointer">
+                      수정
+                    </Button>
+                  }
+                />
               </TableCell>
             </TableRow>
           ))}
