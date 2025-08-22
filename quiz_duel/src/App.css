@@ -1,0 +1,16 @@
+.admin_button {
+  background-color: #5a2e20;
+  color: white;
+  font-size: 1rem;
+  font-weight: 100;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.admin_button:hover {
+  background-color: #7a4531;
+}
+
+.admin_button:active {
+  background-color: #4a2316;
+}

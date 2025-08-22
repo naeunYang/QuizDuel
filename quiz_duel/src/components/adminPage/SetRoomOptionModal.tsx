@@ -13,9 +13,6 @@ import Button from "../common/Button";
 import SetRoomOption from "./SetRoomOption";
 import { Button as ShadBtn } from "../shadcn/button";
 
-const buttonStyle =
-  "bg-[#5a2e20] hover:bg-[#7a4531] active:bg-[#4a2316] text-white text-[1rem] font-[100] cursor-pointer";
-
 const SetRoomOptionModal = () => {
   const [open, setOpen] = useState(false);
 
@@ -27,7 +24,7 @@ const SetRoomOptionModal = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
-          <ShadBtn className={`${buttonStyle} w-23`}>방 옵션 관리</ShadBtn>
+          <ShadBtn className={"admin_button w-23"}>방 옵션 관리</ShadBtn>
         </DialogTrigger>
         <DialogContent className="w-90 flex flex-col justify-between gap-0 [&>button]:hidden border-none">
           <DialogHeader>
@@ -42,7 +39,7 @@ const SetRoomOptionModal = () => {
           <DialogFooter className="flex flex-row !justify-center gap-3">
             <Button type="DEFAULT" text="닫기" onButtonClick={onBtnClick} />
             <div onClick={onBtnClick}>
-              <ShadBtn className={`${buttonStyle} w-20 p-5`}>저장</ShadBtn>
+              <ShadBtn className={"admin_button w-20 p-5"}>저장</ShadBtn>
             </div>
           </DialogFooter>
         </DialogContent>

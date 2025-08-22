@@ -10,8 +10,6 @@ import SetRoomOptionModal from "./SetRoomOptionModal";
 
 const QuizEditor = () => {
   const nav = useNavigate();
-  const buttonStyle =
-    "bg-[#5a2e20] hover:bg-[#7a4531] active:bg-[#4a2316] text-white text-[1rem] font-[100] cursor-pointer";
 
   // 문제 생성 버튼 클릭
   const onCreateBtnClick = () => {
@@ -20,7 +18,7 @@ const QuizEditor = () => {
 
   return (
     <div className="QuizEditor">
-      <ShadBtn className={`${buttonStyle} w-20`} onClick={onCreateBtnClick}>
+      <ShadBtn className={"admin_button w-20"} onClick={onCreateBtnClick}>
         문제 생성
       </ShadBtn>
       <ConfirmModal
@@ -30,7 +28,7 @@ const QuizEditor = () => {
         activeButton={
           <Button text="네" type="POSITIVE" onButtonClick={() => {}} />
         }
-        trigger={<ShadBtn className={`${buttonStyle} w-20`}>문제 삭제</ShadBtn>}
+        trigger={<ShadBtn className={"admin_button w-20"}>문제 삭제</ShadBtn>}
       />
       <SetRoomOptionModal />
     </div>

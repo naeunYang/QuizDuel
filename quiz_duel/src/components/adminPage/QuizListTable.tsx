@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "../shadcn/table";
 import { Checkbox } from "../shadcn/checkbox";
-import { Button } from "../shadcn/button";
+
 import RowPopover from "./RowPopover";
 
 const quizList = [
@@ -61,15 +61,11 @@ const quizList = [
 ];
 
 const QuizListTable = () => {
-  const clickRow = useRef("");
-
-  const onRowClick = (id: string) => {
-    clickRow.current = id;
-  };
+  const tableRef = useRef<HTMLTableElement | null>(null);
 
   return (
     <div className="w-full max-h-full overflow-auto">
-      <Table className="table-fixed w-full text-base">
+      <Table className="table-fixed w-full text-base" ref={tableRef}>
         <TableHeader className="sticky-header">
           <TableRow className="bg-[#f4a896] hover:bg-[#f7b3a0]">
             <TableHead className="w-[2rem] text-center">
@@ -96,51 +92,45 @@ const QuizListTable = () => {
             <TableHead className="w-[6rem] text-center  text-amber-800">
               상태
             </TableHead>
-            <TableHead className="w-[3.5rem] text-center  text-amber-800"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {quizList.map((quiz) => (
-            <TableRow
+            <RowPopover
               key={quiz.id}
-              className="hover:bg-[#f2f2f2] cursor-pointer"
-              onClick={() => onRowClick(quiz.id)}
-            >
-              <TableCell className="w-[3.1rem] text-center">
-                <Checkbox
-                  className="border-amber-800
-               data-[state=checked]:bg-[#5a2e20]"
-                  checked={quiz.isChecked}
-                />
-              </TableCell>
-              <TableCell className="w-[6rem] text-center text-[#5a2e20]">
-                {quiz.id}
-              </TableCell>
-              <TableCell className="w-[6rem] text-center text-[#5a2e20]">
-                {quiz.type}
-              </TableCell>
-              <TableCell className="w-[6rem] text-center text-[#5a2e20]">
-                {quiz.category}
-              </TableCell>
-              <TableCell className="w-[6rem] text-center text-[#5a2e20]">
-                {quiz.level}
-              </TableCell>
-              <TableCell className="text-center truncate text-[#5a2e20]">
-                {quiz.quiz}
-              </TableCell>
-              <TableCell className="w-[6rem] text-center text-[#5a2e20]">
-                {quiz.status}
-              </TableCell>
-              <TableCell className="w-[1rem] text-center text-[#5a2e20]">
-                <RowPopover
-                  trigger={
-                    <Button className="bg-[#5a2e20] hover:bg-[#7a4531] active:bg-[#4a2316] text-white text-[1rem] font-[100] cursor-pointer">
-                      수정
-                    </Button>
-                  }
-                />
-              </TableCell>
-            </TableRow>
+              tableRef={tableRef}
+              trigger={
+                <TableRow
+                  key={quiz.id}
+                  className="hover:bg-[#f2f2f2] cursor-pointer"
+                >
+                  <TableCell className="w-[3.1rem] text-center">
+                    <Checkbox
+                      className="border-amber-800 data-[state=checked]:bg-[#5a2e20]"
+                      checked={quiz.isChecked}
+                    />
+                  </TableCell>
+                  <TableCell className="w-[6rem] text-center text-[#5a2e20]">
+                    {quiz.id}
+                  </TableCell>
+                  <TableCell className="w-[6rem] text-center text-[#5a2e20]">
+                    {quiz.type}
+                  </TableCell>
+                  <TableCell className="w-[6rem] text-center text-[#5a2e20]">
+                    {quiz.category}
+                  </TableCell>
+                  <TableCell className="w-[6rem] text-center text-[#5a2e20]">
+                    {quiz.level}
+                  </TableCell>
+                  <TableCell className="text-center truncate text-[#5a2e20]">
+                    {quiz.quiz}
+                  </TableCell>
+                  <TableCell className="w-[6rem] text-center text-[#5a2e20]">
+                    {quiz.status}
+                  </TableCell>
+                </TableRow>
+              }
+            />
           ))}
         </TableBody>
       </Table>

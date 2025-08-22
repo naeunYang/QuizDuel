@@ -33,6 +33,10 @@ const LabelSelect = <T,>(props: Props<T>) => {
         <SelectTrigger
           className="min-w-30 justify-center !text-[1rem]"
           style={{ width: props.width }}
+          onPointerDown={(e) => {
+            // 이벤트 버블링 멈춤
+            e.stopPropagation();
+          }}
         >
           <SelectValue placeholder="선택" />
         </SelectTrigger>

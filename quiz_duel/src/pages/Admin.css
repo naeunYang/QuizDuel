@@ -17,6 +17,7 @@
 
 .Admin .logo_section > img {
   width: 12%;
+  cursor: pointer;
 }
 
 .Admin .content_section {
