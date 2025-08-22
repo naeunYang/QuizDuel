@@ -17,10 +17,10 @@ import type { RoomOption } from "@/types/room-options.types";
 const defaultRoomData: RoomInfo = {
   code: "",
   title: "진 사람 떡볶이 쏘기😎",
-  quizCount: 5,
+  quizCount: 1,
   level: "high",
   category: [],
-  timeLimit: 15,
+  timeLimit: 1,
 };
 
 interface ChildHandle {
@@ -88,7 +88,7 @@ const CreateRoom = forwardRef<ChildHandle>((props, ref) => {
           direction="vertical"
           selectLabel="문제 개수"
           itemList={roomOptions?.counts}
-          getValue={(item) => item.countID}
+          getValue={(item) => item.seq}
           getName={(item) => item.countName}
           width={135}
           name="quizCount"
@@ -141,7 +141,7 @@ const CreateRoom = forwardRef<ChildHandle>((props, ref) => {
           direction="vertical"
           selectLabel="제한 시간(초)"
           itemList={roomOptions?.times}
-          getValue={(item) => item.timeID}
+          getValue={(item) => item.seq}
           getName={(item) => item.timeName}
           width={135}
           name="timeLimit"

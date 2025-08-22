@@ -86,8 +86,14 @@ const QuizListTable = () => {
             <TableHead className="w-[6rem] text-center  text-amber-800">
               난이도
             </TableHead>
-            <TableHead className="w-[40rem] text-center  text-amber-800">
+            <TableHead className="w-[20rem] text-center  text-amber-800">
               문제
+            </TableHead>
+            <TableHead className="w-[20rem] text-center  text-amber-800">
+              해설
+            </TableHead>
+            <TableHead className="w-[6rem] text-center  text-amber-800">
+              정답
             </TableHead>
             <TableHead className="w-[6rem] text-center  text-amber-800">
               상태
@@ -124,6 +130,12 @@ const QuizListTable = () => {
                   </TableCell>
                   <TableCell className="text-center truncate text-[#5a2e20]">
                     {quiz.quiz}
+                  </TableCell>
+                  <TableCell className="text-center truncate text-[#5a2e20]">
+                    {quiz.quiz}
+                  </TableCell>
+                  <TableCell className="text-center truncate text-[#5a2e20]">
+                    {"O"}
                   </TableCell>
                   <TableCell className="w-[6rem] text-center text-[#5a2e20]">
                     {quiz.status}

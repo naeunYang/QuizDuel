@@ -4,7 +4,7 @@ export interface Category {
 }
 
 export interface Count {
-  countID: number;
+  seq: number;
   countName: string;
 }
 
@@ -15,7 +15,7 @@ export interface Level {
 }
 
 export interface Time {
-  timeID: number;
+  seq: number;
   timeName: string;
 }
 
