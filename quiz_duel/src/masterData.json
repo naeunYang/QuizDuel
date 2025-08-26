@@ -1,0 +1,20 @@
+{
+  "types": [
+    { "typeID": "0", "typeName": "OX 퀴즈" },
+    { "typeID": "1", "typeName": "객관식 퀴즈" }
+  ],
+  "status": [
+    {
+      "statusID": "-1",
+      "statusName": "전체"
+    },
+    {
+      "statusID": "0",
+      "statusName": "✅ NORMAL"
+    },
+    {
+      "statusID": "1",
+      "statusName": "🚨 REPORT"
+    }
+  ]
+}
