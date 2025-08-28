@@ -1,35 +1,26 @@
 import "./QuizSearch.css";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
 import LabelInput from "../common/LabelInput";
 import LabelSelect from "../common/LabelSelect";
 import { Search } from "lucide-react";
-import masterData from "../../masterData.json";
-import { useOptionDataContext } from "./QuizContent";
+import { OptionDataContext } from "./QuizContent";
 
-import type { RoomOption } from "@/types/room-options.types";
+import type { SearchInput } from "./types/search-value.types";
 
-interface SearchInput {
-  id?: string;
-  type?: string;
-  category?: string;
-  level?: string;
-  status?: string;
-}
-
-const QuizSearch = () => {
+const QuizSearch = ({
+  setSearchValue,
+}: {
+  setSearchValue: React.Dispatch<React.SetStateAction<SearchInput | null>>;
+}) => {
   const [searchInput, setSearchInput] = useState<SearchInput | null>(null);
   const [dataLength, setDataLength] = useState<number | null>(null);
-  const [roomOption, setRoomOptions] = useState<Pick<
-    RoomOption,
-    "categories" | "levels"
-  > | null>(null);
-  const { roomOptions } = useOptionDataContext();
+  const roomOptions = useContext(OptionDataContext);
 
+  // total 데이터 수 세팅
   useEffect(() => {
-    // total 데이터 수
     const fetchData = async () => {
       try {
         const { count, error } = await supabase
@@ -48,22 +39,6 @@ const QuizSearch = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    // 옵션 데이터
-    if (roomOptions) {
-      setRoomOptions({
-        categories: [
-          { categoryID: "all", categoryName: "전체" },
-          ...roomOptions.categories,
-        ],
-        levels: [
-          { seq: -1, levelID: "all", levelName: "전체" },
-          ...roomOptions.levels,
-        ],
-      });
-    }
-  }, [roomOptions]);
-
   const onChangeInput = (name: string, value: string) => {
     setSearchInput((prev) => ({
       ...prev,
@@ -72,42 +47,30 @@ const QuizSearch = () => {
   };
 
   const onSearchBtnClick = async () => {
-    try {
-      // 검색 조건
-      const idValue = searchInput?.id ?? "";
-      const typeValue =
-        !searchInput?.type || searchInput?.type == "all"
-          ? ""
-          : searchInput?.type;
-      const categoryValue =
-        !searchInput?.category || searchInput?.category == "all"
-          ? ""
-          : searchInput?.category;
-      const levelValue =
-        !searchInput?.level || searchInput?.level == "all"
-          ? ""
-          : searchInput?.level;
-      const statusValue =
-        !searchInput?.status || searchInput?.status == "-1"
-          ? ""
-          : searchInput?.status;
+    // 검색 조건
+    const idValue = searchInput?.id ?? "";
+    const typeValue =
+      !searchInput?.type || searchInput?.type == "-1" ? "" : searchInput?.type;
+    const categoryValue =
+      !searchInput?.category || searchInput?.category == "-1"
+        ? ""
+        : searchInput?.category;
+    const levelValue =
+      !searchInput?.level || searchInput?.level == "-1"
+        ? ""
+        : searchInput?.level;
+    const statusValue =
+      !searchInput?.status || searchInput?.status == "-1"
+        ? ""
+        : searchInput?.status;
 
-      const { data, error } = await supabase
-        .from("quiz_master")
-        .select("*")
-        .like("id", `%${idValue}%`)
-        .like("type", `%${typeValue}%`)
-        .like("categoryID", `%${categoryValue}%`)
-        .like("levelID", `%${levelValue}%`)
-        .like("status", `%${statusValue}%`);
-
-      if (error) throw error;
-
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+    setSearchValue({
+      id: idValue,
+      type: typeValue,
+      category: categoryValue,
+      level: levelValue,
+      status: statusValue,
+    });
   };
 
   return (
@@ -128,7 +91,7 @@ const QuizSearch = () => {
       <LabelSelect
         label="문제형식"
         direction="horizontal"
-        itemList={[{ typeID: "all", typeName: "전체" }, ...masterData.types]}
+        itemList={roomOptions?.types}
         getValue={(item) => item.typeID}
         getName={(item) => item.typeName}
         width={100}
@@ -139,7 +102,7 @@ const QuizSearch = () => {
       <LabelSelect
         label="카테고리"
         direction="horizontal"
-        itemList={roomOption?.categories}
+        itemList={roomOptions?.categories}
         getValue={(item) => item.categoryID}
         getName={(item) => item.categoryName}
         width={135}
@@ -150,7 +113,7 @@ const QuizSearch = () => {
       <LabelSelect
         label="난이도"
         direction="horizontal"
-        itemList={roomOption?.levels}
+        itemList={roomOptions?.levels}
         getValue={(item) => item.levelID}
         getName={(item) => item.levelName}
         width={100}
@@ -161,9 +124,9 @@ const QuizSearch = () => {
       <LabelSelect
         label="상태"
         direction="horizontal"
-        itemList={masterData.status}
-        getValue={(item) => item.statusID}
-        getName={(item) => item.statusName}
+        itemList={roomOptions?.states}
+        getValue={(item) => item.stateID}
+        getName={(item) => item.stateName}
         width={135}
         name="status"
         content={searchInput?.status}

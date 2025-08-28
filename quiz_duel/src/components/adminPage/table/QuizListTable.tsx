@@ -10,36 +10,42 @@ import {
 import { Checkbox } from "../../shadcn/checkbox";
 import { supabase } from "@/lib/supabaseClient";
 import QuizListTableRow from "./QuizListTableRow";
-import masterData from "../../../masterData.json";
+import { Spinner } from "@/components/common/LoadingSpinner";
 
-import type { QuizData } from "@/components/homePage/types/quizdata.types";
+import type { QuizData } from "@/components/adminPage/types/quizdata.types";
+import type { SearchInput } from "../types/search-value.types";
 
-const QuizListTable = () => {
+const QuizListTable = ({
+  searchValue,
+}: {
+  searchValue: SearchInput | null;
+}) => {
   const [quizList, setQuizList] = useState<QuizData[]>([]);
+  const [loadingVisible, setLoadingVisible] = useState(true);
   const tableRef = useRef<HTMLTableElement | null>(null);
+  const parentRef = useRef(null);
 
-  // quiz 데이터 로드
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await supabase
           .from("quiz_master")
-          .select(
-            `id, type, categoryID, levelID, status, content, explanation, answer, choices`
-          )
+          .select("*")
+          .like("id", `%${searchValue?.id ?? ""}%`)
+          .like("type", `%${searchValue?.type ?? ""}%`)
+          .like("categoryID", `%${searchValue?.category ?? ""}%`)
+          .like("levelID", `%${searchValue?.level ?? ""}%`)
+          .like("status", `%${searchValue?.status ?? ""}%`)
           .order("id", { ascending: true });
 
         if (data) {
           const newData = data.map((row) => ({
             ...row,
             isChecked: false,
-            type: masterData.types.find((type) => type.typeID === row.type),
-            status: masterData.status.find(
-              (stat) => stat.statusID === row.status
-            ),
           }));
 
           setQuizList(newData);
+          setLoadingVisible(false);
         }
       } catch (error) {
         console.error(error);
@@ -48,7 +54,7 @@ const QuizListTable = () => {
     };
 
     fetchData();
-  }, []);
+  }, [searchValue]);
 
   const onHeaderCheckChange = (isChecked: boolean) => {
     if (isChecked) {
@@ -112,7 +118,7 @@ const QuizListTable = () => {
             </TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody ref={parentRef}>
           {quizList.map((quiz) => (
             <QuizListTableRow
               key={quiz.id}
@@ -123,6 +129,7 @@ const QuizListTable = () => {
           ))}
         </TableBody>
       </Table>
+      <Spinner className="text-red-400 w-20 h-20 mt-20" show={loadingVisible} />
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import { useState, useContext } from "react";
+
 import { Popover, PopoverContent, PopoverTrigger } from "../../shadcn/popover";
 import LabelSelect from "../../common/LabelSelect";
 import LabelTextArea from "../../common/LabelTextArea";
@@ -6,9 +8,10 @@ import Button from "../../common/Button";
 import { Button as ShadBtn } from "../../shadcn/button";
 import ConfirmModal from "../../common/ConfirmModal";
 import masterData from "../../../masterData.json";
-import { useOptionDataContext } from "../QuizContent";
+import { OptionDataContext } from "../QuizContent";
+import { supabase } from "@/lib/supabaseClient";
 
-import type { QuizData } from "@/components/homePage/types/quizdata.types";
+import type { QuizData } from "@/components/adminPage/types/quizdata.types";
 
 interface Props {
   tableRef: React.RefObject<HTMLTableElement | null>;
@@ -17,7 +20,8 @@ interface Props {
 }
 
 const RowPopover = ({ tableRef, quizData, trigger }: Props) => {
-  const { roomOptions } = useOptionDataContext();
+  const [quiz, setQuiz] = useState<QuizData>(quizData);
+  const roomOptions = useContext(OptionDataContext);
 
   // 행에 포커스 주기
   const onOpenChange = (open: boolean) => {
@@ -38,6 +42,35 @@ const RowPopover = ({ tableRef, quizData, trigger }: Props) => {
     }
   };
 
+  const onChangeInput = (name: string, value: string) => {
+    setQuiz((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const onUpdateBtnClick = async () => {
+    if (JSON.stringify(quizData) === JSON.stringify(quiz)) return;
+
+    try {
+      const { isChecked, ...quizData } = quiz;
+
+      const { data, error } = await supabase
+        .from("quiz_master")
+        .update(quizData)
+        .eq("id", quiz.id);
+
+      if (error) throw error;
+
+      if (data) {
+        setQuiz(data);
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   return (
     <Popover onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
@@ -46,84 +79,89 @@ const RowPopover = ({ tableRef, quizData, trigger }: Props) => {
           <LabelSelect
             label="문제 형식"
             direction="horizontal"
-            itemList={masterData.types}
+            itemList={masterData.types.filter((type) => type.typeID !== "-1")}
             getValue={(item) => item.typeID}
             getName={(item) => item.typeName}
             width={135}
-            name="category"
-            content={String(quizData.type?.typeID)}
-            onSelectValueChange={() => {}}
+            name="type"
+            content={quiz.type}
+            onSelectValueChange={onChangeInput}
           />
-
           <LabelSelect
             label="카테고리"
             direction="horizontal"
-            itemList={roomOptions?.categories}
+            itemList={roomOptions?.categories.filter(
+              (category) => category.categoryID !== "-1"
+            )}
             getValue={(item) => item.categoryID}
             getName={(item) => item.categoryName}
             width={135}
-            name="category"
-            content={quizData.categoryID}
-            onSelectValueChange={() => {}}
+            name="categoryID"
+            content={quiz.categoryID}
+            onSelectValueChange={onChangeInput}
           />
           <LabelSelect
             label="난이도"
             direction="horizontal"
-            itemList={roomOptions?.levels}
+            itemList={roomOptions?.levels.filter(
+              (level) => level.levelID !== "-1"
+            )}
             getValue={(item) => item.levelID}
             getName={(item) => item.levelName}
             width={100}
-            name="level"
-            content={quizData.levelID}
-            onSelectValueChange={() => {}}
+            name="levelID"
+            content={quiz.levelID}
+            onSelectValueChange={onChangeInput}
           />
           <LabelSelect
             label="상태"
             direction="horizontal"
-            itemList={masterData.status}
-            getValue={(item) => item.statusID}
-            getName={(item) => item.statusName}
+            itemList={masterData.status.filter((stat) => stat.stateID !== "-1")}
+            getValue={(item) => item.stateID}
+            getName={(item) => item.stateName}
             width={135}
             name="status"
-            content={String(quizData.status?.statusID)}
-            onSelectValueChange={() => {}}
+            content={quiz.status}
+            onSelectValueChange={onChangeInput}
           />
         </div>
         <div className="flex flex-row gap-0">
           <LabelTextArea
             label="문제"
             direction="horizontal"
-            content={quizData.content}
+            content={quiz.content}
             width={500}
             height={200}
             name="content"
-            onTextChange={() => {}}
+            onTextChange={onChangeInput}
           />
           <LabelTextArea
             label="해설"
             direction="horizontal"
-            content={quizData.explanation}
+            content={quiz.explanation}
             width={500}
             height={200}
             name="explanation"
-            onTextChange={() => {}}
+            onTextChange={onChangeInput}
           />
         </div>
         <div className="flex flex-row gap-0">
           <LabelInput
             label="정답&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
             direction="horizontal"
-            content={quizData.answer}
-            onInputValueChange={() => {}}
+            content={quiz.answer}
+            onInputValueChange={onChangeInput}
             width={500}
+            name="answer"
           />
-          {quizData.choices ? (
+          {quiz.choices ? (
             <LabelInput
               label="선택&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
               direction="horizontal"
-              content={quizData.choices}
-              onInputValueChange={() => {}}
+              content={quiz.choices}
+              onInputValueChange={onChangeInput}
               width={500}
+              name="choices"
             />
           ) : (
             <></>
@@ -135,7 +173,11 @@ const RowPopover = ({ tableRef, quizData, trigger }: Props) => {
             content="수정하시겠습니까?"
             closeButtonLabel="아니오"
             activeButton={
-              <Button text="네" type="POSITIVE" onButtonClick={() => {}} />
+              <Button
+                text="네"
+                type="POSITIVE"
+                onButtonClick={onUpdateBtnClick}
+              />
             }
             trigger={
               <ShadBtn

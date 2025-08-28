@@ -3,8 +3,9 @@ import { memo } from "react";
 import { TableRow, TableCell } from "@/components/shadcn/table";
 import { Checkbox } from "@/components/shadcn/checkbox";
 import RowPopover from "./RowPopover";
+import masterData from "../../../masterData.json";
 
-import type { QuizData } from "@/components/homePage/types/quizdata.types";
+import type { QuizData } from "@/components/adminPage/types/quizdata.types";
 
 interface Props {
   quizData: QuizData;
@@ -35,7 +36,10 @@ const QuizListTableRow = ({ quizData, tableRef, onCheckboxChange }: Props) => {
             {quizData.id}
           </TableCell>
           <TableCell className="w-[6rem] text-center text-[#5a2e20]">
-            {quizData.type?.typeName}
+            {
+              masterData.types.find((type) => type.typeID === quizData.type)
+                ?.typeName
+            }
           </TableCell>
           <TableCell className="w-[6rem] text-center text-[#5a2e20]">
             {quizData.categoryID}
@@ -53,7 +57,10 @@ const QuizListTableRow = ({ quizData, tableRef, onCheckboxChange }: Props) => {
             {quizData.answer}
           </TableCell>
           <TableCell className="w-[6rem] text-center text-[#5a2e20]">
-            {quizData.status?.statusName}
+            {
+              masterData.status.find((stat) => stat.stateID === quizData.status)
+                ?.stateName
+            }
           </TableCell>
         </TableRow>
       }

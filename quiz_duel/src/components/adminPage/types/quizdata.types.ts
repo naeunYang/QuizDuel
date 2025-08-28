@@ -1,10 +1,10 @@
 export interface QuizData {
-  isChecked: boolean;
+  isChecked?: boolean;
   id: string;
-  type?: { typeID: string; typeName: string };
+  type: string;
   categoryID: string;
   levelID: string;
-  status?: { statusID: string; statusName: string };
+  status: string;
   content: string;
   explanation: string;
   answer: string;

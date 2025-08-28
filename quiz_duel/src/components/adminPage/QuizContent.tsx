@@ -1,28 +1,21 @@
 import "./QuizContent.css";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import axios from "axios";
+import masterData from "../../masterData.json";
 
 import QuizListTable from "./table/QuizListTable";
 import Toolbar from "./Toolbar";
 
-import type { RoomOption } from "@/types/room-options.types";
+import type { RoomOption } from "./types/room-options.types";
+import type { SearchInput } from "./types/search-value.types";
 
-const OptionDataContext = createContext<{
-  roomOptions: Pick<RoomOption, "categories" | "levels"> | null;
-} | null>(null);
-
-export function useOptionDataContext() {
-  const value = useContext(OptionDataContext);
-  if (!value) throw new Error("OptionDataContext에 문제가 있음");
-  return value;
-}
+// 옵션 정보 전역으로 저장
+export const OptionDataContext = createContext<RoomOption | null>(null);
 
 const QuizContent = () => {
-  const [roomOptions, setRoomOptions] = useState<Pick<
-    RoomOption,
-    "categories" | "levels"
-  > | null>(null);
+  const [roomOptions, setRoomOptions] = useState<RoomOption | null>(null);
+  const [searchValue, setSearchValue] = useState<SearchInput | null>(null);
 
   // 카테고리, 난이도 데이터
   useEffect(() => {
@@ -30,8 +23,16 @@ const QuizContent = () => {
       .get("/home/room-options")
       .then((response) => {
         setRoomOptions({
-          categories: response.data.categories,
-          levels: response.data.levels,
+          types: masterData.types,
+          categories: [
+            { categoryID: "-1", categoryName: "전체" },
+            ...response.data.categories,
+          ],
+          levels: [
+            { levelID: "-1", levelName: "전체" },
+            ...response.data.levels,
+          ],
+          states: masterData.status,
         });
       })
       .catch((error) => {
@@ -41,12 +42,12 @@ const QuizContent = () => {
 
   return (
     <div className="QuizContent">
-      <OptionDataContext.Provider value={{ roomOptions: roomOptions }}>
+      <OptionDataContext.Provider value={roomOptions}>
         <section className="toolbar_section">
-          <Toolbar />
+          <Toolbar setSearchValue={setSearchValue} />
         </section>
         <section className="table_section">
-          <QuizListTable />
+          <QuizListTable searchValue={searchValue} />
         </section>
       </OptionDataContext.Provider>
     </div>
