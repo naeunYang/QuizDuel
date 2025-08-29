@@ -6,6 +6,7 @@ import masterData from "../../masterData.json";
 
 import QuizListTable from "./table/QuizListTable";
 import Toolbar from "./Toolbar";
+import { Toaster } from "sonner";
 
 import type { RoomOption } from "./types/room-options.types";
 import type { SearchInput } from "./types/search-value.types";
@@ -50,6 +51,16 @@ const QuizContent = () => {
           <QuizListTable searchValue={searchValue} />
         </section>
       </OptionDataContext.Provider>
+      <Toaster
+        richColors
+        expand={true}
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            fontSize: 15,
+          },
+        }}
+      />
     </div>
   );
 };

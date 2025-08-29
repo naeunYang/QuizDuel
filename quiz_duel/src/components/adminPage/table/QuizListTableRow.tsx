@@ -11,9 +11,15 @@ interface Props {
   quizData: QuizData;
   tableRef: React.RefObject<HTMLTableElement | null>;
   onCheckboxChange: (targetId: string) => void;
+  onUpdateRow: (row: QuizData) => void;
 }
 
-const QuizListTableRow = ({ quizData, tableRef, onCheckboxChange }: Props) => {
+const QuizListTableRow = ({
+  quizData,
+  tableRef,
+  onCheckboxChange,
+  onUpdateRow,
+}: Props) => {
   return (
     <RowPopover
       key={quizData.id}
@@ -64,6 +70,7 @@ const QuizListTableRow = ({ quizData, tableRef, onCheckboxChange }: Props) => {
           </TableCell>
         </TableRow>
       }
+      onUpdateRow={onUpdateRow}
     />
   );
 };

@@ -80,6 +80,14 @@ const QuizListTable = ({
     );
   }, []);
 
+  const onUpdateRow = useCallback((row: QuizData) => {
+    setQuizList((prev) =>
+      prev.map((quiz) =>
+        quiz.id === row.id ? { isChecked: quiz.isChecked, ...row } : quiz
+      )
+    );
+  }, []);
+
   return (
     <div className="w-full max-h-full overflow-auto">
       <Table className="table-fixed w-full text-base" ref={tableRef}>
@@ -125,6 +133,7 @@ const QuizListTable = ({
               quizData={quiz}
               tableRef={tableRef}
               onCheckboxChange={onCheckboxChange}
+              onUpdateRow={onUpdateRow}
             />
           ))}
         </TableBody>
