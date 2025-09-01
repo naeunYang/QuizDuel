@@ -1,5 +1,4 @@
-import { useState, useContext, useRef } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { useState, useContext } from "react";
 import masterData from "../../../masterData.json";
 import { OptionDataContext } from "../QuizContent";
 
@@ -18,15 +17,23 @@ import type { QuizData } from "@/components/adminPage/types/quizdata.types";
 
 interface Props {
   tableRef: React.RefObject<HTMLTableElement | null>;
+  popoverCloseRef: React.RefObject<HTMLButtonElement | null>;
   quizData: QuizData;
   trigger: React.ReactElement;
   onUpdateRow: (row: QuizData) => void;
+  onDeleteRow: (rowId: string[]) => void;
 }
 
-const RowPopover = ({ tableRef, quizData, trigger, onUpdateRow }: Props) => {
+const RowPopover = ({
+  tableRef,
+  popoverCloseRef,
+  quizData,
+  trigger,
+  onUpdateRow,
+  onDeleteRow,
+}: Props) => {
   const [quiz, setQuiz] = useState<QuizData>(quizData);
   const roomOptions = useContext(OptionDataContext);
-  const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   // 행에 포커스 주기
   const onOpenChange = (open: boolean) => {
@@ -44,11 +51,12 @@ const RowPopover = ({ tableRef, quizData, trigger, onUpdateRow }: Props) => {
       rows.forEach((row) => {
         (row as HTMLTableRowElement).style.backgroundColor = "";
       });
-      setQuiz(quizData); // 데이터 초기화
+      setQuiz(quizData); // close 시 데이터 초기화
     }
   };
 
   const onChangeInput = (name: string, value: string) => {
+    // 선택값 변경 시 배열 처리
     if (name === "choices") {
       setQuiz((prev) => ({
         ...prev,
@@ -65,34 +73,19 @@ const RowPopover = ({ tableRef, quizData, trigger, onUpdateRow }: Props) => {
   };
 
   // 수정
-  const onUpdateBtnClick = async () => {
+  const onUpdateBtnClick = () => {
     if (JSON.stringify(quizData) === JSON.stringify(quiz)) {
       toast.warning("변경 사항이 없습니다.");
       return;
     }
 
-    try {
-      const { isChecked, ...quizData } = quiz;
+    const { isChecked, ...quizContent } = quiz;
+    onUpdateRow(quizContent);
+  };
 
-      const { data, error } = await supabase
-        .from("quiz_master")
-        .update(quizData)
-        .eq("id", quiz.id)
-        .select();
-
-      if (error) throw error;
-
-      if (data.length > 0) {
-        setQuiz({ isChecked: isChecked, ...data[0] }); // 현재 popover 데이터 세팅
-        onUpdateRow(data[0]); // 테이블 row 데이터 세팅
-
-        closeBtnRef.current?.click(); // popover 닫기
-        toast.success(`${data[0].id} 수정 완료`);
-      }
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  // 삭제
+  const onDeleteBtnClick = () => {
+    onDeleteRow([quiz.id]);
   };
 
   return (
@@ -150,7 +143,7 @@ const RowPopover = ({ tableRef, quizData, trigger, onUpdateRow }: Props) => {
           />
           <div className="absolute top-0 right-0 ">
             <PopoverClose asChild>
-              <button ref={closeBtnRef}>
+              <button ref={popoverCloseRef}>
                 <X className="cursor-pointer w-8" color="#4a2316" />
               </button>
             </PopoverClose>
@@ -210,7 +203,11 @@ const RowPopover = ({ tableRef, quizData, trigger, onUpdateRow }: Props) => {
             content="삭제하시겠습니까?"
             closeButtonLabel="아니오"
             activeButton={
-              <Button text="네" type="POSITIVE" onButtonClick={() => {}} />
+              <Button
+                text="네"
+                type="POSITIVE"
+                onButtonClick={onDeleteBtnClick}
+              />
             }
             trigger={<ShadBtn className={"admin_button w-20"}>삭제</ShadBtn>}
           />

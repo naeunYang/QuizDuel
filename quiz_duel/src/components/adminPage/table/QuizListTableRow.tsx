@@ -10,20 +10,25 @@ import type { QuizData } from "@/components/adminPage/types/quizdata.types";
 interface Props {
   quizData: QuizData;
   tableRef: React.RefObject<HTMLTableElement | null>;
+  popoverCloseRef: React.RefObject<HTMLButtonElement | null>;
   onCheckboxChange: (targetId: string) => void;
   onUpdateRow: (row: QuizData) => void;
+  onDeleteRow: (rowId: string[]) => void;
 }
 
 const QuizListTableRow = ({
   quizData,
   tableRef,
+  popoverCloseRef,
   onCheckboxChange,
   onUpdateRow,
+  onDeleteRow,
 }: Props) => {
   return (
     <RowPopover
       key={quizData.id}
       tableRef={tableRef}
+      popoverCloseRef={popoverCloseRef}
       quizData={quizData}
       trigger={
         <TableRow
@@ -35,7 +40,7 @@ const QuizListTableRow = ({
               className="border-amber-800 data-[state=checked]:bg-[#5a2e20]"
               checked={quizData.isChecked}
               onCheckedChange={() => onCheckboxChange(quizData.id)}
-              onClick={(e) => e.stopPropagation()} // 부모 이벤트 전파 차단
+              onClick={(e) => e.stopPropagation()} // 부모 이벤트 전파 차단(클릭 시 팝오버 안뜨게)
             />
           </TableCell>
           <TableCell className="w-[6rem] text-center text-[#5a2e20]">
@@ -71,6 +76,7 @@ const QuizListTableRow = ({
         </TableRow>
       }
       onUpdateRow={onUpdateRow}
+      onDeleteRow={onDeleteRow}
     />
   );
 };

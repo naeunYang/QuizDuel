@@ -14,12 +14,6 @@ const countData = [
   { id: 30, value: "30개" },
 ];
 
-const levelData = [
-  { id: "high", value: "상" },
-  { id: "medium", value: "중" },
-  { id: "low", value: "하" },
-];
-
 const categoryData = [
   { id: "comic", value: "만화" },
   { id: "drama", value: "드라마" },
@@ -46,7 +40,6 @@ const SetRoomOption = () => {
       <Tabs defaultValue="account">
         <TabsList>
           <TabsTrigger value="count">문제 개수</TabsTrigger>
-          <TabsTrigger value="level">난이도</TabsTrigger>
           <TabsTrigger value="category">카테고리</TabsTrigger>
           <TabsTrigger value="time">제한시간(초)</TabsTrigger>
         </TabsList>
@@ -55,21 +48,6 @@ const SetRoomOption = () => {
             {countData.map((data) => (
               <div key={data.id} className="content-wrapper">
                 <label className="key text-center">🗝️ {data.id}</label>
-                <Input className="value" value={data.value} />
-                <Trash2 className="cursor-pointer w-5" />
-              </div>
-            ))}
-            <Badge variant="secondary" className="w-20 h-8 cursor-pointer">
-              <BadgePlus />
-              옵션 추가
-            </Badge>
-          </Card>
-        </TabsContent>
-        <TabsContent value="level">
-          <Card className="flex flex-col gap-3 justify-center items-center">
-            {levelData.map((data) => (
-              <div key={data.id} className="content-wrapper">
-                <label className="key">🗝️ {data.id}</label>
                 <Input className="value" value={data.value} />
                 <Trash2 className="cursor-pointer w-5" />
               </div>

@@ -8,12 +8,25 @@ import Button from "../common/Button";
 import ConfirmModal from "../common/ConfirmModal";
 import SetRoomOptionModal from "./SetRoomOptionModal";
 
-const QuizEditor = () => {
+import type { TableRef } from "./types/table-ref.types";
+
+const QuizEditor = ({
+  tableRef,
+}: {
+  tableRef: React.RefObject<TableRef | null>;
+}) => {
   const nav = useNavigate();
 
   // 문제 생성 버튼 클릭
   const onCreateBtnClick = () => {
     nav("/admin/createquiz");
+  };
+
+  // 문제 삭제 버튼 클릭
+  const onDeleteBtnClick = () => {
+    if (tableRef.current) {
+      tableRef.current.onDeleteCheckedRows();
+    }
   };
 
   return (
@@ -26,7 +39,7 @@ const QuizEditor = () => {
         content="삭제하시겠습니까?"
         closeButtonLabel="아니오"
         activeButton={
-          <Button text="네" type="POSITIVE" onButtonClick={() => {}} />
+          <Button text="네" type="POSITIVE" onButtonClick={onDeleteBtnClick} />
         }
         trigger={<ShadBtn className={"admin_button w-20"}>문제 삭제</ShadBtn>}
       />
