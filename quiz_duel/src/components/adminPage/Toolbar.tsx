@@ -1,6 +1,6 @@
 import "./Toolbar.css";
 
-import QuizEditor from "./QuizEditor";
+import QuizEditor from "./manage/QuizEditor";
 import QuizSearch from "./QuizSearch";
 
 import type { SearchInput } from "./types/search-value.types";

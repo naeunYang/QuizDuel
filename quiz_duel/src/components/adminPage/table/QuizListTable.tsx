@@ -32,7 +32,6 @@ type QuizListTableProps = {
 const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
   ({ searchValue }, ref) => {
     const [quizList, setQuizList] = useState<QuizData[]>([]);
-    const [loadingVisible, setLoadingVisible] = useState(true);
     const tableRef = useRef<HTMLTableElement | null>(null);
     const popoverCloseRef = useRef<HTMLButtonElement>(null);
 
@@ -66,7 +65,6 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
             }));
 
             setQuizList(newData);
-            setLoadingVisible(false);
           }
         } catch (error) {
           console.error(error);
@@ -163,6 +161,10 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
       }
     }, []);
 
+    if (quizList.length < 1) {
+      return <Spinner className="text-red-400 w-20 h-20 mt-50" />;
+    }
+
     return (
       <div className="w-full max-h-full overflow-auto">
         <Table className="table-fixed w-full text-base" ref={tableRef}>
@@ -215,10 +217,6 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
             ))}
           </TableBody>
         </Table>
-        <Spinner
-          className="text-red-400 w-20 h-20 mt-20"
-          show={loadingVisible}
-        />
       </div>
     );
   }

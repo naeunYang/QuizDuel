@@ -25,3 +25,8 @@ export interface RoomOption {
   levels: Level[];
   states: State[];
 }
+
+export interface OptionData {
+  id: string | number;
+  value: string;
+}

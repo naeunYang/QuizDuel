@@ -8,10 +8,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../shadcn/dialog";
-import Button from "../common/Button";
+} from "../../shadcn/dialog";
+import Button from "../../common/Button";
 import SetRoomOption from "./SetRoomOption";
-import { Button as ShadBtn } from "../shadcn/button";
+import { Button as ShadBtn } from "../../shadcn/button";
 
 const SetRoomOptionModal = () => {
   const [open, setOpen] = useState(false);

@@ -3,12 +3,12 @@ import "./QuizEditor.css";
 // React Hooks
 import { useNavigate } from "react-router-dom";
 
-import { Button as ShadBtn } from "../shadcn/button";
-import Button from "../common/Button";
-import ConfirmModal from "../common/ConfirmModal";
+import { Button as ShadBtn } from "../../shadcn/button";
+import Button from "../../common/Button";
+import ConfirmModal from "../../common/ConfirmModal";
 import SetRoomOptionModal from "./SetRoomOptionModal";
 
-import type { TableRef } from "./types/table-ref.types";
+import type { TableRef } from "../types/table-ref.types";
 
 const QuizEditor = ({
   tableRef,
