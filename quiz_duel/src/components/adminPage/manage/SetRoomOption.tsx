@@ -17,8 +17,8 @@ const SetRoomOption = () => {
         const { data: count } = await supabase.from("count_master").select("*");
         if (count) {
           setCountData(
-            count.map((data) => {
-              return { id: data.seq, value: data.countName };
+            count.map((data, index) => {
+              return { key: index, id: data.seq, value: data.countName };
             })
           );
         }
@@ -28,8 +28,12 @@ const SetRoomOption = () => {
           .select("*");
         if (category) {
           setCategoryData(
-            category.map((data) => {
-              return { id: data.categoryID, value: data.categoryName };
+            category.map((data, index) => {
+              return {
+                key: index,
+                id: data.categoryID,
+                value: data.categoryName,
+              };
             })
           );
         }
@@ -37,8 +41,8 @@ const SetRoomOption = () => {
         const { data: time } = await supabase.from("time_master").select("*");
         if (time) {
           setTimeData(
-            time.map((data) => {
-              return { id: data.seq, value: data.timeName };
+            time.map((data, index) => {
+              return { key: index, id: data.seq, value: data.timeName };
             })
           );
         }

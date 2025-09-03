@@ -5,7 +5,12 @@ import { Trash2 } from "lucide-react";
 
 import type { OptionData } from "../types/room-options.types";
 
-const OptionTabItem = ({ data }: { data: OptionData }) => {
+interface Props {
+  data: OptionData;
+  onDelOptionBtnClick: (key: number) => void;
+}
+
+const OptionTabItem = ({ data, onDelOptionBtnClick }: Props) => {
   return (
     <div key={data.id} className="content-wrapper">
       <div className="key">
@@ -13,7 +18,12 @@ const OptionTabItem = ({ data }: { data: OptionData }) => {
         <Input className="text-center" value={data.id} onChange={() => {}} />
       </div>
       <Input className="value" value={data.value} onChange={() => {}} />
-      <Trash2 className="cursor-pointer w-5 h-5" />
+      <Trash2
+        className="cursor-pointer w-5 h-5"
+        onClick={() => {
+          onDelOptionBtnClick(data.key);
+        }}
+      />
     </div>
   );
 };

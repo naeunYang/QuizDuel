@@ -27,6 +27,7 @@ export interface RoomOption {
 }
 
 export interface OptionData {
+  key: number;
   id: string | number;
   value: string;
 }

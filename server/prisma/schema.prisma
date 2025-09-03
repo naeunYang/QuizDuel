@@ -11,8 +11,9 @@ datasource db {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model category_master {
-  categoryID   String @id(map: "category_pkey")
+  categoryID   String        @id(map: "category_pkey")
   categoryName String
+  quiz_master  quiz_master[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -25,23 +26,26 @@ model count_master {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model level_master {
-  levelName String
-  seq       Int    @id(map: "level_pkey")
-  levelID   String
+  levelName   String
+  seq         Int           @id(map: "level_pkey")
+  levelID     String        @unique
+  quiz_master quiz_master[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model quiz_master {
-  id          Int    @id @default(autoincrement())
-  type        Int
-  categoryID  String
-  levelID     String
-  status      Int    @db.SmallInt
-  content     String
-  explanation String
-  answer      String
-  choices     Json?
+  type            String
+  categoryID      String
+  levelID         String
+  status          String
+  content         String
+  explanation     String
+  answer          String
+  choices         Json?
+  id              String          @id
+  category_master category_master @relation(fields: [categoryID], references: [categoryID], onDelete: NoAction, onUpdate: NoAction)
+  level_master    level_master    @relation(fields: [levelID], references: [levelID], onDelete: NoAction, onUpdate: NoAction)
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments

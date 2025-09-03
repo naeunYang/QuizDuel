@@ -22,9 +22,9 @@ interface Props {
 const WaitForReadyModal = ({ setOpen, userId }: Props) => {
   const [isReady, setIsReady] = useState(false);
   const [opponentState, setOpponentState] = useState(false);
+  const room = useRoomInfoValueContext();
   const { subscribe, send } = useSocket();
   const nav = useNavigate();
-  const room = useRoomInfoValueContext();
 
   useEffect(() => {
     const unsubscribe = subscribe((msg) => {

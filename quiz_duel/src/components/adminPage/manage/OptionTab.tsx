@@ -17,7 +17,14 @@ const OptionTab = ({ optionData }: { optionData: OptionData[] }) => {
 
   // 옵션 추가
   const onAddOptionBtnClick = () => {
-    setOptionItems((prev) => [...prev, { id: "", value: "" }]);
+    const maxKey = optionItems.reduce((arr, cur) => Math.max(arr, cur.key), 0);
+
+    setOptionItems((prev) => [...prev, { key: maxKey + 1, id: "", value: "" }]);
+  };
+
+  // 옵션 삭제
+  const onDelOptionBtnClick = (key: number) => {
+    setOptionItems((prev) => prev.filter((item) => item.key !== key));
   };
 
   if (optionData.length < 1) {
@@ -28,7 +35,11 @@ const OptionTab = ({ optionData }: { optionData: OptionData[] }) => {
     <div>
       <Card className="flex flex-col gap-3 justify-top items-center h-83 max-h-83 truncate overflow-auto">
         {optionItems.map((data, index) => (
-          <OptionTabItem key={index} data={data} />
+          <OptionTabItem
+            key={index}
+            data={data}
+            onDelOptionBtnClick={onDelOptionBtnClick}
+          />
         ))}
         <Badge
           variant="secondary"
