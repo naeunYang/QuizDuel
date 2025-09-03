@@ -26,7 +26,7 @@ const SetRoomOptionModal = () => {
         <DialogTrigger asChild>
           <ShadBtn className={"admin_button w-23"}>방 옵션 관리</ShadBtn>
         </DialogTrigger>
-        <DialogContent className="w-90 flex flex-col justify-between gap-0 [&>button]:hidden border-none">
+        <DialogContent className="w-95 flex flex-col justify-between gap-0 [&>button]:hidden border-none">
           <DialogHeader>
             <DialogTitle className="text-center text-xl">
               방 옵션 관리

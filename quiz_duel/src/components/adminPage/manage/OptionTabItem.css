@@ -1,18 +1,21 @@
 .SetRoomOption .content-wrapper {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  max-height: 2.5rem;
+  width: 100%;
+  padding: 0 1rem;
 }
 
 .SetRoomOption .content-wrapper .key {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
   font-weight: bold;
-  width: 35%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  width: 50%;
 }
 
 .SetRoomOption .content-wrapper .value {
