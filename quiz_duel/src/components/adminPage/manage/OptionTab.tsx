@@ -1,19 +1,29 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Card } from "@/components/shadcn/card";
 import { Badge } from "@/components/shadcn/badge";
 import { BadgePlus } from "lucide-react";
-import { Spinner } from "@/components/common/LoadingSpinner";
 import OptionTabItem from "./OptionTabItem";
+import { Button as ShadBtn } from "../../shadcn/button";
+import useOptionFetch from "../hooks/useOptionFetch";
+import optionSave from "../lib/optionSave";
+import { toast } from "sonner";
 
 import type { OptionData } from "../types/room-options.types";
 
-const OptionTab = ({ optionData }: { optionData: OptionData[] }) => {
-  const [optionItems, setOptionItems] = useState<OptionData[]>(optionData);
+interface Props {
+  tableName: string;
+  keyColumn: string;
+  valueColumn: string;
+}
+
+const OptionTab = ({ tableName, keyColumn, valueColumn }: Props) => {
+  const defaultData = useOptionFetch(tableName, keyColumn, valueColumn);
+  const [optionItems, setOptionItems] = useState<OptionData[]>(defaultData);
 
   useEffect(() => {
-    setOptionItems(optionData);
-  }, [optionData]);
+    setOptionItems(defaultData);
+  }, [defaultData]);
 
   // 옵션 추가
   const onAddOptionBtnClick = () => {
@@ -27,9 +37,23 @@ const OptionTab = ({ optionData }: { optionData: OptionData[] }) => {
     setOptionItems((prev) => prev.filter((item) => item.key !== key));
   };
 
-  if (optionData.length < 1) {
-    return <Spinner className="text-red-400 w-20 h-20 mt-30 mb-30" />;
-  }
+  // 옵션 저장
+  const onSaveClick = async () => {
+    if (JSON.stringify(defaultData) === JSON.stringify(optionItems)) {
+      toast.warning("변경된 데이터가 없습니다.");
+      return;
+    }
+
+    const data = await optionSave(
+      tableName,
+      keyColumn,
+      valueColumn,
+      optionItems
+    );
+    if (data) {
+      setOptionItems(data);
+    }
+  };
 
   return (
     <div>
@@ -39,6 +63,7 @@ const OptionTab = ({ optionData }: { optionData: OptionData[] }) => {
             key={index}
             data={data}
             onDelOptionBtnClick={onDelOptionBtnClick}
+            setOptionItems={setOptionItems}
           />
         ))}
         <Badge
@@ -50,6 +75,11 @@ const OptionTab = ({ optionData }: { optionData: OptionData[] }) => {
           옵션 추가
         </Badge>
       </Card>
+      <div className="flex flex-row !justify-center gap-3 pt-4">
+        <ShadBtn className={"admin_button w-20 p-5"} onClick={onSaveClick}>
+          저장
+        </ShadBtn>
+      </div>
     </div>
   );
 };

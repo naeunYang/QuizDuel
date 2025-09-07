@@ -1,60 +1,7 @@
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabaseClient";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../shadcn/tabs";
 import OptionTab from "./OptionTab";
 
-import type { OptionData } from "../types/room-options.types";
-
 const SetRoomOption = () => {
-  const [countData, setCountData] = useState<OptionData[]>([]);
-  const [categoryData, setCategoryData] = useState<OptionData[]>([]);
-  const [timeData, setTimeData] = useState<OptionData[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data: count } = await supabase.from("count_master").select("*");
-        if (count) {
-          setCountData(
-            count.map((data, index) => {
-              return { key: index, id: data.seq, value: data.countName };
-            })
-          );
-        }
-
-        const { data: category } = await supabase
-          .from("category_master")
-          .select("*");
-        if (category) {
-          setCategoryData(
-            category.map((data, index) => {
-              return {
-                key: index,
-                id: data.categoryID,
-                value: data.categoryName,
-              };
-            })
-          );
-        }
-
-        const { data: time } = await supabase.from("time_master").select("*");
-        if (time) {
-          setTimeData(
-            time.map((data, index) => {
-              return { key: index, id: data.seq, value: data.timeName };
-            })
-          );
-        }
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    };
-
-    fetchData();
-  }, []);
-
   return (
     <div className="flex w-full max-h-100 max-w-sm flex-col gap-6 SetRoomOption">
       <Tabs defaultValue="account">
@@ -64,13 +11,25 @@ const SetRoomOption = () => {
           <TabsTrigger value="time">제한시간(초)</TabsTrigger>
         </TabsList>
         <TabsContent value="count">
-          <OptionTab optionData={countData} />
+          <OptionTab
+            tableName={"count_master"}
+            keyColumn={"seq"}
+            valueColumn={"countName"}
+          />
         </TabsContent>
         <TabsContent value="category">
-          <OptionTab optionData={categoryData} />
+          <OptionTab
+            tableName={"category_master"}
+            keyColumn={"categoryID"}
+            valueColumn={"categoryName"}
+          />
         </TabsContent>
         <TabsContent value="time">
-          <OptionTab optionData={timeData} />
+          <OptionTab
+            tableName={"time_master"}
+            keyColumn={"seq"}
+            valueColumn={"timeName"}
+          />
         </TabsContent>
       </Tabs>
     </div>
