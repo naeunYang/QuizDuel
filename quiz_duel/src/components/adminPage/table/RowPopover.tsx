@@ -64,6 +64,12 @@ const RowPopover = ({
       }));
 
       return;
+    } else if (name === "answer") {
+      setQuiz((prev) => ({
+        ...prev,
+        answer: quiz.choices[Number(value)],
+      }));
+      return;
     }
 
     setQuiz((prev) => ({
@@ -170,19 +176,27 @@ const RowPopover = ({
           />
         </div>
         <div className="flex flex-row gap-0">
-          <LabelInput
+          <LabelSelect
             label="정답&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
             direction="horizontal"
-            content={quiz.answer}
-            onInputValueChange={onChangeInput}
+            itemList={quiz.choices?.map((item, index) => ({
+              choiceID: index,
+              choiceName: item,
+            }))}
+            getValue={(item) => item.choiceID}
+            getName={(item) => item.choiceName}
             width={500}
             name="answer"
+            content={quiz.choices
+              ?.findIndex((item) => item === quiz.answer)
+              .toString()}
+            onSelectValueChange={onChangeInput}
           />
-          {quiz.choices ? (
+          {quiz.type === "1" ? (
             <LabelInput
               label="선택&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
               direction="horizontal"
-              content={quiz.choices.join(",")}
+              content={quiz.choices?.join(",")}
               onInputValueChange={onChangeInput}
               width={500}
               name="choices"

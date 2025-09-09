@@ -8,5 +8,5 @@ export interface QuizData {
   content: string;
   explanation: string;
   answer: string;
-  choices: string[] | null;
+  choices: string[];
 }

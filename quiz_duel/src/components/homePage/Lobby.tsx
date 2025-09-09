@@ -120,6 +120,7 @@ const Lobby = () => {
 
       return;
     } else if (code.toUpperCase() === import.meta.env.VITE_ADMIN_ENTRY_CODE) {
+      localStorage.setItem("isAdmin", "true");
       nav("/admin");
       return;
     }
