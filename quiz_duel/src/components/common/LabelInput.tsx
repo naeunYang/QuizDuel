@@ -9,6 +9,7 @@ interface Props {
   width?: number;
   placeholder?: string;
   onInputValueChange: (name: string, value: string) => void;
+  onEnterKeyDown?: () => void;
 }
 
 const LabelInput = (props: Props) => {
@@ -23,6 +24,9 @@ const LabelInput = (props: Props) => {
         onChange={(e) =>
           props.onInputValueChange(e.target.name, e.target.value)
         }
+        onKeyDown={(e) => {
+          if (e.key === "Enter") props.onEnterKeyDown?.();
+        }}
         placeholder={props.placeholder}
         style={{ width: props.width }}
       />

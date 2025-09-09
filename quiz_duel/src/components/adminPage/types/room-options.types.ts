@@ -28,6 +28,7 @@ export interface RoomOption {
 
 export interface OptionData {
   key: number;
-  id: string | number;
+  id: string;
   value: string;
+  editable: boolean;
 }

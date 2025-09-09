@@ -1,6 +1,6 @@
 import "./QuizContent.css";
 
-import { createContext, useEffect, useState, useRef } from "react";
+import { createContext, useEffect, useState, useRef, useContext } from "react";
 import axios from "axios";
 import masterData from "../../masterData.json";
 
@@ -14,10 +14,25 @@ import type { TableRef } from "./types/table-ref.types";
 
 // 옵션 정보 전역으로 저장
 export const OptionDataContext = createContext<RoomOption | null>(null);
+export const setOptionDataContext = createContext<React.Dispatch<
+  React.SetStateAction<RoomOption | null>
+> | null>(null);
+
+// 테이블 행 개수
+const tableRowsCntContext = createContext<{
+  tableRowsCnt: number;
+  setTableRowsCnt: React.Dispatch<React.SetStateAction<number>>;
+} | null>(null);
+export function useTableRowsCntContext() {
+  const dispatch = useContext(tableRowsCntContext);
+  if (!dispatch) throw new Error("tableRowsCntContextt에 문제가 있다");
+  return dispatch;
+}
 
 const QuizContent = () => {
   const [roomOptions, setRoomOptions] = useState<RoomOption | null>(null); // 방 옵션
   const [searchValue, setSearchValue] = useState<SearchInput | null>(null); // 검색 조건
+  const [tableRowsCnt, setTableRowsCnt] = useState<number>(0);
   const tableRef = useRef<TableRef>(null); // table 컴포넌트 ref(onDeleteCheckedRows())
 
   // 카테고리, 난이도 데이터
@@ -46,12 +61,21 @@ const QuizContent = () => {
   return (
     <div className="QuizContent">
       <OptionDataContext.Provider value={roomOptions}>
-        <section className="toolbar_section">
-          <Toolbar setSearchValue={setSearchValue} tableRef={tableRef} />
-        </section>
-        <section className="table_section">
-          <QuizListTable ref={tableRef} searchValue={searchValue} />
-        </section>
+        <tableRowsCntContext.Provider
+          value={{
+            tableRowsCnt: tableRowsCnt,
+            setTableRowsCnt: setTableRowsCnt,
+          }}
+        >
+          <section className="toolbar_section">
+            <setOptionDataContext.Provider value={setRoomOptions}>
+              <Toolbar setSearchValue={setSearchValue} tableRef={tableRef} />
+            </setOptionDataContext.Provider>
+          </section>
+          <section className="table_section">
+            <QuizListTable ref={tableRef} searchValue={searchValue} />
+          </section>
+        </tableRowsCntContext.Provider>
       </OptionDataContext.Provider>
       <Toaster
         richColors

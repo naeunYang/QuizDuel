@@ -1,11 +1,11 @@
 import "./QuizSearch.css";
 
 import { useEffect, useState, useContext } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { useTableRowsCntContext } from "./QuizContent";
 
 import LabelInput from "../common/LabelInput";
 import LabelSelect from "../common/LabelSelect";
-import { Search } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { OptionDataContext } from "./QuizContent";
 
 import type { SearchInput } from "./types/search-value.types";
@@ -16,28 +16,23 @@ const QuizSearch = ({
   setSearchValue: React.Dispatch<React.SetStateAction<SearchInput | null>>;
 }) => {
   const [searchInput, setSearchInput] = useState<SearchInput | null>(null);
-  const [dataLength, setDataLength] = useState<number | null>(null);
   const roomOptions = useContext(OptionDataContext);
+  const { tableRowsCnt } = useTableRowsCntContext();
 
-  // total 데이터 수 세팅
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { count, error } = await supabase
-          .from("quiz_master")
-          .select("*", { count: "exact", head: true });
+    if (!searchInput) {
+      setSearchConditions();
+    }
+  }, [searchInput]);
 
-        if (error) throw error;
-
-        setDataLength(count);
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    };
-
-    fetchData();
-  }, []);
+  useEffect(() => {
+    setSearchConditions();
+  }, [
+    searchInput?.type,
+    searchInput?.category,
+    searchInput?.level,
+    searchInput?.status,
+  ]);
 
   const onChangeInput = (name: string, value: string) => {
     setSearchInput((prev) => ({
@@ -46,7 +41,7 @@ const QuizSearch = ({
     }));
   };
 
-  const onSearchBtnClick = async () => {
+  const setSearchConditions = async () => {
     // 검색 조건
     const idValue = searchInput?.id ?? "";
     const typeValue =
@@ -73,11 +68,16 @@ const QuizSearch = ({
     });
   };
 
+  const onResetBtnClick = () => {
+    setSearchInput(null);
+    setSearchConditions();
+  };
+
   return (
     <div className="QuizSearch">
       <div className="total">
         Total
-        <p>{dataLength}</p>
+        <p>{tableRowsCnt}</p>
       </div>
       <LabelInput
         label="ID"
@@ -87,6 +87,7 @@ const QuizSearch = ({
         width={150}
         name="id"
         placeholder="ID 입력"
+        onEnterKeyDown={() => setSearchConditions()}
       />
       <LabelSelect
         label="문제형식"
@@ -134,7 +135,8 @@ const QuizSearch = ({
       />
       <section className="search_icon">
         <div>
-          <Search onClick={onSearchBtnClick} />
+          <RotateCcw onClick={onResetBtnClick} />
+          {/* 검색 조건 리셋 */}
         </div>
       </section>
     </div>

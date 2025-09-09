@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import useOptionFetch from "../hooks/useOptionFetch";
+import optionSave from "../lib/optionSave";
+import { setOptionDataContext } from "../QuizContent";
 
 import { Card } from "@/components/shadcn/card";
 import { Badge } from "@/components/shadcn/badge";
 import { BadgePlus } from "lucide-react";
 import OptionTabItem from "./OptionTabItem";
 import { Button as ShadBtn } from "../../shadcn/button";
-import useOptionFetch from "../hooks/useOptionFetch";
-import optionSave from "../lib/optionSave";
 import { toast } from "sonner";
+import { Spinner } from "@/components/common/LoadingSpinner";
 
 import type { OptionData } from "../types/room-options.types";
 
@@ -20,6 +22,8 @@ interface Props {
 const OptionTab = ({ tableName, keyColumn, valueColumn }: Props) => {
   const defaultData = useOptionFetch(tableName, keyColumn, valueColumn);
   const [optionItems, setOptionItems] = useState<OptionData[]>(defaultData);
+  const [delOptionItems, setDelOptionItems] = useState<string[]>([]);
+  const setRoomOptions = useContext(setOptionDataContext);
 
   useEffect(() => {
     setOptionItems(defaultData);
@@ -29,12 +33,16 @@ const OptionTab = ({ tableName, keyColumn, valueColumn }: Props) => {
   const onAddOptionBtnClick = () => {
     const maxKey = optionItems.reduce((arr, cur) => Math.max(arr, cur.key), 0);
 
-    setOptionItems((prev) => [...prev, { key: maxKey + 1, id: "", value: "" }]);
+    setOptionItems((prev) => [
+      ...prev,
+      { key: maxKey + 1, id: "", value: "", editable: true },
+    ]);
   };
 
   // 옵션 삭제
-  const onDelOptionBtnClick = (key: number) => {
+  const onDelOptionBtnClick = (key: number, id: string) => {
     setOptionItems((prev) => prev.filter((item) => item.key !== key));
+    setDelOptionItems((prev) => [...prev, id]);
   };
 
   // 옵션 저장
@@ -44,16 +52,47 @@ const OptionTab = ({ tableName, keyColumn, valueColumn }: Props) => {
       return;
     }
 
-    const data = await optionSave(
-      tableName,
-      keyColumn,
-      valueColumn,
-      optionItems
-    );
-    if (data) {
-      setOptionItems(data);
+    if (optionItems.length > 0) {
+      const data = await optionSave(
+        tableName,
+        keyColumn,
+        valueColumn,
+        optionItems,
+        delOptionItems
+      );
+      if (data) {
+        setOptionItems(data);
+
+        // 검색 조건의 카테고리 데이터 업데이트
+        if (tableName === "category_master" && setRoomOptions) {
+          setRoomOptions((prev) => {
+            if (!prev) {
+              return {
+                categories: [],
+                types: [],
+                levels: [],
+                states: [],
+              };
+            }
+            return {
+              ...prev,
+              categories: [
+                { categoryID: "-1", categoryName: "전체" },
+                ...data.map((item) => ({
+                  categoryID: item.id,
+                  categoryName: item.value,
+                })),
+              ],
+            };
+          });
+        }
+      }
     }
   };
+
+  if (defaultData.length < 1) {
+    return <Spinner className="text-red-400 w-20 h-20" />;
+  }
 
   return (
     <div>
@@ -64,6 +103,7 @@ const OptionTab = ({ tableName, keyColumn, valueColumn }: Props) => {
             data={data}
             onDelOptionBtnClick={onDelOptionBtnClick}
             setOptionItems={setOptionItems}
+            editable={data.editable}
           />
         ))}
         <Badge

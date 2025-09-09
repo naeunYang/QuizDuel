@@ -22,6 +22,7 @@ const useOptionFetch = (
                 key: index,
                 id: item[keyColumn],
                 value: item[valueColumn],
+                editable: false,
               };
             })
           );
@@ -32,7 +33,7 @@ const useOptionFetch = (
     };
 
     fetchData();
-  }, [tableName]);
+  }, [tableName, keyColumn, valueColumn]);
 
   return optionData;
 };

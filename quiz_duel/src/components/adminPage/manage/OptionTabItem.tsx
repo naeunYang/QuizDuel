@@ -7,14 +7,16 @@ import type { OptionData } from "../types/room-options.types";
 
 interface Props {
   data: OptionData;
-  onDelOptionBtnClick: (key: number) => void;
+  onDelOptionBtnClick: (key: number, id: string) => void;
   setOptionItems: React.Dispatch<React.SetStateAction<OptionData[]>>;
+  editable: boolean;
 }
 
 const OptionTabItem = ({
   data,
   onDelOptionBtnClick,
   setOptionItems,
+  editable,
 }: Props) => {
   const onIdInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOptionItems((prev) =>
@@ -40,17 +42,19 @@ const OptionTabItem = ({
           className="text-center"
           value={data.id}
           onChange={onIdInputChange}
+          readOnly={!editable}
         />
       </div>
       <Input
         className="value"
         value={data.value}
         onChange={onValueInputChange}
+        readOnly={!editable}
       />
       <Trash2
         className="cursor-pointer w-5 h-5"
         onClick={() => {
-          onDelOptionBtnClick(data.key);
+          onDelOptionBtnClick(data.key, data.id);
         }}
       />
     </div>

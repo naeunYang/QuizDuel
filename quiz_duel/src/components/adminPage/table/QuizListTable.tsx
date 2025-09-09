@@ -6,6 +6,7 @@ import {
   forwardRef,
   useImperativeHandle,
 } from "react";
+import { useTableRowsCntContext } from "../QuizContent";
 
 import {
   Table,
@@ -32,6 +33,8 @@ type QuizListTableProps = {
 const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
   ({ searchValue }, ref) => {
     const [quizList, setQuizList] = useState<QuizData[]>([]);
+    const [loading, setLoading] = useState(true);
+    const { setTableRowsCnt } = useTableRowsCntContext();
     const tableRef = useRef<HTMLTableElement | null>(null);
     const popoverCloseRef = useRef<HTMLButtonElement>(null);
 
@@ -65,6 +68,8 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
             }));
 
             setQuizList(newData);
+            setTableRowsCnt(newData.length);
+            setLoading(false);
           }
         } catch (error) {
           console.error(error);
@@ -161,10 +166,6 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
       }
     }, []);
 
-    if (quizList.length < 1) {
-      return <Spinner className="text-red-400 w-20 h-20 mt-50" />;
-    }
-
     return (
       <div className="w-full max-h-full overflow-auto">
         <Table className="table-fixed w-full text-base" ref={tableRef}>
@@ -217,6 +218,10 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
             ))}
           </TableBody>
         </Table>
+        <Spinner className="text-red-400 w-20 h-20 mt-50" show={loading} />
+        {quizList.length < 1 && loading === false && (
+          <div className="w-full h-full text-center mt-50">No Data</div>
+        )}
       </div>
     );
   }
