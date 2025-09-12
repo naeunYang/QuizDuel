@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
-import useOptionFetch from "../hooks/useOptionFetch";
-import optionSave from "../lib/optionSave";
+import useOptionFetch from "../../../hooks/useOptionFetch";
+import optionSave from "../../../lib/optionSave";
 import { setOptionDataContext } from "../QuizContent";
 
 import { Card } from "@/components/shadcn/card";

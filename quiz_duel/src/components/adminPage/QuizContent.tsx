@@ -19,20 +19,20 @@ export const setOptionDataContext = createContext<React.Dispatch<
 > | null>(null);
 
 // 테이블 행 개수
-const tableRowsCntContext = createContext<{
+const TableRowsCntContext = createContext<{
   tableRowsCnt: number;
   setTableRowsCnt: React.Dispatch<React.SetStateAction<number>>;
 } | null>(null);
 export function useTableRowsCntContext() {
-  const dispatch = useContext(tableRowsCntContext);
-  if (!dispatch) throw new Error("tableRowsCntContextt에 문제가 있다");
+  const dispatch = useContext(TableRowsCntContext);
+  if (!dispatch) throw new Error("TableRowsCntContext에 문제가 있다");
   return dispatch;
 }
 
 const QuizContent = () => {
   const [roomOptions, setRoomOptions] = useState<RoomOption | null>(null); // 방 옵션
   const [searchValue, setSearchValue] = useState<SearchInput | null>(null); // 검색 조건
-  const [tableRowsCnt, setTableRowsCnt] = useState<number>(0);
+  const [tableRowsCnt, setTableRowsCnt] = useState<number>(0); // 행 수
   const tableRef = useRef<TableRef>(null); // table 컴포넌트 ref(onDeleteCheckedRows())
 
   // 카테고리, 난이도 데이터
@@ -61,7 +61,7 @@ const QuizContent = () => {
   return (
     <div className="QuizContent">
       <OptionDataContext.Provider value={roomOptions}>
-        <tableRowsCntContext.Provider
+        <TableRowsCntContext.Provider
           value={{
             tableRowsCnt: tableRowsCnt,
             setTableRowsCnt: setTableRowsCnt,
@@ -75,7 +75,7 @@ const QuizContent = () => {
           <section className="table_section">
             <QuizListTable ref={tableRef} searchValue={searchValue} />
           </section>
-        </tableRowsCntContext.Provider>
+        </TableRowsCntContext.Provider>
       </OptionDataContext.Provider>
       <Toaster
         richColors

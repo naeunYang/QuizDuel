@@ -56,7 +56,7 @@ const RowPopover = ({
   };
 
   const onChangeInput = (name: string, value: string) => {
-    // 선택값 변경 시 배열 처리
+    // choices 값 변경 시 배열 처리
     if (name === "choices") {
       setQuiz((prev) => ({
         ...prev,

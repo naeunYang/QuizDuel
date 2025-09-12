@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
-import type { OptionData } from "../types/room-options.types";
+import type { OptionData } from "../components/adminPage/types/room-options.types";
 
 const useOptionFetch = (
   tableName: string,
@@ -14,19 +14,16 @@ const useOptionFetch = (
     const fetchData = async () => {
       try {
         const { data } = await supabase.from(tableName).select("*");
+        if (!data) return [];
 
-        if (data) {
-          setOptionData(
-            data.map((item, index) => {
-              return {
-                key: index,
-                id: item[keyColumn],
-                value: item[valueColumn],
-                editable: false,
-              };
-            })
-          );
-        }
+        setOptionData(
+          data.map((item, index) => ({
+            key: index,
+            id: item[keyColumn],
+            value: item[valueColumn],
+            editable: false,
+          }))
+        );
       } catch (error) {
         console.error(error);
       }

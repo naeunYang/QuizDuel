@@ -1,6 +1,5 @@
 import "./QuizEditor.css";
 
-// React Hooks
 import { useNavigate } from "react-router-dom";
 
 import { Button as ShadBtn } from "../../shadcn/button";
@@ -31,9 +30,12 @@ const QuizEditor = ({
 
   return (
     <div className="QuizEditor">
+      {/* 문제 생성 */}
       <ShadBtn className={"admin_button w-20"} onClick={onCreateBtnClick}>
         문제 생성
       </ShadBtn>
+
+      {/* 문제 삭제 */}
       <ConfirmModal
         title="📢 삭제"
         content="삭제하시겠습니까?"
@@ -43,6 +45,8 @@ const QuizEditor = ({
         }
         trigger={<ShadBtn className={"admin_button w-20"}>문제 삭제</ShadBtn>}
       />
+
+      {/* 방 옵션 관리 */}
       <SetRoomOptionModal />
     </div>
   );

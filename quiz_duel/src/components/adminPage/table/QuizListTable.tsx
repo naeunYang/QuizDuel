@@ -48,56 +48,53 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
       },
     }));
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const { data } = await supabase
-            .from("quiz_master")
-            .select("*")
-            .like("id", `%${searchValue?.id ?? ""}%`)
-            .like("type", `%${searchValue?.type ?? ""}%`)
-            .like("categoryID", `%${searchValue?.category ?? ""}%`)
-            .like("levelID", `%${searchValue?.level ?? ""}%`)
-            .like("status", `%${searchValue?.status ?? ""}%`)
-            .order("id", { ascending: true });
+    // 데이터 조회
+    const fetchTableData = async (searchValue: SearchInput | null) => {
+      try {
+        const { data } = await supabase
+          .from("quiz_master")
+          .select("*")
+          .like("id", `%${searchValue?.id ?? ""}%`)
+          .like("type", `%${searchValue?.type ?? ""}%`)
+          .like("categoryID", `%${searchValue?.category ?? ""}%`)
+          .like("levelID", `%${searchValue?.level ?? ""}%`)
+          .like("status", `%${searchValue?.status ?? ""}%`)
+          .order("id", { ascending: true });
 
-          if (data) {
-            const newData = data.map((row) => ({
-              ...row,
-              isChecked: false,
-            }));
+        if (data) {
+          const newData = data.map((row) => ({
+            ...row,
+            isChecked: false,
+          }));
 
-            setQuizList(newData);
-            setTableRowsCnt(newData.length);
-            setLoading(false);
-          }
-        } catch (error) {
-          console.error(error);
-          throw error;
+          setQuizList(newData);
+          setTableRowsCnt(newData.length);
+          setLoading(false);
         }
-      };
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    };
 
-      fetchData();
+    useEffect(() => {
+      fetchTableData(searchValue);
     }, [searchValue]);
 
     // 헤더 체크 컬럼
     const onHeaderCheckChange = (isChecked: boolean) => {
       if (isChecked) {
         setQuizList((prev) =>
-          prev.map((quiz) => {
-            return { ...quiz, isChecked: true };
-          })
+          prev.map((quiz) => ({ ...quiz, isChecked: true }))
         );
       } else {
         setQuizList((prev) =>
-          prev.map((quiz) => {
-            return { ...quiz, isChecked: false };
-          })
+          prev.map((quiz) => ({ ...quiz, isChecked: false }))
         );
       }
     };
 
-    // 로우 체크
+    // 로우 체크 박스
     const onCheckboxChange = useCallback((targetId: string) => {
       setQuizList((prev) =>
         prev.map((quiz) =>
@@ -167,7 +164,7 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
     }, []);
 
     return (
-      <div className="w-full max-h-full overflow-auto">
+      <div className="w-full h-full overflow-auto">
         <Table className="table-fixed w-full text-base" ref={tableRef}>
           <TableHeader className="sticky-header">
             <TableRow className="bg-[#f4a896] hover:bg-[#f7b3a0]">
