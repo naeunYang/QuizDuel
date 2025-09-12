@@ -26,3 +26,33 @@
   border-radius: 10px;
   padding: 0.5vh 1.5vh 1vh 1.5vh;
 }
+
+.Admin .content_section .header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 7%;
+}
+
+.Admin .content_section .header .title {
+  text-align: center;
+  font-size: 1.5rem;
+  flex: 1;
+}
+
+.Admin .content_section .header .close {
+  cursor: pointer;
+}
+
+.Admin .content_section .body {
+  display: flex;
+  height: 86%;
+}
+
+.Admin .content_section .footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 7%;
+  gap: 1rem;
+}

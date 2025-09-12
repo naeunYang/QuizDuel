@@ -10,6 +10,8 @@ interface Props {
   placeholder?: string;
   onInputValueChange: (name: string, value: string) => void;
   onEnterKeyDown?: () => void;
+  type?: string;
+  align?: "left" | "right" | "center" | "justify" | "start" | "end";
 }
 
 const LabelInput = (props: Props) => {
@@ -17,6 +19,7 @@ const LabelInput = (props: Props) => {
     <div className={`LabelInput ${props.direction}`}>
       <label className="label_section">{props.label}</label>
       <Input
+        type={props.type ?? "text"}
         autoFocus={true}
         className="!text-[1.125rem] placeholder:text-[#AAAAAA] min-w-30 max-w-full focus:border-none "
         name={props.name}
@@ -28,7 +31,7 @@ const LabelInput = (props: Props) => {
           if (e.key === "Enter") props.onEnterKeyDown?.();
         }}
         placeholder={props.placeholder}
-        style={{ width: props.width }}
+        style={{ width: props.width, textAlign: props.align }}
       />
     </div>
   );
