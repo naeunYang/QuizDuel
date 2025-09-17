@@ -5,13 +5,14 @@ interface Props {
   label: string;
   direction: "vertical" | "horizontal";
   name?: string;
-  content?: string;
+  content?: string | number;
   width?: number;
   placeholder?: string;
   onInputValueChange: (name: string, value: string) => void;
   onEnterKeyDown?: () => void;
   type?: string;
   align?: "left" | "right" | "center" | "justify" | "start" | "end";
+  readonly?: boolean;
 }
 
 const LabelInput = (props: Props) => {
@@ -32,6 +33,7 @@ const LabelInput = (props: Props) => {
         }}
         placeholder={props.placeholder}
         style={{ width: props.width, textAlign: props.align }}
+        readOnly={props.readonly}
       />
     </div>
   );

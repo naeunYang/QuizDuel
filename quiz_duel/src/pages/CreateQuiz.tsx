@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 import logo from "../assets/logo.png";
 import { X } from "lucide-react";
-import Button from "@/components/common/Button";
 import QuizCreateForm from "@/components/createQuizPage/QuizCreateForm";
 import { QuizCreateGrid } from "@/components/createQuizPage/QuizCreateGrid";
 
@@ -12,11 +11,11 @@ const CreateQuiz = () => {
   const nav = useNavigate();
 
   const onLogoClick = () => {
-    nav("/");
+    nav("/", { replace: true });
   };
 
   const onCloseBtnClick = () => {
-    nav("/admin");
+    nav("/admin", { replace: true });
   };
 
   return (
@@ -32,10 +31,6 @@ const CreateQuiz = () => {
         <div className="body">
           <QuizCreateForm />
           <QuizCreateGrid />
-        </div>
-        <div className="footer">
-          <Button text="추가하기" type="POSITIVE" onButtonClick={() => {}} />
-          <Button text="취소하기" type="DEFAULT" onButtonClick={() => {}} />
         </div>
       </div>
     </div>

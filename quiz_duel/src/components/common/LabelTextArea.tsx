@@ -10,6 +10,7 @@ interface Props {
   width?: number;
   height?: number;
   onTextChange: (name: string, value: string) => void;
+  readonly?: boolean;
 }
 
 const LabelTextArea = (props: Props) => {
@@ -23,6 +24,7 @@ const LabelTextArea = (props: Props) => {
         value={props.content}
         onChange={(e) => props.onTextChange(e.target.name, e.target.value)}
         style={{ width: props.width, height: props.height, resize: "none" }}
+        readOnly={props.readonly}
       />
     </div>
   );

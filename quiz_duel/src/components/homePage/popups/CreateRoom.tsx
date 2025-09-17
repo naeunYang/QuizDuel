@@ -39,6 +39,10 @@ const CreateRoom = forwardRef<ChildHandle>((props, ref) => {
     axios
       .get("/home/room-options")
       .then((response) => {
+        response.data?.categories.push({
+          categoryID: "random",
+          categoryName: "랜덤",
+        });
         setRoomOptions(response.data);
       })
       .catch((error) => {

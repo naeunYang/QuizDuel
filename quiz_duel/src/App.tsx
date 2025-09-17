@@ -6,6 +6,7 @@ import Admin from "./pages/Admin.tsx";
 import Notfound from "./pages/Notfound.tsx";
 import CreateQuiz from "./pages/CreateQuiz.tsx";
 import { ProtectedRoute } from "./ProtectedRoute.tsx";
+import { Toaster } from "sonner";
 
 function App() {
   return (
@@ -31,6 +32,16 @@ function App() {
         />
         <Route path="*" element={<Notfound />} />
       </Routes>
+      <Toaster
+        richColors
+        expand={true}
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            fontSize: 15,
+          },
+        }}
+      />
     </>
   );
 }
