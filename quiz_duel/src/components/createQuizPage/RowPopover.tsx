@@ -24,10 +24,10 @@ export default function RowPopover({
     const rows = tableRef.current!.querySelectorAll("tr");
 
     if (open) {
-      if (quizData.check === "🚨") {
+      if (!quizData.check) {
         setQuizList((prev) =>
           prev.map((item) =>
-            item.seq === quizData.seq ? { ...item, check: "✅" } : item
+            item.seq === quizData.seq ? { ...item, check: true } : item
           )
         );
       }
