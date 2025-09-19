@@ -9,14 +9,20 @@ interface Props {
   quizData: QuizData;
   tableRef: React.RefObject<HTMLTableElement | null>;
   onRowCheckChange: (seq: number) => void;
+  setQuizList: React.Dispatch<React.SetStateAction<QuizData[]>>;
 }
 
-const QuizCreateGridRow = ({ quizData, tableRef, onRowCheckChange }: Props) => {
+const QuizCreateGridRow = ({
+  quizData,
+  tableRef,
+  onRowCheckChange,
+  setQuizList,
+}: Props) => {
   // 검수 셀 클릭
   const onCheckCellClick = (
     e: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
   ) => {
-    onRowCheckChange(quizData.seq);
+    onRowCheckChange(quizData.seq!);
     e.stopPropagation();
   };
 
@@ -25,13 +31,14 @@ const QuizCreateGridRow = ({ quizData, tableRef, onRowCheckChange }: Props) => {
       key={quizData.seq}
       tableRef={tableRef}
       quizData={quizData}
+      setQuizList={setQuizList}
       trigger={
         <TableRow
           key={quizData.seq}
           className="hover:bg-[#f2f2f2] cursor-pointer"
         >
           <TableCell className="w-[6rem] text-center text-[#5a2e20]">
-            {quizData.type}
+            {quizData.type === "0" ? "OX 퀴즈" : "객관식 퀴즈"}
           </TableCell>
           <TableCell className="w-[6rem] text-center text-[#5a2e20]">
             {quizData.categoryID}
@@ -52,7 +59,7 @@ const QuizCreateGridRow = ({ quizData, tableRef, onRowCheckChange }: Props) => {
             className="text-center truncate text-[#5a2e20]"
             onClick={onCheckCellClick}
           >
-            {quizData.check}
+            {quizData.check ? "✅" : "🚨"}
           </TableCell>
         </TableRow>
       }

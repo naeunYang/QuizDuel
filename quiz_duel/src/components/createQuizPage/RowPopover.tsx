@@ -9,15 +9,29 @@ import type { QuizData } from "./types/quizdata.types";
 interface Props {
   tableRef: React.RefObject<HTMLTableElement | null>;
   quizData: QuizData;
+  setQuizList: React.Dispatch<React.SetStateAction<QuizData[]>>;
   trigger: React.ReactElement;
 }
 
-export default function RowPopover({ tableRef, quizData, trigger }: Props) {
+export default function RowPopover({
+  tableRef,
+  quizData,
+  setQuizList,
+  trigger,
+}: Props) {
   // 행에 포커스 주기
   const onOpenChange = (open: boolean) => {
     const rows = tableRef.current!.querySelectorAll("tr");
 
     if (open) {
+      if (quizData.check === "🚨") {
+        setQuizList((prev) =>
+          prev.map((item) =>
+            item.seq === quizData.seq ? { ...item, check: "✅" } : item
+          )
+        );
+      }
+
       rows.forEach((row) => {
         if (row.getAttribute("data-state") === "open") {
           (row as HTMLTableRowElement).style.backgroundColor = "#e5e7eb";
@@ -38,7 +52,7 @@ export default function RowPopover({ tableRef, quizData, trigger }: Props) {
       <PopoverContent className="w-full" align="start">
         <div className="flex flex-col relative ">
           <div className="flex flex-row gap-2 text-gray-400 text-[15px]">
-            <label>{quizData.type}</label>
+            <label>{quizData.type === "0" ? "OX 퀴즈" : "객관식 퀴즈"}</label>
             <label>{quizData.categoryID}</label>
             <label>{quizData.levelID}</label>
           </div>
@@ -50,7 +64,6 @@ export default function RowPopover({ tableRef, quizData, trigger }: Props) {
               width={500}
               height={200}
               name="quiz"
-              onTextChange={() => {}}
               readonly={true}
             />
             <LabelTextArea
@@ -60,7 +73,6 @@ export default function RowPopover({ tableRef, quizData, trigger }: Props) {
               width={500}
               height={200}
               name="explanation"
-              onTextChange={() => {}}
               readonly={true}
             />
           </div>
@@ -69,18 +81,16 @@ export default function RowPopover({ tableRef, quizData, trigger }: Props) {
               label="정답"
               direction="horizontal"
               content={quizData.answer}
-              onInputValueChange={() => {}}
               width={465}
               name="answer"
               readonly={true}
             />
 
-            {quizData.type === "객관식 퀴즈" ? (
+            {quizData.type === "1" ? (
               <LabelInput
                 label="선택"
                 direction="horizontal"
                 content={quizData.choices?.join(",")}
-                onInputValueChange={() => {}}
                 width={465}
                 name="choices"
                 readonly={true}

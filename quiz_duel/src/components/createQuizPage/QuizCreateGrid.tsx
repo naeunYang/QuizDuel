@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -14,48 +14,14 @@ import Button from "../common/Button";
 import { Button as ShadBtn } from "../shadcn/button";
 import ConfirmModal from "../common/ConfirmModal";
 import { toast } from "sonner";
-
 import type { QuizData } from "./types/quizdata.types";
 
-const mockData: QuizData[] = [
-  {
-    seq: 1,
-    type: "0",
-    categoryID: "comic",
-    levelID: "medium",
-    content: "원피스의 첫 에피소드 제목은 로맨스 돈이다.",
-    explanation: "원피스의 첫 에피소드 제목은 로맨스 돈이다.",
-    answer: "O",
-    choices: ["O", "X"],
-    check: "🚨",
-  },
-  {
-    seq: 2,
-    type: "1",
-    categoryID: "movie",
-    levelID: "high",
-    content: "영화 인터스텔라에서 주인공이 찾으려는 것은?",
-    explanation:
-      "인터스텔라에서 쿠퍼는 인류가 살아갈 새로운 행성을 찾으려 한다.",
-    answer: "새로운 행성",
-    choices: ["새로운 행성", "보물", "외계인", "타임머신"],
-    check: "🚨",
-  },
-  {
-    seq: 3,
-    type: "0",
-    categoryID: "drama",
-    levelID: "low",
-    content: "드라마 사랑의 불시착은 한국 작품이다.",
-    explanation: "사랑의 불시착은 한국 tvN 드라마이다.",
-    answer: "O",
-    choices: ["O", "X"],
-    check: "🚨",
-  },
-];
+interface Props {
+  quizList: QuizData[];
+  setQuizList: React.Dispatch<React.SetStateAction<QuizData[]>>;
+}
 
-export function QuizCreateGrid() {
-  const [quizList, setQuizList] = useState(mockData);
+export function QuizCreateGrid({ quizList, setQuizList }: Props) {
   const tableRef = useRef<HTMLTableElement | null>(null);
   const nav = useNavigate();
 
@@ -63,12 +29,14 @@ export function QuizCreateGrid() {
   const onRowCheckChange = useCallback((seq: number) => {
     setQuizList((prev) =>
       prev.map((quiz) =>
-        quiz.seq === seq
-          ? { ...quiz, check: quiz.check === "✅" ? "🚨" : "✅" }
-          : quiz
+        quiz.seq === seq ? { ...quiz, check: !quiz.check } : quiz
       )
     );
   }, []);
+
+  // const onRowCheckHeaderClick = () => {
+  //   setQuizList((prev) => prev.map((item) => ({ ...item, check: "✅" })));
+  // };
 
   // db에서 id max값 구하기 위한 오늘 날씨 추출(yy-mm-dd)
   const getToday = () => {
@@ -111,7 +79,7 @@ export function QuizCreateGrid() {
     try {
       const maxId = await getMaxId();
       const saveDatas = quizList
-        .filter((quiz) => quiz.check !== "🚨") // 검수 안된 데이터 제외
+        .filter((quiz) => !quiz.check) // 검수 안된 데이터 제외
         .map((quiz, index) => ({
           id: String(Number(maxId) + index + 1),
           type: quiz.type,
@@ -168,7 +136,10 @@ export function QuizCreateGrid() {
               <TableHead className="w-[6rem] text-center  text-amber-800">
                 정답
               </TableHead>
-              <TableHead className="w-[6rem] text-center  text-amber-800">
+              <TableHead
+                className="w-[6rem] text-center  text-amber-800"
+                // onClick={onRowCheckHeaderClick}
+              >
                 검수
               </TableHead>
             </TableRow>
@@ -180,6 +151,7 @@ export function QuizCreateGrid() {
                 quizData={quiz}
                 tableRef={tableRef}
                 onRowCheckChange={onRowCheckChange}
+                setQuizList={setQuizList}
               />
             ))}
           </TableBody>

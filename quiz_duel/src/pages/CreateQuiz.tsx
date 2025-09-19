@@ -1,5 +1,6 @@
 import "./Admin.css";
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import logo from "../assets/logo.png";
@@ -7,7 +8,10 @@ import { X } from "lucide-react";
 import QuizCreateForm from "@/components/createQuizPage/QuizCreateForm";
 import { QuizCreateGrid } from "@/components/createQuizPage/QuizCreateGrid";
 
+import type { QuizData } from "@/components/createQuizPage/types/quizdata.types";
+
 const CreateQuiz = () => {
+  const [quizList, setQuizList] = useState<QuizData[]>([]);
   const nav = useNavigate();
 
   const onLogoClick = () => {
@@ -29,8 +33,8 @@ const CreateQuiz = () => {
           <X className="close" onClick={onCloseBtnClick} />
         </div>
         <div className="body">
-          <QuizCreateForm />
-          <QuizCreateGrid />
+          <QuizCreateForm quizList={quizList} setQuizList={setQuizList} />
+          <QuizCreateGrid quizList={quizList} setQuizList={setQuizList} />
         </div>
       </div>
     </div>

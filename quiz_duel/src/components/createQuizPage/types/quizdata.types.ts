@@ -1,5 +1,5 @@
 export interface QuizData {
-  seq: number;
+  seq?: number;
   type: string;
   categoryID: string;
   levelID: string;
@@ -7,5 +7,5 @@ export interface QuizData {
   explanation: string;
   answer: string;
   choices: string[];
-  check: string;
+  check: boolean;
 }

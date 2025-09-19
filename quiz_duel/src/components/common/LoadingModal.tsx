@@ -12,7 +12,8 @@ interface Props {
   open: boolean;
   content: string;
   type: "LOADING" | "ERROR";
-  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+  onOpenChange?: React.Dispatch<React.SetStateAction<boolean>>;
+  className?: string;
 }
 
 const LoadingModal = (props: Props) => {
@@ -20,7 +21,7 @@ const LoadingModal = (props: Props) => {
     <div>
       <Dialog open={props.open} onOpenChange={props.onOpenChange}>
         <DialogContent
-          className="bg-[#E8E8E8] w-80 h-35"
+          className={`bg-[#E8E8E8] w-80 h-35 ${props.className}`}
           // onOpenAutoFocus={(e) => e.preventDefault()}
           // // e.preventDefault() : Dialog가 열릴 때 자동으로 내부 포커스 주는 기본 동작 막음.
         >

@@ -15,7 +15,7 @@ export default defineConfig({
     host: true, // 0.0.0.0으로 바인딩
     proxy: {
       // http://localhost:3001/home
-      "/home": {
+      "/api": {
         target: "http://localhost:3001",
         changeOrigin: true,
         secure: false,

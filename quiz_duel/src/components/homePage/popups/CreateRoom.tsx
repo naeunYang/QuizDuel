@@ -37,7 +37,7 @@ const CreateRoom = forwardRef<ChildHandle>((props, ref) => {
 
   useEffect(() => {
     axios
-      .get("/home/room-options")
+      .get("/api/home/room-options")
       .then((response) => {
         response.data?.categories.push({
           categoryID: "random",

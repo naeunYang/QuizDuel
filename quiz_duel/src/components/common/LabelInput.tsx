@@ -8,7 +8,7 @@ interface Props {
   content?: string | number;
   width?: number;
   placeholder?: string;
-  onInputValueChange: (name: string, value: string) => void;
+  onInputValueChange?: (name: string, value: string) => void;
   onEnterKeyDown?: () => void;
   type?: string;
   align?: "left" | "right" | "center" | "justify" | "start" | "end";
@@ -26,7 +26,7 @@ const LabelInput = (props: Props) => {
         name={props.name}
         value={props.content ?? ""}
         onChange={(e) =>
-          props.onInputValueChange(e.target.name, e.target.value)
+          props.onInputValueChange?.(e.target.name, e.target.value)
         }
         onKeyDown={(e) => {
           if (e.key === "Enter") props.onEnterKeyDown?.();

@@ -37,7 +37,7 @@ const QuizContent = () => {
   // 카테고리, 난이도 데이터
   useEffect(() => {
     axios
-      .get("/home/room-options")
+      .get("/api/home/room-options")
       .then((response) => {
         setRoomOptions({
           types: masterData.types,

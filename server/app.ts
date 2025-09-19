@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import homeRouter from "./routes/home";
+import adminRouter from "./routes/admin";
 import http from "http";
 import WebSocket from "ws";
 import connectionSocket from "./websocket/connection";
@@ -16,7 +17,8 @@ app.use(
   })
 );
 
-app.use("/home", homeRouter); // /home으로 진입하는 모든 요청을 homeRouter에 맡김
+app.use("/api/home", homeRouter); // /home으로 진입하는 모든 요청을 homeRouter에 맡김
+app.use("/api/admin", adminRouter);
 
 // http 서버
 const server = http.createServer(app);
