@@ -10,7 +10,7 @@ import { TriangleAlert } from "lucide-react";
 
 interface Props {
   open: boolean;
-  content: string;
+  content: string | React.ReactNode;
   type: "LOADING" | "ERROR";
   onOpenChange?: React.Dispatch<React.SetStateAction<boolean>>;
   className?: string;
@@ -32,9 +32,7 @@ const LoadingModal = (props: Props) => {
             {props.type === "ERROR" && (
               <TriangleAlert className="text-yellow-400 w-full h-13 text-center" />
             )}
-            <div>
-              <label>{props.content}</label>
-            </div>
+            <div style={{ whiteSpace: "pre-wrap" }}>{props.content}</div>
           </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogContent>

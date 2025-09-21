@@ -1,35 +1,39 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import geminiPrompt from "./gemini_prompt";
+import { PrismaClient } from "@prisma/client";
+
+import type { Response } from "express";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const prisma = new PrismaClient();
 
 export async function generateQuiz(
   type: string,
   category: string,
   level: string,
-  cnt: string
+  cnt: string,
+  res: Response
 ) {
   const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-  const result = await model.generateContent(
-    geminiPrompt(type, category, level, cnt)
+  // 카테고리 정보 불러오기
+  const categories = await prisma.category_master.findMany();
+
+  res.write(`data: ${JSON.stringify("prompt 전송중...\n\n")}\n\n`);
+  const result = await model.generateContentStream(
+    geminiPrompt(type, category, level, cnt, categories)
   );
-  const response = result.response;
-  const text = response.text();
 
-  console.log(text);
-  return JSON.parse(text);
+  let text = "";
+  for await (const chunk of result.stream) {
+    const chunkText = chunk.text();
 
-  //   const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    console.log(chunkText);
+    res.write(`data: ${JSON.stringify(chunkText)}\n\n`);
+    text += chunkText;
+  }
 
-  //   const result = await model.generateContentStream(
-  //     geminiPrompt(type, category, level, cnt)
-  //   );
-
-  //   let text = "";
-  //   for await (const chunk of result.stream) {
-  //     const chunkText = chunk.text();
-  //     console.log(chunkText);
-  //     text += chunkText;
-  //   }
+  const data = JSON.parse(text);
+  res.write(`event: end\ndata: ${JSON.stringify(data)}\n\n`);
+  res.end();
 }

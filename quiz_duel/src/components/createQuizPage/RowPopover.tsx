@@ -24,6 +24,7 @@ export default function RowPopover({
     const rows = tableRef.current!.querySelectorAll("tr");
 
     if (open) {
+      // popover 열면 검수 상태 변경
       if (!quizData.check) {
         setQuizList((prev) =>
           prev.map((item) =>

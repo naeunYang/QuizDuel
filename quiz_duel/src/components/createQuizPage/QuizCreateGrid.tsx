@@ -34,9 +34,21 @@ export function QuizCreateGrid({ quizList, setQuizList }: Props) {
     );
   }, []);
 
-  // const onRowCheckHeaderClick = () => {
-  //   setQuizList((prev) => prev.map((item) => ({ ...item, check: "✅" })));
-  // };
+  // row 검수 헤더 클릭
+  const onRowCheckHeaderClick = (
+    e: React.MouseEvent<HTMLLabelElement, MouseEvent>
+  ) => {
+    let checkValue;
+    if (e.currentTarget.textContent === "검수✅") {
+      checkValue = true;
+    } else {
+      checkValue = false;
+    }
+
+    e.currentTarget.textContent = checkValue ? "검수🚨" : "검수✅";
+
+    setQuizList((prev) => prev.map((item) => ({ ...item, check: checkValue })));
+  };
 
   // db에서 id max값 구하기 위한 오늘 날씨 추출(yy-mm-dd)
   const getToday = () => {
@@ -79,7 +91,7 @@ export function QuizCreateGrid({ quizList, setQuizList }: Props) {
     try {
       const maxId = await getMaxId();
       const saveDatas = quizList
-        .filter((quiz) => !quiz.check) // 검수 안된 데이터 제외
+        .filter((quiz) => quiz.check) // 검수된 데이터만 포함
         .map((quiz, index) => ({
           id: String(Number(maxId) + index + 1),
           type: quiz.type,
@@ -136,11 +148,15 @@ export function QuizCreateGrid({ quizList, setQuizList }: Props) {
               <TableHead className="w-[6rem] text-center  text-amber-800">
                 정답
               </TableHead>
-              <TableHead
-                className="w-[6rem] text-center  text-amber-800"
-                // onClick={onRowCheckHeaderClick}
-              >
-                검수
+              <TableHead className="w-[6rem] text-center  text-amber-800">
+                <label
+                  className="cursor-pointer"
+                  onClick={(e) => {
+                    onRowCheckHeaderClick(e);
+                  }}
+                >
+                  검수✅
+                </label>
               </TableHead>
             </TableRow>
           </TableHeader>
