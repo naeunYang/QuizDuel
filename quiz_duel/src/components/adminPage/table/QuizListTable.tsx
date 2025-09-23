@@ -7,6 +7,7 @@ import {
   useImperativeHandle,
 } from "react";
 import { useTableRowsCntContext } from "../QuizContent";
+import { useInView } from "react-intersection-observer";
 
 import {
   Table,
@@ -29,16 +30,32 @@ type QuizListTableProps = {
   searchValue: SearchInput | null;
 };
 
+const PAGE = 20;
+
 // forwardRef<Ref 타입, Props 타입>
 const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
-  ({ searchValue }, ref) => {
+  ({ searchValue }, ref1) => {
     const [quizList, setQuizList] = useState<QuizData[]>([]);
     const [loading, setLoading] = useState(true);
     const { setTableRowsCnt } = useTableRowsCntContext();
     const tableRef = useRef<HTMLTableElement | null>(null);
     const popoverCloseRef = useRef<HTMLButtonElement>(null);
 
-    useImperativeHandle(ref, () => ({
+    const [page, setPage] = useState({ pageNumer: 1 });
+    const [hasMore, setHasMore] = useState(true);
+    const { ref: rowRef, inView } = useInView({
+      threshold: 0.5, // 화면의 50%가 보일 때 감지
+      triggerOnce: true, // 요소가 한 번 화면에 나타나고 나면 감지 중지
+    });
+
+    // rowRef가 뷰포트에 들어오거나 나갈 떄 inView가 true/false로 바뀜.
+    useEffect(() => {
+      if (inView) {
+        setPage((prev) => ({ pageNumer: prev.pageNumer + 1 }));
+      }
+    }, [inView]);
+
+    useImperativeHandle(ref1, () => ({
       // 체크 행 삭제
       onDeleteCheckedRows: () => {
         const checkedIds = quizList
@@ -49,27 +66,36 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
     }));
 
     // 데이터 조회
-    const fetchTableData = async (searchValue: SearchInput | null) => {
+    const fetchTableData = async (searchValue: SearchInput) => {
+      if (!hasMore) return;
       try {
-        const { data } = await supabase
+        const { data, count } = await supabase
           .from("quiz_master")
-          .select("*")
+          .select("*", { count: "exact" })
           .like("id", `%${searchValue?.id ?? ""}%`)
           .like("type", `%${searchValue?.type ?? ""}%`)
           .like("categoryID", `%${searchValue?.category ?? ""}%`)
           .like("levelID", `%${searchValue?.level ?? ""}%`)
           .like("status", `%${searchValue?.status ?? ""}%`)
+          .range((page.pageNumer - 1) * PAGE, page.pageNumer * PAGE - 1)
           .order("id", { ascending: true });
 
         if (data) {
+          if (data.length <= 0) {
+            setTableRowsCnt(0);
+            return;
+          }
+
           const newData = data.map((row) => ({
             ...row,
             isChecked: false,
           }));
 
-          setQuizList(newData);
-          setTableRowsCnt(newData.length);
+          setQuizList((prev) => [...prev, ...newData]);
+          setTableRowsCnt(count || 0);
           setLoading(false);
+
+          if (data.length < PAGE) setHasMore(false);
         }
       } catch (error) {
         console.error(error);
@@ -78,7 +104,17 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
     };
 
     useEffect(() => {
-      fetchTableData(searchValue);
+      if (searchValue) {
+        fetchTableData(searchValue);
+      }
+    }, [page]);
+
+    useEffect(() => {
+      if (searchValue) {
+        setQuizList([]);
+        setPage({ pageNumer: 1 }); // 무조건 page 트리거링
+        setHasMore(true);
+      }
     }, [searchValue]);
 
     // 헤더 체크 컬럼
@@ -202,7 +238,7 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
             </TableRow>
           </TableHeader>
           <TableBody>
-            {quizList.map((quiz) => (
+            {quizList.map((quiz, index) => (
               <QuizListTableRow
                 key={quiz.id}
                 quizData={quiz}
@@ -211,6 +247,7 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
                 onCheckboxChange={onCheckboxChange}
                 onUpdateRow={onUpdateRow}
                 onDeleteRow={onDeleteRow}
+                rowRef={index === quizList.length - 1 ? rowRef : null}
               />
             ))}
           </TableBody>

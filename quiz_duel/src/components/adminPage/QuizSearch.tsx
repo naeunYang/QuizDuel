@@ -41,8 +41,8 @@ const QuizSearch = ({
     }));
   };
 
-  const setSearchConditions = async () => {
-    // 검색 조건
+  // 검색 조건 설정
+  const setSearchConditions = () => {
     const idValue = searchInput?.id ?? "";
     const typeValue =
       !searchInput?.type || searchInput?.type == "-1" ? "" : searchInput?.type;
@@ -70,7 +70,6 @@ const QuizSearch = ({
 
   const onResetBtnClick = () => {
     setSearchInput(null);
-    setSearchConditions();
   };
 
   return (

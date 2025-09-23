@@ -1,4 +1,5 @@
 import { memo } from "react";
+import type { RefCallback } from "react";
 
 import { TableRow, TableCell } from "@/components/shadcn/table";
 import { Checkbox } from "@/components/shadcn/checkbox";
@@ -14,6 +15,7 @@ interface Props {
   onCheckboxChange: (targetId: string) => void;
   onUpdateRow: (row: QuizData) => void;
   onDeleteRow: (rowId: string[]) => void;
+  rowRef: RefCallback<HTMLTableRowElement> | null;
 }
 
 const QuizListTableRow = ({
@@ -23,6 +25,7 @@ const QuizListTableRow = ({
   onCheckboxChange,
   onUpdateRow,
   onDeleteRow,
+  rowRef,
 }: Props) => {
   return (
     <RowPopover
@@ -34,6 +37,7 @@ const QuizListTableRow = ({
         <TableRow
           key={quizData.id}
           className="hover:bg-[#f2f2f2] cursor-pointer"
+          ref={rowRef}
         >
           <TableCell className="w-[3.1rem] text-center">
             <Checkbox
