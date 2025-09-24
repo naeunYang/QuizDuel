@@ -8,8 +8,8 @@ interface Props {
 
 const SharePlatform = ({ fileName, platformName, onLogoClick }: Props) => {
   return (
-    <button className="SharePlatform">
-      <div className="logo_section" onClick={onLogoClick}>
+    <button className="SharePlatform" onClick={onLogoClick}>
+      <div className="logo_section">
         <img src={`../src/assets/${fileName}`} />
       </div>
       <div className="name_section">{platformName}</div>

@@ -1,0 +1,23 @@
+.Timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.Timer .time {
+  background-color: #f39c12;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: whitesmoke;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.Timer .footer {
+  color: whitesmoke;
+}

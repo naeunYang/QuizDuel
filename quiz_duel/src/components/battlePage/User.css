@@ -1,0 +1,46 @@
+.User {
+  width: 12rem;
+  height: 15rem;
+  background-color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.User img {
+  width: 75%;
+}
+
+.User .name {
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: bold;
+  font-family: "/NanumSquareB.otf";
+}
+
+.User .score {
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: bold;
+  font-family: "/NanumSquareB.otf";
+  color: #ee6a6a;
+}
+
+.User .status {
+  width: 80%;
+  border-radius: 1rem;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.User .complete {
+  color: #3c6099;
+  background-color: #d1e6fd;
+}
+
+.User .waiting {
+  color: #bdbdbd;
+  background-color: #efefef;
+}

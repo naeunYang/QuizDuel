@@ -65,11 +65,10 @@ const WaitForOpponent = () => {
           <Popover>
             <PopoverTrigger className="flex flex-row justify-center items-center w-full">
               <p className="cardcontent_section share">
-                초대 링크 공유하기&nbsp;
-                <Share className="w-4 h-4" />
+                초대 링크 공유하기&nbsp; <Share className="w-4 h-4" />
               </p>
             </PopoverTrigger>
-            <PopoverContent className="w-63 h-24 flex flex-wrap gap-2 justify-start items-start overflow-hidden">
+            <PopoverContent className="pointer-events-auto w-63 h-24 flex flex-wrap gap-2 justify-start items-start overflow-hidden cursor-pointer">
               <SharePlatform
                 fileName="kakaoTalk.png"
                 platformName="카카오톡"
