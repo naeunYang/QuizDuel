@@ -18,10 +18,14 @@ export async function generateQuiz(
 
   // 카테고리 정보 불러오기
   const categories = await prisma.category_master.findMany();
+  // 퀴즈 리스트 불러오기
+  const quizList = await prisma.quiz_master.findMany({
+    select: { content: true },
+  });
 
   res.write(`data: ${JSON.stringify("prompt 전송중...\n\n")}\n\n`);
   const result = await model.generateContentStream(
-    geminiPrompt(type, category, level, cnt, categories)
+    geminiPrompt(type, category, level, cnt, categories, quizList)
   );
 
   let text = "";

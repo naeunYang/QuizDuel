@@ -7,10 +7,12 @@ export default function geminiPrompt(
     categoryID: string;
     categoryName: string;
     description: string | null;
-  }[]
+  }[],
+  quizList: { content: string }[]
 ) {
   return `
       퀴즈 문제를 JSON 배열 형식으로 출력해줘. 코드 블록(\`\`\`)으로 감싸지 말고, 순수 JSON 텍스트만 출력해줘. 아래에는 속성 정보가 담겨 있고 그 밑에는 생성 조건이야. 조건이 "random" 이나 "-1"이면 랜덤으로 생성해줘.
+      그리고 이미 존재하는 퀴즈 리스트를 보고 중복되는 퀴즈는 생성하지 마.
 
       [속성 정보]
          1. type
@@ -42,5 +44,8 @@ export default function geminiPrompt(
          2. 카테고리: ${category}
          3. 난이도: ${level}
          4. 문제 수: ${cnt}
+
+      [이미 존재하는 퀴즈 리스트]
+         ${JSON.stringify(quizList)}
    `;
 }

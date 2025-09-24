@@ -192,6 +192,11 @@ const QuizListTable = forwardRef<TableRef, QuizListTableProps>(
 
         popoverCloseRef.current?.click(); // popover 닫기
         toast.success(`${rowId} 삭제 완료`);
+
+        // 삭제 후 데이터 재조회
+        setQuizList([]);
+        setPage({ pageNumer: 1 }); // 무조건 page 트리거링
+        setHasMore(true);
       } catch (error) {
         console.error(error);
         toast.error(`${rowId} 삭제 실패`);
