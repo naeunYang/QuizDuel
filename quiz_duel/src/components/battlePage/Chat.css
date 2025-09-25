@@ -1,5 +1,66 @@
 .Chat {
-  width: 30%;
+  width: 20%;
   height: 100%;
-  border: 1px solid red;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.Chat .chat_section {
+  flex: 1;
+  color: white;
+  padding-bottom: 0.5rem;
+}
+
+.Chat .chat_section textarea {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  resize: none;
+}
+
+/* 스크롤바 전체 영역 */
+.Chat .chat_section textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* 스크롤바 막대 */
+.Chat .chat_section textarea::-webkit-scrollbar-thumb {
+  background-color: #a5a5a591; /* 색상 */
+  border-radius: 4px; /* 모서리 둥글게 */
+  cursor: pointer;
+}
+
+/* 스크롤바 막대 호버 */
+.Chat .chat_section textarea::-webkit-scrollbar-thumb:hover {
+  background-color: #72727291;
+}
+
+/* 스크롤바 트랙 (배경) */
+.Chat .chat_section textarea::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
+
+.Chat .input_section {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.Chat .input_section input {
+  flex: 1;
+  outline: none;
+  color: whitesmoke;
+}
+
+.Chat .input_section button {
+  background-color: #9ad3dd;
+  color: whitesmoke;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
 }
