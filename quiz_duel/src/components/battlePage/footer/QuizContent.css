@@ -1,0 +1,21 @@
+.QuizContent {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  width: 100%;
+  height: 100%;
+}
+
+.QuizContent .quiz_number {
+  color: #a3a3a3;
+  height: 7%;
+}
+
+.QuizContent .content {
+  width: 100%;
+  height: 65%;
+}
+
+.QuizContent .answer {
+  height: 30%;
+}

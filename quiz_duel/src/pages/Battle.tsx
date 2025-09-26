@@ -1,8 +1,8 @@
-import RoomStatus from "@/components/battlePage/RoomStatus";
+import RoomStatus from "@/components/battlePage/header/RoomStatus";
 import "./Battle.css";
 import { useParams } from "react-router-dom";
-import Palyers from "@/components/battlePage/Players";
-import QuizContent from "@/components/battlePage/QuizContent";
+import Palyers from "@/components/battlePage/body/Players";
+import QuizContent from "@/components/battlePage/footer/QuizContent";
 
 const Battle = () => {
   const params = useParams();

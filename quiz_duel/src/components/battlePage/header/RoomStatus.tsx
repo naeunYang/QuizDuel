@@ -1,9 +1,9 @@
-import { Progress } from "../shadcn/progress";
+import { Progress } from "../../shadcn/progress";
 import { BadgeInfo } from "lucide-react";
 
 import "./RoomStatus.css";
-import { Button } from "../shadcn/button";
-import { Tooltip } from "../shadcn/tooltip";
+import { Button } from "../../shadcn/button";
+import { Tooltip } from "../../shadcn/tooltip";
 import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 
 interface Props {
