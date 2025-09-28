@@ -160,7 +160,6 @@ const Lobby = () => {
         <Card className="rounded-[0.5rem] w-95 h-95 flex items-center justify-between">
           <CardContent className="flex flex-col items-center">
             <TypingAnimation
-              startOnView={true}
               duration={150}
               className="text-[1.563rem] font-bold pb-[1.875rem]"
             >

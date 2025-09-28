@@ -15,10 +15,13 @@
   justify-content: center;
   align-items: center;
   flex: 1;
+  white-space: normal; /* 기본 줄바꿈 허용 */
+  word-wrap: break-word; /* 단어가 너무 길면 강제로 줄바꿈 */
+  overflow-wrap: break-word; /* 최신 표준 */
 }
 
 .Solution .footer {
-  height: 13%;
+  height: 18%;
   display: flex;
   justify-content: space-between;
 }
@@ -35,6 +38,9 @@
 
 .Solution .footer .declaration {
   color: #a3a3a3;
+}
+
+.Solution .footer .declaration p {
   cursor: pointer;
 }
 

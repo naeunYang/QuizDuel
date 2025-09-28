@@ -44,3 +44,13 @@
   color: #bdbdbd;
   background-color: #efefef;
 }
+
+.User .correct {
+  color: white;
+  background-color: #2ecc71;
+}
+
+.User .wrong {
+  color: white;
+  background-color: #e74c3c;
+}

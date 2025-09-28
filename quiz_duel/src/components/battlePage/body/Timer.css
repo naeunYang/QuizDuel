@@ -20,4 +20,10 @@
 
 .Timer .footer {
   color: whitesmoke;
+  text-align: center;
+  padding: 0.2rem;
+}
+
+.Timer .timeout {
+  background-color: #ee6a6a;
 }
