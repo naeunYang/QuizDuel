@@ -1,8 +1,11 @@
-import RoomStatus from "@/components/battlePage/header/RoomStatus";
 import "./Battle.css";
+
 import { useParams } from "react-router-dom";
+
+import RoomStatus from "@/components/battlePage/header/RoomStatus";
 import Palyers from "@/components/battlePage/body/Players";
 import QuizContent from "@/components/battlePage/footer/QuizContent";
+import GameOverPopup from "@/components/battlePage/GameOverPopup";
 
 const Battle = () => {
   const params = useParams();
@@ -18,6 +21,7 @@ const Battle = () => {
       <div className="quiz">
         <QuizContent />
       </div>
+      <GameOverPopup />
     </div>
   );
 };

@@ -22,8 +22,14 @@
   cursor: pointer;
 }
 
-.AnswerOX .active {
+.AnswerOX .click {
   background-color: #dceeff;
   border: 2px solid #3498db;
   color: #3498db;
+}
+
+.AnswerOX .correct_answer {
+  background-color: #2ecc71;
+  border: 2px solid #27ae60;
+  color: white;
 }
