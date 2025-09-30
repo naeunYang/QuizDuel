@@ -1,0 +1,63 @@
+.container {
+  height: 100%;
+  margin-top: 0.5rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.container .winner {
+  background-color: #e0f7fa;
+  width: 100%;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  color: #00796b;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.container .player {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.container .player .versus {
+  width: 15%;
+  height: 15%;
+}
+
+.container .player .profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 50%;
+}
+
+.container .player .profile .username {
+  font-size: 1.2rem;
+  font-weight: bold;
+  font-family: "/NanumSquareB.otf";
+}
+
+.container .player .profile .score {
+  font-size: 1.3rem;
+  font-weight: bold;
+  font-family: "/NanumSquareB.otf";
+}
+
+.win {
+  width: 100%;
+}
+
+.lose {
+  width: 70%;
+  margin: 1.9rem;
+}

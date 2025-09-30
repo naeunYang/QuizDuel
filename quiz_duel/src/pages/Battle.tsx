@@ -21,7 +21,7 @@ const Battle = () => {
       <div className="quiz">
         <QuizContent />
       </div>
-      <GameOverPopup />
+      <GameOverPopup winner={"Player2"} />
     </div>
   );
 };
