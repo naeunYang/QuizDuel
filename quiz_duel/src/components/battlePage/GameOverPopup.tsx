@@ -1,4 +1,5 @@
 import "./GameOverPopup.css";
+import { useState } from "react";
 
 import {
   Dialog,
@@ -10,8 +11,7 @@ import {
 } from "../shadcn/dialog";
 import Button from "@/components/common/Button";
 import { Settings } from "lucide-react";
-import CreateRoomModal from "../homePage/popups/CreateRoomModal";
-import { useState } from "react";
+import RoomSetting from "./RoomSetting";
 
 interface Props {
   winner: "Player1" | "Player2";
@@ -47,40 +47,36 @@ export default function GameOverPopup({ winner }: Props) {
     );
   };
 
-  const gameOver = () => {
-    return (
-      <div className="container">
-        <div className="winner">🎉{winner} 승리!🎉</div>
-        <div className="player">
-          {profile("player1.PNG", "Player1", 240)}
-          <img src={`../src/assets/versus.png`} className="versus" />
-          {profile("player2.PNG", "Player2", 320)}
-        </div>
-      </div>
-    );
-  };
-
-  const roomSetting = () => {
-    return <div></div>;
-  };
-
   return (
-    <Dialog open={true}>
-      <DialogContent className="w-110 flex flex-col justify-between gap-0 [&>button]:hidden border-none bg-[#F5FFFA]">
-        <DialogHeader>
-          <DialogTitle className="text-center text-2xl">게임 종료</DialogTitle>
-          <DialogDescription></DialogDescription>
-        </DialogHeader>
-        {roomSettingPopupOpen ? roomSetting() : gameOver()}
-        <DialogFooter className="relative flex flex-row !justify-center gap-3">
-          <Button text="한판 더!" type="POSITIVE" onButtonClick={() => {}} />
-          <Button text="나가기" type="DEFAULT" onButtonClick={() => {}} />
-          <Settings
-            className="absolute right-0 bottom-0 text-[#00796B] cursor-pointer"
-            onClick={() => setRoomSettingPopupOpen(true)}
-          />
-        </DialogFooter>
-      </DialogContent>
+    <Dialog open={false}>
+      {roomSettingPopupOpen ? (
+        <RoomSetting setRoomSettingPopupOpen={setRoomSettingPopupOpen} />
+      ) : (
+        <DialogContent className="w-110 flex flex-col justify-between gap-0 [&>button]:hidden border-none bg-[#F5FFFA]">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl">
+              게임 종료
+            </DialogTitle>
+            <DialogDescription></DialogDescription>
+          </DialogHeader>
+          <div className="container">
+            <div className="winner">🎉{winner} 승리!🎉</div>
+            <div className="player">
+              {profile("player1.PNG", "Player1", 240)}
+              <img src={`../src/assets/versus.png`} className="versus" />
+              {profile("player2.PNG", "Player2", 320)}
+            </div>
+          </div>
+          <DialogFooter className="relative flex flex-row !justify-center gap-3">
+            <Button text="한판 더!" type="POSITIVE" onButtonClick={() => {}} />
+            <Button text="나가기" type="DEFAULT" onButtonClick={() => {}} />
+            <Settings
+              className="absolute right-0 bottom-0 text-[#00796B] cursor-pointer"
+              onClick={() => setRoomSettingPopupOpen(true)}
+            />
+          </DialogFooter>
+        </DialogContent>
+      )}
     </Dialog>
   );
 }

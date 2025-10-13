@@ -27,9 +27,15 @@ interface ChildHandle {
   getValue: () => RoomInfo;
 }
 
-const CreateRoom = forwardRef<ChildHandle>((props, ref) => {
+interface Props {
+  defaultRoomData?: RoomInfo;
+}
+
+const CreateRoom = forwardRef<ChildHandle, Props>((props: Props, ref) => {
   const [roomOptions, setRoomOptions] = useState<RoomOption | null>();
-  const [roomInput, setRoomInput] = useState<RoomInfo>(defaultRoomData);
+  const [roomInput, setRoomInput] = useState<RoomInfo>(
+    props.defaultRoomData ?? defaultRoomData
+  );
 
   useImperativeHandle(ref, () => ({
     getValue: () => roomInput,
