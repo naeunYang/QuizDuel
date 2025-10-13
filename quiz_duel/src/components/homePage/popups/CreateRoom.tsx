@@ -59,13 +59,23 @@ const CreateRoom = forwardRef<ChildHandle, Props>((props: Props, ref) => {
   // 입력값 변경
   const onChangeInput = (name: string, value: string) => {
     if (name === "category") {
+      // 랜덤 선택할 경우 기존 값 초기화 후 랜덤만 남기기
+      if (value === "random") {
+        setRoomInput((prev) => ({ ...prev, category: [value] }));
+      }
+
       setRoomInput((prev) => {
         // 이미 해당 카테고리 값이 설정되어 있으면 return
         if (prev.category.includes(value)) {
           return prev;
         }
 
-        const newCategory = [...prev.category, value];
+        let newCategory = [...prev.category, value];
+
+        // 배열에 random이 포함되어 있다면 random값을 제거
+        if (prev.category.includes("random")) {
+          newCategory = newCategory.filter((item) => item !== "random");
+        }
 
         // 3개가 넘어가면 맨 앞에 있는 요소를 제거
         if (newCategory.length > 3) {

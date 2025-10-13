@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import homeRouter from "./routes/home";
 import adminRouter from "./routes/admin";
+import battleRouter from "./routes/battle";
 import http from "http";
 import WebSocket from "ws";
 import connectionSocket from "./websocket/connection";
@@ -19,6 +20,7 @@ app.use(
 
 app.use("/api/home", homeRouter); // /home으로 진입하는 모든 요청을 homeRouter에 맡김
 app.use("/api/admin", adminRouter);
+app.use("/api/battle", battleRouter);
 
 // http 서버
 const server = http.createServer(app);
