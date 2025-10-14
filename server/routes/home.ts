@@ -5,5 +5,6 @@ const router = express.Router(); // 특정 라우트 그룹(/home) 안에서 또
 
 // routes는 경로만, controller는 실제 처리 로직 담당(라우터와 로직 분리)
 router.get("/room-options", homeController.getRoomOptions);
+router.get("/quiz-settings/:code", homeController.getQuizSettings);
 
 export default router;

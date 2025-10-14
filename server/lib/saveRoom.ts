@@ -14,6 +14,7 @@ export default async function saveRoom(roomInfo: RoomInfo) {
         category: JSON.stringify(roomInfo.category),
         timeLimit: JSON.stringify(roomInfo.timeLimit),
         users: JSON.stringify(roomInfo.users),
+        status: JSON.stringify(roomInfo.status),
       });
     }
     // 이미 존재하는 방에 join 시

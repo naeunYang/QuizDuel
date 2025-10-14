@@ -9,4 +9,5 @@ export type RoomInfo = {
     userId: string;
     isReady: boolean;
   }[];
+  status?: "WAITING" | "PLAYING" | "FINISHED";
 };

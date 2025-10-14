@@ -10,3 +10,14 @@ export async function getRoomOptions(req: Request, res: Response) {
     res.status(500).json({ error: "방 옵션을 불러오는 중 오류 발생" });
   }
 }
+
+export async function getQuizSettings(req: Request, res: Response) {
+  try {
+    const code = req.params.code;
+    const data = await homeData.getQuizSettings(code);
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "퀴즈 정보를 불러오는 중 오류 발생" });
+  }
+}

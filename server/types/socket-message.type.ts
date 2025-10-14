@@ -6,6 +6,7 @@ export type SocketMessage =
       level: string;
       category: string[];
       timeLimit: number;
+      status: "WAITING" | "PLAYING" | "FINISHED";
     }
   | { type: "join"; userId: string; roomCode: string }
   | {

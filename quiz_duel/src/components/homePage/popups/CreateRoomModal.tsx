@@ -78,6 +78,7 @@ const CreateRoomModal = ({ setOpen, userId }: Props) => {
             ? ["random"]
             : childRoomInput.category,
         timeLimit: childRoomInput.timeLimit,
+        status: "WAITING",
       });
 
       setRoom((prev) => {

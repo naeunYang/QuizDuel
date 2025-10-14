@@ -7,7 +7,7 @@ export default async function handleCreate(
   ws: ExtendedWebSocket,
   data: Extract<SocketMessage, { type: "create" }>
 ) {
-  const { title, quizCount, level, category, timeLimit } = data;
+  const { title, quizCount, level, category, timeLimit, status } = data;
   const roomCode = await generateRoomCode();
 
   await saveRoom({
@@ -18,6 +18,7 @@ export default async function handleCreate(
     category,
     timeLimit,
     users: [],
+    status,
   });
 
   ws.send(

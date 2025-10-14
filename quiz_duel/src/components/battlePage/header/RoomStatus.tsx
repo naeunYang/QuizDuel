@@ -67,6 +67,7 @@ export default function RoomStatus({ code, roomInfo }: Props) {
 
   useEffect(() => {
     if (roomInfo) {
+      console.log(roomInfo);
       getValue();
     }
   }, [roomInfo]);
