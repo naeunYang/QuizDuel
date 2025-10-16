@@ -5,7 +5,7 @@ import Timer from "./Timer";
 import Chat from "./Chat";
 import { useState } from "react";
 
-export default function Palyers() {
+export default function Palyers({ timeLimit }: { timeLimit: string }) {
   const [userStatus, setUserStatus] = useState<
     "Submit" | "Non-Submit" | "Correct" | "Wrong"
   >("Non-Submit");
@@ -28,7 +28,7 @@ export default function Palyers() {
         />
       </div>
       <div className="body">
-        <Timer />
+        <Timer timeLimit={timeLimit} />
       </div>
     </div>
   );

@@ -1,18 +1,43 @@
 import { useState, useEffect } from "react";
 import "./Timer.css";
 import { TimerOff } from "lucide-react";
+import { supabase } from "@/lib/supabaseClient";
 
-export default function Timer() {
-  const [time, setTime] = useState(3);
+export default function Timer({ timeLimit }: { timeLimit: string }) {
+  const [time, setTime] = useState<number>(0);
+
+  // Name 값 추출
+  const getValue = async () => {
+    try {
+      const { data: time_master, error } = await supabase
+        .from("time_master")
+        .select("timeName")
+        .eq("seq", timeLimit);
+
+      const timeName = time_master?.map((item) => item.timeName)[0];
+      if (error) throw error;
+
+      setTime(Number(timeName.slice(0, -1)));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
 
   useEffect(() => {
-    if (time <= 0) return;
+    getValue();
+  }, []);
 
-    const interval = setInterval(() => {
-      setTime((prev) => prev - 1);
-    }, 1000);
+  useEffect(() => {
+    if (time > 0) {
+      if (time <= 0) return;
 
-    return () => clearInterval(interval);
+      const interval = setInterval(() => {
+        setTime((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
   }, [time]);
 
   return (

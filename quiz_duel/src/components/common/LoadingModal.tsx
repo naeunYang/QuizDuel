@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogTitle,
   DialogDescription,
+  DialogOverlay,
 } from "../shadcn/dialog";
 import { Spinner } from "./LoadingSpinner";
 import { TriangleAlert } from "lucide-react";
@@ -11,15 +12,22 @@ import { TriangleAlert } from "lucide-react";
 interface Props {
   open: boolean;
   content: string | React.ReactNode;
-  type: "LOADING" | "ERROR";
+  type: "LOADING" | "ERROR" | "NONE";
   onOpenChange?: React.Dispatch<React.SetStateAction<boolean>>;
   className?: string;
+  overlayColor?: string;
 }
 
 const LoadingModal = (props: Props) => {
   return (
     <div>
       <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+        {props.overlayColor && (
+          <DialogOverlay
+            className="fixed inset-0 backdrop-blur-sm"
+            style={{ background: props.overlayColor }}
+          />
+        )}
         <DialogContent
           className={`bg-[#E8E8E8] w-80 h-35 ${props.className}`}
           // onOpenAutoFocus={(e) => e.preventDefault()}
@@ -32,6 +40,7 @@ const LoadingModal = (props: Props) => {
             {props.type === "ERROR" && (
               <TriangleAlert className="text-yellow-400 w-full h-13 text-center" />
             )}
+            {props.type === "NONE" && <></>}
             <div style={{ whiteSpace: "pre-wrap" }}>{props.content}</div>
           </DialogTitle>
           <DialogDescription></DialogDescription>

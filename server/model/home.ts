@@ -17,7 +17,7 @@ export async function getRoomOptions(): Promise<RoomOption> {
   return { categories, counts, levels, times };
 }
 
-// 모든 유저 준비 완료 후 문제 리스트 세팅을 위해 퀴즈 정보를 추출
+// 모든 유저 준비 완료 후 문제 리스트 세팅을 위해 퀴즈 옵션 정보를 추출
 export async function getQuizSettings(code: string) {
   try {
     const redis = await getRedisClient();
@@ -28,7 +28,9 @@ export async function getQuizSettings(code: string) {
 
     let count;
     if (quizCount) {
-      count = await prisma.count_master.findFirst(JSON.parse(quizCount));
+      count = await prisma.count_master.findFirst({
+        where: { seq: String(JSON.parse(quizCount)) },
+      });
     }
 
     const quizInfo = {
@@ -41,5 +43,32 @@ export async function getQuizSettings(code: string) {
   } catch (error) {
     console.log("getQuizSettings 실패", error);
     throw new Error("Redis 조회 실패");
+  }
+}
+
+// 방 초기세팅
+export async function roomInitialize(code: string, quizIdList: string[]) {
+  try {
+    const redis = await getRedisClient();
+
+    const users = await redis.hGet(code, "users");
+    let initUsers;
+    if (users) {
+      initUsers = JSON.parse(users).map((user: {}) => ({
+        ...user,
+        totalScore: 0,
+      }));
+    }
+
+    if (code && quizIdList) {
+      await redis.hSet(code, {
+        quizIds: JSON.stringify(quizIdList),
+        // currentIndex: 0,
+        users: JSON.stringify(initUsers),
+      });
+    }
+  } catch (error) {
+    console.error("roomInitialize 실패", error);
+    throw new Error("Redis 저장 실패");
   }
 }

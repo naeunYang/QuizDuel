@@ -20,3 +20,15 @@ export async function getRoomInfos(roomCode: string) {
     throw new Error("Redis 조회 실패");
   }
 }
+
+export async function setRoomStatus(code: string, status: string) {
+  try {
+    const redis = await getRedisClient();
+    await redis.hSet(code, {
+      status: status,
+    });
+  } catch (error) {
+    console.log("setRoomState 실패", error);
+    throw new Error("Redis 저장 실패");
+  }
+}

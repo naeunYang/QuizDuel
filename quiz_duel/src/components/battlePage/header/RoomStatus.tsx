@@ -9,30 +9,31 @@ import { Button } from "../../shadcn/button";
 import { Tooltip } from "../../shadcn/tooltip";
 import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 
-interface RoomInfo {
-  title: string;
-  category: string[];
-  level: string;
-  quizCount: string;
-  timeLimit: string;
-  users: string[];
-}
-
+import type { RoomInfo } from "@/types/battle-room-info.types";
+import axios from "axios";
+import { useCurrentQuizStore } from "@/stores/useCurrentQuizStore";
 interface Props {
   code: string;
   roomInfo: RoomInfo;
 }
 
 export default function RoomStatus({ code, roomInfo }: Props) {
-  const [roomInfos, setRoomInfos] = useState<RoomInfo | null>(null);
+  const [roomInfos, setRoomInfos] = useState<RoomInfo>(roomInfo);
+  const { currentIndex } = useCurrentQuizStore();
 
+  // Name 값 추출
   const getValue = async () => {
     try {
-      const { data: cateogry_master } = await supabase
-        .from("category_master")
-        .select("categoryName")
-        .in("categoryID", roomInfo.category);
-      const category = cateogry_master?.map((item) => item.categoryName);
+      let category;
+      if (roomInfo.category[0] === "random") {
+        category = ["랜덤"];
+      } else {
+        const { data: cateogry_master } = await supabase
+          .from("category_master")
+          .select("categoryName")
+          .in("categoryID", roomInfo.category);
+        category = cateogry_master?.map((item) => item.categoryName);
+      }
 
       const { data: level_master } = await supabase
         .from("level_master")
@@ -59,16 +60,32 @@ export default function RoomStatus({ code, roomInfo }: Props) {
         quizCount: count,
         timeLimit: time,
         users: roomInfo.users,
+        quizIds: roomInfo.quizIds,
+        currentIndex: roomInfo.currentIndex,
+        status: roomInfo.status,
       });
     } catch (error) {
       console.error(error);
     }
   };
 
+  // 방 상태 PLAYING으로 변경
+  const setRoomStatus = async () => {
+    try {
+      await axios.post("/api/battle/room-status", {
+        code: code,
+        status: "PLAYING",
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     if (roomInfo) {
-      console.log(roomInfo);
-      getValue();
+      getValue(); // Name 값 추출 후 roomInfo 다시 세팅
+      setRoomStatus(); // 방 상태 변경
     }
   }, [roomInfo]);
 
@@ -76,11 +93,16 @@ export default function RoomStatus({ code, roomInfo }: Props) {
     <div className="RoomStatus">
       <div className="info">
         <div className="code">{code}</div>
-        <div className="title">{roomInfos?.title}</div>
+        <div className="title">{roomInfos.title}</div>
       </div>
       <div className="quiz_count">
-        <div>문제 1 / {roomInfos?.quizCount}</div>
-        <Progress value={10} className="w-[100%]" />
+        <div>
+          문제 {currentIndex + 1} / {roomInfos.quizIds.length}
+        </div>
+        <Progress
+          value={((currentIndex + 1) / roomInfos.quizIds.length) * 100}
+          className="w-[100%]"
+        />
       </div>
       <div className="exit">
         <Tooltip>
@@ -91,15 +113,15 @@ export default function RoomStatus({ code, roomInfo }: Props) {
             <div className="room_info">
               <div className="setting">
                 <div className="setting_title">문제 개수</div>
-                <div className="setting_value">{roomInfos?.quizCount}</div>
+                <div className="setting_value">{roomInfos.quizCount}</div>
               </div>
               <div className="setting">
                 <div className="setting_title">난이도</div>
-                <div className="setting_value">{roomInfos?.level}</div>
+                <div className="setting_value">{roomInfos.level}</div>
               </div>
               <div className="setting">
                 <div className="setting_title">카테고리</div>
-                {roomInfos?.category.map((item, index) => (
+                {roomInfos.category.map((item, index) => (
                   <div key={index} className="setting_value">
                     {item}
                   </div>
@@ -107,7 +129,7 @@ export default function RoomStatus({ code, roomInfo }: Props) {
               </div>
               <div className="setting">
                 <div className="setting_title">제한시간</div>
-                <div className="setting_value">{roomInfos?.timeLimit}</div>
+                <div className="setting_value">{roomInfos.timeLimit}</div>
               </div>
             </div>
           </TooltipContent>

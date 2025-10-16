@@ -1,6 +1,6 @@
 // React Hooks
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { UNSAFE_ErrorResponseImpl, useNavigate } from "react-router-dom";
 import { useSocket } from "@/context/SocketProvider";
 import { useRoomInfoValueContext } from "@/context/RoomInfoProvider";
 import axios from "axios";
@@ -30,12 +30,11 @@ const WaitForReadyModal = ({ setOpen, userId }: Props) => {
   const { subscribe, send } = useSocket();
   const nav = useNavigate();
 
-  const roomSetting = async () => {
-    setIsLoading(false);
-
+  // 문제 ID 리스트 추출
+  const getQuizIdList = async () => {
     try {
       // 퀴즈 옵션 정보 가져오기
-      const { data: quizSettings } = await axios(
+      const { data: quizSettings } = await axios.get(
         `/api/home/quiz-settings/${room.code}`
       );
       const { level, quizCount, category } = quizSettings;
@@ -43,29 +42,49 @@ const WaitForReadyModal = ({ setOpen, userId }: Props) => {
       // "5개" 형식으로 가져오기 때문에 "개"를 제거 후 숫자 변환
       const limitCount = Number(quizCount.slice(0, -1) || 0);
 
-      const { data: quizIds, error } = await supabase
-        .from("quiz_master")
-        .select("id")
-        .eq("levelID", level)
-        .eq("categoryID", category)
-        .order("RANDOM()", { ascending: true }) // 랜덤 정렬
-        .limit(limitCount);
-      console.log(quizIds);
+      // 조건에 맞는 퀴즈 ID 리스트 가져오기
+      const { data, error } = await supabase.rpc("get_random_quizdatas", {
+        level: level,
+        category_list: category,
+        limit_count: limitCount,
+      });
 
       if (error) throw error;
+
+      return data;
     } catch (error) {
-      console.error("roomSetting error: ", error);
+      console.error("getQuizIdList error: ", error);
+      throw error;
+    }
+  };
+
+  // 방 세팅 - redis 저장
+  // 1. 문제 리스트 세팅
+  // 2. totalScore 0 세팅
+  // 3. currentIndex 0 세팅
+  const roomInitialize = async (code: string, quizIdList: string[]) => {
+    try {
+      await axios.post("/api/home/room-initialize", {
+        code: code,
+        quizIdList: quizIdList,
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   };
 
   useEffect(() => {
     const unsubscribe = subscribe(async (msg) => {
       if (msg.type === "all_ready" && msg.isAllReady) {
-        console.log("준비 전부 완료");
         setIsLoading(true);
-        await roomSetting();
 
-        // nav(`/battle/${msg.roomCode}`);
+        const quizIdList = await getQuizIdList(); // 문제 ID 리스트 추출
+        await roomInitialize(room.code, quizIdList); // 방 세팅
+
+        setIsLoading(false);
+
+        nav(`/battle/${msg.roomCode}`);
       } else if (msg.type === "opponent_ready_state") {
         setOpponentState(msg.isOpponentReady);
       } else if (msg.type === "opponent_quit") {

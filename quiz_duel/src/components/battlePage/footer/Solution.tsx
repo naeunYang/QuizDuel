@@ -1,8 +1,11 @@
 import ConfirmModal from "@/components/common/ConfirmModal";
 import "./Solution.css";
 import Button from "@/components/common/Button";
+import { useEffect } from "react";
 
-export default function Solution() {
+export default function Solution({ quzIdList }: { quzIdList: string[] }) {
+  useEffect(() => {}, [quzIdList]);
+
   return (
     <div className="Solution">
       <div className="content">

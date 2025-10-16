@@ -21,3 +21,14 @@ export async function getQuizSettings(req: Request, res: Response) {
     res.status(500).json({ error: "퀴즈 정보를 불러오는 중 오류 발생" });
   }
 }
+
+export async function roomInitialize(req: Request, res: Response) {
+  try {
+    const { code, quizIdList } = req.body;
+    await homeData.roomInitialize(code, quizIdList);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: " 방 초기화 중 오류 발생" });
+  }
+}

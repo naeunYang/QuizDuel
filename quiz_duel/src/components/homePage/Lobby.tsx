@@ -74,7 +74,6 @@ const Lobby = () => {
         setSocketErrorMsg(msg.message);
       } else if (msg.type === "all_users_joined") {
         if (msg.connCompleted) {
-          console.log("모두 접속 완료");
           setModalStep("WAIT_READY");
 
           setOpenModal(true);

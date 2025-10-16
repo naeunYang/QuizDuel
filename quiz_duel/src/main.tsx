@@ -11,11 +11,11 @@ window.Kakao.init(JAVASCRIPT_KEY);
 window.Kakao.isInitialized();
 
 createRoot(document.getElementById("root")!).render(
-  <BrowserRouter>
-    <SocketProvider>
-      <RoomInfoProvider>
-        <App />
-      </RoomInfoProvider>
-    </SocketProvider>
-  </BrowserRouter>
+    <BrowserRouter>
+      <SocketProvider>
+        <RoomInfoProvider>
+          <App />
+        </RoomInfoProvider>
+      </SocketProvider>
+    </BrowserRouter>
 );
