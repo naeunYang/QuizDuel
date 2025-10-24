@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import "./Timer.css";
 import { TimerOff } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
+import { useTimeOver } from "@/stores/useTimeOver";
 
 export default function Timer({ timeLimit }: { timeLimit: string }) {
-  const [time, setTime] = useState<number>(0);
+  const [time, setTime] = useState<number | null>(null);
+  const { setTimeOver } = useTimeOver();
 
   // Name 값 추출
   const getValue = async () => {
@@ -29,15 +31,17 @@ export default function Timer({ timeLimit }: { timeLimit: string }) {
   }, []);
 
   useEffect(() => {
-    if (time > 0) {
-      if (time <= 0) return;
-
-      const interval = setInterval(() => {
-        setTime((prev) => prev - 1);
-      }, 1000);
-
-      return () => clearInterval(interval);
+    if (time === null) return;
+    if (time <= 0) {
+      setTimeOver(true);
+      return;
     }
+
+    const interval = setInterval(() => {
+      setTime((prev) => prev! - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [time]);
 
   return (

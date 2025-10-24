@@ -32,3 +32,15 @@ export async function setRoomStatus(code: string, status: string) {
     throw new Error("Redis 저장 실패");
   }
 }
+
+export async function setUserStatus(code: string, userStatus: string) {
+  // try {
+  //   const redis = await getRedisClient();
+  //   await redis.hSet(code, {
+  //     status: status,
+  //   });
+  // } catch (error) {
+  //   console.log("setRoomState 실패", error);
+  //   throw new Error("Redis 저장 실패");
+  // }
+}

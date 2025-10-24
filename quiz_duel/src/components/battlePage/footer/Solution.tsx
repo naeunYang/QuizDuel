@@ -1,21 +1,20 @@
 import ConfirmModal from "@/components/common/ConfirmModal";
 import "./Solution.css";
 import Button from "@/components/common/Button";
-import { useEffect } from "react";
 
-export default function Solution({ quzIdList }: { quzIdList: string[] }) {
-  useEffect(() => {}, [quzIdList]);
+interface Props {
+  content: string;
+  explanation: string | null;
+}
 
+export default function Solution({ content, explanation }: Props) {
   return (
     <div className="Solution">
-      <div className="content">
-        드라마 '오징어 게임'은 넷플릭스에서 제작되었다.
-      </div>
+      <div className="content">{content}</div>
       <div className="footer">
-        <section className="explanation">
-          👤 : '오징어 게임'은 넷플릭스에서 제작 및 공개된 오리지널
-          시리즈입니다.
-        </section>
+        {explanation && (
+          <section className={"explanation"}>👤 : {explanation}</section>
+        )}
         <section className="declaration">
           <ConfirmModal
             title={"🚨 신고"}

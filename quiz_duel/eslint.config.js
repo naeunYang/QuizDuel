@@ -26,6 +26,7 @@ export default tseslint.config(
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "off",
       "react-hooks/exhaustive-deps": "off", // useEffect 의존성 검사 끄기
+      "@typescript-eslint/no-explicit-any": "off", // any 허용
     },
   }
 );

@@ -51,6 +51,12 @@ const Battle = () => {
         return;
       }
 
+      if (Array.isArray(data.quizIds)) {
+        data.quizIds = data.quizIds.sort(
+          (a: any, b: any) => Number(a) - Number(b)
+        );
+      }
+
       setRoomInfo(res.data);
     } catch (error) {
       console.error(error);
@@ -84,7 +90,7 @@ const Battle = () => {
             <Palyers timeLimit={roomInfo.timeLimit} />
           </div>
           <div className="quiz">
-            <QuizContent quzIdList={roomInfo.quizIds} />
+            <QuizContent quizIdList={roomInfo.quizIds} />
           </div>
           <GameOverPopup winner={"Player2"} />
         </div>

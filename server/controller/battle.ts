@@ -31,3 +31,16 @@ export async function setRoomStatus(req: Request, res: Response) {
     res.status(500).json({ error: "서버 오류 발생" });
   }
 }
+
+export async function setUserStatus(req: Request, res: Response) {
+  try {
+    const { code, userStatus } = req.body;
+
+    await battleData.setUserStatus(code, userStatus);
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "서버 오류 발생" });
+  }
+}

@@ -1,14 +1,13 @@
 import "./Players.css";
 
+import { useUserStatus } from "@/stores/useUserStatus";
+
 import User from "./User";
 import Timer from "./Timer";
 import Chat from "./Chat";
-import { useState } from "react";
 
 export default function Palyers({ timeLimit }: { timeLimit: string }) {
-  const [userStatus, setUserStatus] = useState<
-    "Submit" | "Non-Submit" | "Correct" | "Wrong"
-  >("Non-Submit");
+  const { userStatus } = useUserStatus();
 
   return (
     <div className="Palyers">
@@ -17,7 +16,7 @@ export default function Palyers({ timeLimit }: { timeLimit: string }) {
           userProfile="player1.PNG"
           userName="Player1"
           score="240"
-          userStatus={"Correct"}
+          userStatus={userStatus}
         />
         <Chat />
         <User

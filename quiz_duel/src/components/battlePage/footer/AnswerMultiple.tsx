@@ -1,14 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./AnswerMultiple.css";
-
-const mockData = ["기생충", "살인의 추억", "괴물", "신과 함께"];
+import { useUserStatus } from "@/stores/useUserStatus";
 
 interface Props {
   answer: string | number | null;
+  choices: string[];
 }
 
-export default function AnswerMultiple({ answer }: Props) {
+export default function AnswerMultiple({ answer, choices }: Props) {
   const [selectValue, setSelectValue] = useState<number | null>(null);
+  const { setUserStatus } = useUserStatus();
+
+  useEffect(() => {
+    if (selectValue) {
+      setUserStatus("Submit");
+    }
+  }, [selectValue]);
+
+  useEffect(() => {
+    if (answer) {
+      const findAnswerIndex = choices.findIndex((item) => item === answer);
+      if (selectValue === findAnswerIndex + 1) {
+        setUserStatus("Correct");
+      } else {
+        setUserStatus("Wrong");
+      }
+    }
+  }, [answer]);
 
   const onClickItem = (index: number) => {
     if (answer) return;
@@ -21,7 +39,7 @@ export default function AnswerMultiple({ answer }: Props) {
       <div className="Item" onClick={() => onClickItem(index)}>
         <div
           className={`index ${selectValue === index ? "active" : ""} ${
-            answer === index ? "correct_answer" : ""
+            answer === content ? "correct_answer" : ""
           }`}
         >
           {index}
@@ -33,7 +51,7 @@ export default function AnswerMultiple({ answer }: Props) {
 
   return (
     <div className="AnswerMultiple">
-      {mockData.map((content, index) => (
+      {choices.map((content, index) => (
         <Item key={index} index={index + 1} content={content} />
       ))}
     </div>

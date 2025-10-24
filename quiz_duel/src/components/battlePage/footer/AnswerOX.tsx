@@ -1,12 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./AnswerOX.css";
+import { useUserStatus } from "@/stores/useUserStatus";
 
 interface Props {
-  answer: string | number | null;
+  answer: string | null;
 }
 
 export default function AnswerOX({ answer }: Props) {
   const [clickedValue, setClickedValue] = useState<"O" | "X" | null>(null);
+  const { setUserStatus } = useUserStatus();
+
+  useEffect(() => {
+    if (clickedValue) {
+      setUserStatus("Submit");
+    }
+  }, [clickedValue]);
+
+  useEffect(() => {
+    if (answer) {
+      if (clickedValue === answer) {
+        setUserStatus("Correct");
+      } else {
+        setUserStatus("Wrong");
+      }
+    }
+  }, [answer]);
 
   const onClickItem = (value: "O" | "X") => {
     if (answer) return;

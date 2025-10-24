@@ -1,10 +1,11 @@
+import type { UserStatus } from "@/types/user-status";
 import "./User.css";
 
 interface Props {
   userProfile: "player1.PNG" | "player2.PNG";
   userName: string;
   score: string;
-  userStatus: "Submit" | "Non-Submit" | "Correct" | "Wrong";
+  userStatus: UserStatus;
 }
 
 export default function User({
@@ -23,7 +24,7 @@ export default function User({
       break;
     case "Non-Submit":
       container_style = { border: "2px solid #BDBDBD" };
-      statusDiv = <div className="status waiting">대기중</div>;
+      statusDiv = <div className="status waiting">선택중</div>;
       break;
     case "Correct":
       container_style = { border: "2px solid #2ecc71" };

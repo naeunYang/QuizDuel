@@ -23,7 +23,8 @@
 .Solution .footer {
   height: 18%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  position: relative;
 }
 
 .Solution .footer .explanation {
@@ -38,6 +39,9 @@
 
 .Solution .footer .declaration {
   color: #a3a3a3;
+  position: absolute; /* 오른쪽 하단 고정 */
+  right: 0.5rem;
+  bottom: 0.5rem;
 }
 
 .Solution .footer .declaration p {
