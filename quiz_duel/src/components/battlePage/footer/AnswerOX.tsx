@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./AnswerOX.css";
 import { useUserStatus } from "@/stores/useUserStatus";
+import { useSocket } from "@/context/SocketProvider";
 
 interface Props {
   answer: string | null;
@@ -8,7 +9,10 @@ interface Props {
 
 export default function AnswerOX({ answer }: Props) {
   const [clickedValue, setClickedValue] = useState<"O" | "X" | null>(null);
-  const { setUserStatus } = useUserStatus();
+  const { userStatus, setUserStatus } = useUserStatus();
+  const { send, subscribe } = useSocket();
+
+  useEffect(() => {}, [userStatus]);
 
   useEffect(() => {
     if (clickedValue) {
